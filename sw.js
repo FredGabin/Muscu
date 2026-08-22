@@ -1,13 +1,24 @@
-const CACHE="coach10k-v2-0-0";
-const CORE=["./","./index.html","./styles.css","./app.js","./manifest.webmanifest","./icon-192.png","./icon-512.png"];
-self.addEventListener("install",e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)))});
-self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
-self.addEventListener("fetch",e=>{
-  const req=e.request;
-  if(req.mode==="navigate"){
-    e.respondWith(fetch(req).then(r=>{const cp=r.clone();caches.open(CACHE).then(c=>c.put("./index.html",cp));return r}).catch(()=>caches.match("./index.html")));
-    return;
-  }
-  e.respondWith(caches.match(req).then(cached=>cached||fetch(req).then(r=>{const cp=r.clone();caches.open(CACHE).then(c=>c.put(req,cp));return r})));
+const CACHE="coach10k-v2-1-0";
+const CORE=["./","./index.html","./manifest.webmanifest","./icon-192.png","./icon-512.png"];
+self.addEventListener("install",function(e){
+  self.skipWaiting();
+  e.waitUntil(caches.open(CACHE).then(function(c){return c.addAll(CORE)}));
 });
-self.addEventListener("message",e=>{if(e.data?.type==="SKIP_WAITING")self.skipWaiting()});
+self.addEventListener("activate",function(e){
+  e.waitUntil(caches.keys().then(function(keys){
+    return Promise.all(keys.filter(function(k){return k!==CACHE}).map(function(k){return caches.delete(k)}));
+  }).then(function(){return self.clients.claim()}));
+});
+self.addEventListener("fetch",function(e){
+  if(e.request.method!=="GET") return;
+  e.respondWith(
+    fetch(e.request).then(function(r){
+      var cp=r.clone();
+      caches.open(CACHE).then(function(c){c.put(e.request,cp)});
+      return r;
+    }).catch(function(){
+      return caches.match(e.request).then(function(r){return r||caches.match("./index.html")});
+    })
+  );
+});
+self.addEventListener("message",function(e){if(e.data && e.data.type==="SKIP_WAITING")self.skipWaiting()});

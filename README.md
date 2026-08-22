@@ -1,35 +1,16 @@
-# Coach 10K + Force — PWA
+# Coach 10K + Force v2.1 — correctif écran figé
 
-Application mobile-first statique, conçue pour GitHub Pages.
+Correctif principal :
+- JavaScript et CSS intégrés directement dans `index.html` pour éviter les incohérences de cache GitHub Pages / PWA.
+- migration défensive des anciennes données locales ;
+- écran de réparation visible si une donnée locale provoque encore une erreur ;
+- service worker v2.1 en mode réseau d'abord pour faciliter les mises à jour.
 
-## Fichiers à mettre à la racine du dépôt
-- index.html
-- styles.css
-- app.js
-- manifest.webmanifest
-- sw.js
-- icon-192.png
-- icon-512.png
+## Mise à jour
+Remplace tous les fichiers du dépôt par ceux de ce ZIP puis commit/push.
 
-## Fonctionnement
-- A/B/C : musculation
-- R1 : endurance fondamentale
-- R2 : fractionné court
-- R3 : seuil / tempo
-- R4 : spécifique 10 km
-- R5 : côtes
-- recommandation quotidienne selon scores Garmin, fatigue jambes, récupération, temps disponible et historique
-- choix libre de séance + deuxième séance avec contrôle de compatibilité
-- chrono de récupération automatique après validation d'une série
-- historique et saisie des performances
-- export/import JSON
-- stockage local sur le téléphone
-- fonctionne hors-ligne après la première visite
+Le fichier important est `index.html` : même si un ancien `app.js` reste en cache sur le téléphone,
+la v2.1 peut démarrer car son code est intégré dans la page.
 
-## Mise à jour GitHub Pages
-Remplacer les anciens fichiers par ceux-ci, faire commit/push puis recharger la page.
-Si le téléphone affiche encore l'ancienne version : Réglages > Forcer mise à jour.
-
-## Important
-La séance A est préremplie avec une structure cohérente et reste entièrement modifiable dans Réglages.
-Après avoir remis exactement les exercices de la séance A validée, l'application mémorise cette version.
+## Données
+Le correctif tente de conserver l'historique et les réglages de la v2.
