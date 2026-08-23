@@ -84,7 +84,7 @@ dialog{width:min(720px,calc(100% - 18px));max-height:88vh;overflow:auto;border:1
   <div id="app">
     <header class="topbar">
       <div>
-        <div class="eyebrow">COACH ADAPTATIF · V3.0</div>
+        <div class="eyebrow">COACH ADAPTATIF · V3.1.1</div>
         <h1>10K + Force</h1>
       </div>
       <button id="installBtn" class="ghost hidden">Installer</button>
@@ -108,9 +108,25 @@ dialog{width:min(720px,calc(100% - 18px));max-height:88vh;overflow:auto;border:1
   <dialog id="quickDialog"><div id="quickDialogContent"></div></dialog>
 
   <script>
-const APP_VERSION = "3.1.0";
+const APP_VERSION = "3.1.1";
 const STORE = "coach10k_force_v2"; // même clé pour conserver les données v2
-const LIBRARY_VERSION = 4;
+const LIBRARY_VERSION = 5;
+
+// Référence A conservée depuis la version précédente validée.
+// Elle sert uniquement de filet de sécurité si la v3.1.0 avait remplacé A par son modèle par défaut.
+const LEGACY_A_REFERENCE = {
+  code:"A", type:"strength", title:"Muscu A — séance de référence", duration:55, hardLegs:false,
+  goal:"Force / entretien — séance validée",
+  note:"Séance A de référence. Les charges et répétitions de la dernière A sont reprises automatiquement dès qu’elles existent dans l’historique.",
+  exercises:[
+    {name:"Développé couché",sets:4,reps:"5-6",rest:120,increment:2.5},
+    {name:"Tirage vertical",sets:4,reps:"6-8",rest:105,increment:2.5},
+    {name:"Rowing poulie ou barre",sets:3,reps:"8",rest:90,increment:2.5},
+    {name:"Développé épaules",sets:3,reps:"6-8",rest:90,increment:2.5},
+    {name:"Curl biceps",sets:2,reps:"10",rest:60,increment:1},
+    {name:"Extension triceps",sets:2,reps:"10",rest:60,increment:1}
+  ]
+};
 
 const defaults = {
   libraryVersion: LIBRARY_VERSION,
@@ -130,19 +146,7 @@ const defaults = {
     runPlanVersion: 1
   },
   sessions: [
-    {
-      code:"A", type:"strength", title:"Muscu A — dos / biceps", duration:55, hardLegs:false,
-      goal:"Force haut du corps / tirage",
-      note:"Séance A modifiable. Garde 2–3 répétitions en réserve et une respiration continue.",
-      exercises:[
-        {name:"Tirage vertical",sets:4,reps:"6-8",rest:105,increment:2.5},
-        {name:"Rowing poulie ou barre",sets:4,reps:"8",rest:90,increment:2.5},
-        {name:"Rowing unilatéral poulie",sets:3,reps:"8/côté",rest:75,increment:2.5},
-        {name:"Face pull",sets:3,reps:"12",rest:60,increment:2.5},
-        {name:"Curl biceps",sets:3,reps:"8-10",rest:75,increment:1},
-        {name:"Curl marteau",sets:2,reps:"10",rest:60,increment:1}
-      ]
-    },
+    clone(LEGACY_A_REFERENCE),
     {
       code:"B", type:"strength", title:"Muscu B — pectoraux / épaules / triceps", duration:55, hardLegs:false,
       goal:"Force et entretien du haut du corps",
@@ -211,6 +215,30 @@ function normalizePlanned(planned){
   });
   return out;
 }
+function isV310DefaultA(s){
+  if(!s||s.code!=="A"||!Array.isArray(s.exercises))return false;
+  const names=s.exercises.map(e=>e.name);
+  const v310=["Tirage vertical","Rowing poulie ou barre","Rowing unilatéral poulie","Face pull","Curl biceps","Curl marteau"];
+  return names.length===v310.length&&v310.every((n,i)=>names[i]===n);
+}
+function aFromHistory(parsed,oldA){
+  const hist=(Array.isArray(parsed?.history)?parsed.history:[])
+    .filter(h=>h&&h.code==="A"&&h.strength&&Object.keys(h.strength).length)
+    .sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
+  if(!hist.length)return null;
+  const h=hist[0],names=Object.keys(h.strength||{});
+  if(!names.length)return null;
+  const catalogs=[...(oldA?.exercises||[]),...LEGACY_A_REFERENCE.exercises];
+  const ex=names.map(name=>{
+    const known=catalogs.find(e=>e.name===name)||{};
+    const sets=Array.isArray(h.strength[name])?h.strength[name]:[];
+    const done=sets.filter(x=>x&&x.done);
+    const lastRep=(done[done.length-1]?.reps??sets[sets.length-1]?.reps??"");
+    return {name,sets:sets.length||known.sets||3,reps:String(lastRep||known.reps||"8"),rest:known.rest||90,increment:known.increment||2.5};
+  });
+  return Object.assign({},clone(LEGACY_A_REFERENCE),oldA||{},{code:"A",type:"strength",hardLegs:false,title:"Muscu A — séance de référence",goal:"Force / entretien — référence récupérée",exercises:ex});
+}
+
 function normalizeState(parsed){
   const base=clone(defaults);
   if(!parsed||typeof parsed!=="object") return base;
@@ -222,10 +250,17 @@ function normalizeState(parsed){
 
   const oldSessions=Array.isArray(parsed.sessions)?parsed.sessions:[];
   if(oldSessions.length){
-    // Migration v2/v3 -> v3.1 : conserver les exercices personnalisés A/B/C,
-    // puis compléter la bibliothèque running avec les nouvelles variantes ludiques.
+    // Migration v2/v3 -> v3.1.1 : ne plus écraser A.
+    // Si un historique A existe, ses noms d’exercices deviennent la référence afin de retrouver les anciennes charges.
     base.sessions=defaults.sessions.map(d=>{
       const old=oldSessions.find(s=>s.code===d.code);
+      if(d.code==="A"){
+        const fromHistory=aFromHistory(parsed,old);
+        if(fromHistory)return fromHistory;
+        if(old&&isV310DefaultA(old))return clone(LEGACY_A_REFERENCE);
+        if(old&&Array.isArray(old.exercises)&&old.exercises.length)return Object.assign({},clone(LEGACY_A_REFERENCE),old,{code:"A",type:"strength",hardLegs:false,exercises:old.exercises});
+        return clone(LEGACY_A_REFERENCE);
+      }
       if(!old)return clone(d);
       if(d.type==="strength"&&Array.isArray(old.exercises)&&old.exercises.length){
         return Object.assign({},d,old,{code:d.code,type:"strength",hardLegs:d.hardLegs,exercises:old.exercises});
@@ -242,6 +277,18 @@ function load(){
 }
 let state=load();
 function save(){state.updatedAt=new Date().toISOString();state.libraryVersion=LIBRARY_VERSION;localStorage.setItem(STORE,JSON.stringify(state))}
+function recoverKnownAWeek(){
+  // La séance A du vendredi 21/08/2026 a été faite avant cette mise à jour.
+  // On ne fabrique aucune charge : si les séries existent encore, elles sont conservées ; sinon on restaure seulement la trace calendaire.
+  const target="2026-08-21";
+  const around=state.history.some(h=>h&&h.code==="A"&&["2026-08-20","2026-08-21","2026-08-22"].includes(historyDateKey(h)));
+  if(!around&&!state.settings.recoveredA20260821){
+    const d=parseDateKey(target);d.setHours(18,0,0,0);
+    state.history.push({id:uid(),code:"A",type:"strength",date:d.toISOString(),dateKey:target,duration:55,rpe:0,notes:"Séance A effectuée avant la mise à jour v3.1.1. La trace calendaire est récupérée ; aucune charge n’a été inventée.",strength:{},recovered:true});
+    state.settings.recoveredA20260821=true;save();
+  }
+}
+recoverKnownAWeek();
 function esc(s=""){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
 function secToPace(sec){if(!isFinite(sec)||sec<=0)return "—";const m=Math.floor(sec/60),s=Math.round(sec%60);return `${m}:${String(s).padStart(2,"0")}/km`}
 function paceToSec(txt){if(!txt)return null;const m=String(txt).match(/(\d+)\s*[:']\s*(\d+)/);return m?(+m[1]*60 + +m[2]):null}
@@ -510,10 +557,21 @@ function upcomingPlans(days){
   return out;
 }
 function sessionCard(s,open=false){return `<div class="card session-card ${open?"clickable":""}" ${open?`onclick="openSession('${s.code}','${todayKey()}',null)"`:""}><div class="code ${s.type==="run"?"run":""}">${esc(displayCode(s.code))}</div><div><strong>${esc(s.title)}</strong><p>${esc(s.goal)} · ≈ ${s.duration} min</p></div><div class="chev">›</div></div>`}
+function strengthHistorySummary(h){
+  if(!h||!h.strength||!Object.keys(h.strength).length)return `<div class="small">Séance enregistrée, mais les charges/reps de cette ancienne version ne sont plus disponibles. Elles seront recréées automatiquement à la prochaine A.</div>`;
+  return Object.entries(h.strength).map(([name,sets])=>{
+    const vals=(Array.isArray(sets)?sets:[]).filter(x=>x&&x.done).map(x=>`${x.kg||0} kg × ${x.reps||0}`).join(" · ");
+    return `<div class="kpi"><div><strong>${esc(name)}</strong><div class="small">${esc(vals||"séries enregistrées")}</div></div></div>`;
+  }).join("");
+}
+function aReferenceCard(){
+  const a=sessionBy("A"),last=state.history.filter(h=>h.code==="A").sort((x,y)=>new Date(y.date)-new Date(x.date))[0];
+  return `<section class="card"><div class="row between"><div><div class="small">RÉFÉRENCE A</div><h3 style="margin:4px 0 0">${esc(a?.title||"Séance A")}</h3></div>${last?`<span class="badge good">${esc(fmtDate(historyDateKey(last)))}</span>`:`<span class="badge">aucune</span>`}</div>${last?strengthHistorySummary(last):`<p class="small">Aucune A enregistrée pour l’instant.</p>`}<button class="ghost full" style="margin-top:10px" onclick="openSession('A','${todayKey()}',null)">Ouvrir A avec les dernières références</button></section>`;
+}
 function renderSessions(){
   const strength=state.sessions.filter(s=>s.type==="strength");
-  view.innerHTML=`<div class="section-title"><h2>Musculation</h2><span class="small">simple · efficace · A/B/C</span></div>${strength.map(s=>sessionCard(s,true)).join("")}
-  <section class="card"><div class="notice">A, B et C restent volontairement simples. On ajustera surtout B et C à partir de tes vraies séances, charges, reps et sensations.</div></section>
+  view.innerHTML=`<div class="section-title"><h2>Musculation</h2><span class="small">simple · efficace · A/B/C</span></div>${aReferenceCard()}${strength.map(s=>sessionCard(s,true)).join("")}
+  <section class="card"><div class="notice">A est désormais protégée comme séance de référence. On ajustera surtout B et C à partir de tes vraies séances, charges, reps et sensations.</div></section>
   <button class="secondary full" onclick="chooseSession(true,'${todayKey()}')">+ Ajouter une 2e séance aujourd’hui</button>`;
 }
 
@@ -791,7 +849,7 @@ async function clearCaches(){if("caches" in window){for(const k of await caches.
 let deferredPrompt=null;
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;document.getElementById("installBtn").classList.remove("hidden")});
 document.getElementById("installBtn").onclick=async()=>{if(deferredPrompt){deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;document.getElementById("installBtn").classList.add("hidden")}};
-if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=3.1.0").catch(()=>{}))}
+if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=3.1.1").catch(()=>{}))}
 
 function boot(){
   try{render()}catch(err){console.error(err);const v=document.getElementById("view");if(v){v.innerHTML=`<section class="card hero"><h2>Réparation nécessaire</h2><p>L’application a rencontré une donnée locale incompatible.</p><button class="primary full" id="repairBtn">Réparer sans supprimer l’historique</button><button class="ghost full" style="margin-top:8px" id="resetBtn">Réinitialiser l’application</button><p class="small" style="margin-top:10px">Erreur : ${esc(err?.message||String(err))}</p></section>`;document.getElementById("repairBtn").onclick=()=>{state=normalizeState(state);save();location.reload()};document.getElementById("resetBtn").onclick=()=>{if(confirm("Réinitialiser les données locales ?")){localStorage.removeItem(STORE);location.reload()}}}}
