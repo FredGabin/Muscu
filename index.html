@@ -8,9 +8,9 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <title>Coach 10K + Force</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=3.1.0" />
-  <link rel="icon" href="./icon-192.png?v=3.1.0" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=3.1.0" />
+  <link rel="manifest" href="./manifest.webmanifest?v=3.2.0" />
+  <link rel="icon" href="./icon-192.png?v=3.2.0" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=3.2.0" />
   <style>
 :root{
   --bg:#0b0d10;--panel:#14171c;--panel2:#1b1f25;--line:#2a3038;
@@ -52,7 +52,7 @@ h1{font-size:24px;margin:2px 0 0}h2{font-size:19px;margin:0 0 12px}h3{font-size:
 input,select,textarea{width:100%;background:#0e1115;border:1px solid #303741;color:var(--text);border-radius:12px;padding:11px}textarea{min-height:80px;resize:vertical}
 label{display:block;font-size:12px;font-weight:750;color:#c3cbd5;margin:10px 0 5px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .exercise{border-top:1px solid #293039;padding:13px 0}.exercise:first-child{border-top:0}.ex-head{display:flex;justify-content:space-between;gap:10px;align-items:start}.ex-title{font-weight:900}.previous{font-size:11px;color:#8e99a7;margin-top:2px}.suggestion{font-size:11px;color:#ffb66e;margin-top:3px}
-.set-grid{display:grid;grid-template-columns:32px 1fr 1fr 1fr 44px;gap:6px;align-items:center;margin-top:8px}.set-grid input{padding:9px 6px;text-align:center}.checkset{width:42px;height:42px;border:1px solid #39414b;background:#20252c;color:#fff;border-radius:11px}.checkset.done{background:#183724;color:#65df91;border-color:#245c39}
+.set-grid{display:grid;grid-template-columns:28px 58px 1fr 1fr 48px 40px;gap:5px;align-items:center;margin-top:8px}.set-grid input{padding:9px 5px;text-align:center}.refcell{min-height:38px;display:grid;place-items:center;text-align:center;padding:4px;border-radius:9px;background:#0f1216;border:1px solid #2a3139;color:#b9c3cf;font-size:10px;font-weight:800;line-height:1.15}.today-list{display:grid;gap:8px}.today-entry{display:grid;grid-template-columns:46px 1fr auto;gap:10px;align-items:center;padding:11px;border:1px solid #2b323a;background:#111419;border-radius:14px}.today-entry .code{width:46px;height:46px}.run-detail{padding:13px 0;border-top:1px solid #282e36}.run-detail:first-child{border-top:0}.run-block{margin-top:7px;padding:9px 10px;border-radius:10px;background:#101318;border:1px solid #282f37;font-size:12px;line-height:1.45}.record-row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid #282e36}.record-row:last-child{border-bottom:0}.record-weight{font-size:19px;font-weight:950}.level-line{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid #282e36}.level-line:last-child{border-bottom:0}.checkset{width:42px;height:42px;border:1px solid #39414b;background:#20252c;color:#fff;border-radius:11px}.checkset.done{background:#183724;color:#65df91;border-color:#245c39}
 .timerbar{position:sticky;top:70px;z-index:10;background:#172019;border:1px solid #27472f;border-radius:14px;padding:10px 12px;margin:8px 0;display:flex;align-items:center;justify-content:space-between}.timerbig{font-size:22px;font-weight:950;color:#72e99a}.elapsed{font-size:13px;font-weight:800;color:#d7dee7}
 dialog{width:min(720px,calc(100% - 18px));max-height:88vh;overflow:auto;border:1px solid #343b45;border-radius:20px;background:#111419;color:var(--text);padding:0;box-shadow:0 30px 80px rgba(0,0,0,.6)}dialog::backdrop{background:rgba(0,0,0,.72)}
 .dialog-inner{padding:17px}.dialog-head{position:sticky;top:0;background:#111419;z-index:4;display:flex;justify-content:space-between;align-items:center;padding:4px 0 10px}.close{width:38px;height:38px;border-radius:50%;border:1px solid #363e47;background:#20252b;color:#fff}
@@ -75,7 +75,7 @@ dialog{width:min(720px,calc(100% - 18px));max-height:88vh;overflow:auto;border:1
 .run-plan-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid #282e36}.run-plan-row:last-child{border-bottom:0}
 @media(max-width:620px){.week-grid{grid-template-columns:repeat(7,minmax(42px,1fr));overflow-x:auto}.week-day{min-width:42px;padding:6px}.week-day .dot{display:block;margin-bottom:3px}.year-grid{grid-template-columns:1fr 1fr}}
 
-@media(max-width:380px){.nav-btn small{font-size:8px}.bottom-nav{padding-left:0;padding-right:0}.day{min-height:66px;padding:5px}.dot{font-size:8px}.set-grid{grid-template-columns:28px 1fr 1fr 1fr 40px}}
+@media(max-width:380px){.nav-btn small{font-size:8px}.bottom-nav{padding-left:0;padding-right:0}.day{min-height:66px;padding:5px}.dot{font-size:8px}.set-grid{grid-template-columns:24px 48px 1fr 1fr 42px 36px}.refcell{font-size:9px;padding:3px}}
 @media(min-width:650px){.metric-grid{grid-template-columns:repeat(4,1fr)}.action-grid{grid-template-columns:repeat(3,1fr)}.day{min-height:92px}}
 
   </style>
@@ -84,7 +84,7 @@ dialog{width:min(720px,calc(100% - 18px));max-height:88vh;overflow:auto;border:1
   <div id="app">
     <header class="topbar">
       <div>
-        <div class="eyebrow">COACH ADAPTATIF · V3.1.1</div>
+        <div class="eyebrow">COACH ADAPTATIF · V3.2.0</div>
         <h1>10K + Force</h1>
       </div>
       <button id="installBtn" class="ghost hidden">Installer</button>
@@ -99,7 +99,7 @@ dialog{width:min(720px,calc(100% - 18px));max-height:88vh;overflow:auto;border:1
       <button data-tab="activity" class="nav-btn"><span>▦</span><small>Activité</small></button>
       <button data-tab="sessions" class="nav-btn"><span>≡</span><small>Muscu</small></button>
       <button data-tab="running" class="nav-btn"><span>⌁</span><small>Course</small></button>
-      <button data-tab="stats" class="nav-btn"><span>↗</span><small>Analyse</small></button>
+      <button data-tab="stats" class="nav-btn"><span>↗</span><small>Niveau</small></button>
       <button data-tab="settings" class="nav-btn"><span>⚙</span><small>Réglages</small></button>
     </nav>
   </div>
@@ -108,7 +108,7 @@ dialog{width:min(720px,calc(100% - 18px));max-height:88vh;overflow:auto;border:1
   <dialog id="quickDialog"><div id="quickDialogContent"></div></dialog>
 
   <script>
-const APP_VERSION = "3.1.1";
+const APP_VERSION = "3.2.0";
 const STORE = "coach10k_force_v2"; // même clé pour conserver les données v2
 const LIBRARY_VERSION = 5;
 
@@ -294,7 +294,13 @@ function secToPace(sec){if(!isFinite(sec)||sec<=0)return "—";const m=Math.floo
 function paceToSec(txt){if(!txt)return null;const m=String(txt).match(/(\d+)\s*[:']\s*(\d+)/);return m?(+m[1]*60 + +m[2]):null}
 function sessionBy(code){return state.sessions.find(s=>s.code===code)}
 function isRunCode(code){const ss=sessionBy(code);return ss?.type==="run"||String(code).startsWith("R")}
-function displayCode(code){return code==="REST"?"—":(String(code).startsWith("R")||sessionBy(code)?.type==="run")?"D":code}
+function displayCode(code){
+  if(code==="REST")return "—";
+  const txt=String(code||"");
+  const m=txt.match(/^R(\d+)$/i);if(m)return `D${m[1]}`;
+  const d=txt.match(/^D(\d+)$/i);if(d)return `D${d[1]}`;
+  return sessionBy(code)?.type==="run"?"D":code;
+}
 function displayType(code){const s=sessionBy(code);return s?.type==="run"?"COURSE":"MUSCU"}
 function runVariantLabel(code){const s=sessionBy(code);return s?.type==="run"?s.title:"Course"}
 function daysAgo(iso){return (Date.now()-new Date(iso).getTime())/86400000}
@@ -568,11 +574,27 @@ function aReferenceCard(){
   const a=sessionBy("A"),last=state.history.filter(h=>h.code==="A").sort((x,y)=>new Date(y.date)-new Date(x.date))[0];
   return `<section class="card"><div class="row between"><div><div class="small">RÉFÉRENCE A</div><h3 style="margin:4px 0 0">${esc(a?.title||"Séance A")}</h3></div>${last?`<span class="badge good">${esc(fmtDate(historyDateKey(last)))}</span>`:`<span class="badge">aucune</span>`}</div>${last?strengthHistorySummary(last):`<p class="small">Aucune A enregistrée pour l’instant.</p>`}<button class="ghost full" style="margin-top:10px" onclick="openSession('A','${todayKey()}',null)">Ouvrir A avec les dernières références</button></section>`;
 }
+function strengthTodayRows(k=todayKey()){
+  const plans=plansOn(k).filter(p=>!isRunCode(p.code)&&p.code!=="REST"&&p.status!=="skipped");
+  const linked=new Set(plans.map(p=>p.historyId).filter(Boolean));
+  const rows=plans.map(p=>{
+    const done=p.status==="done";return `<div class="today-entry"><div class="code">${esc(p.code)}</div><div><strong>${esc(sessionBy(p.code)?.title||p.code)}</strong><div class="small">${done?"Effectuée":"Prévue"}</div></div>${done?`<span class="badge good">✓</span>`:`<button class="mini good" onclick="openSession('${p.code}','${k}','${p.id}')">Démarrer</button>`}</div>`;
+  });
+  historyOn(k).filter(h=>h.type==="strength"&&!linked.has(h.id)).forEach(h=>rows.push(`<div class="today-entry"><div class="code">${esc(h.code)}</div><div><strong>${esc(sessionBy(h.code)?.title||h.code)}</strong><div class="small">Effectuée · ${h.duration||"—"} min</div></div><span class="badge good">✓</span></div>`));
+  return rows.join("")||`<div class="notice">Aucune séance de musculation aujourd’hui.</div>`;
+}
 function renderSessions(){
+  const k=todayKey();
+  view.innerHTML=`<div class="section-title"><div><div class="small">${esc(fmtLongDate(k))}</div><h2>Musculation</h2></div><span class="badge accent">A · B · C</span></div>
+  <section class="card"><div class="row between"><div><h3 style="margin:0">Aujourd’hui</h3><div class="small">Autant de séances muscu que tu veux dans la journée.</div></div></div><div class="today-list" style="margin-top:12px">${strengthTodayRows(k)}</div><button class="primary full" style="margin-top:12px" onclick="chooseStrengthSession('${k}')">+ Ajouter une séance</button></section>
+  <section class="card"><div class="notice">Dans chaque exercice, la colonne <strong>Réf</strong> reprend le poids et les reps de la séance précédente du même type. Pour un gainage, la durée est saisie en minutes.</div></section>`;
+}
+function chooseStrengthSession(k=todayKey()){
   const strength=state.sessions.filter(s=>s.type==="strength");
-  view.innerHTML=`<div class="section-title"><h2>Musculation</h2><span class="small">simple · efficace · A/B/C</span></div>${aReferenceCard()}${strength.map(s=>sessionCard(s,true)).join("")}
-  <section class="card"><div class="notice">A est désormais protégée comme séance de référence. On ajustera surtout B et C à partir de tes vraies séances, charges, reps et sensations.</div></section>
-  <button class="secondary full" onclick="chooseSession(true,'${todayKey()}')">+ Ajouter une 2e séance aujourd’hui</button>`;
+  document.getElementById("quickDialogContent").innerHTML=`<div class="dialog-inner"><div class="dialog-head"><div><div class="small">AJOUTER UNE SÉANCE MUSCU</div><h2 style="margin:0">${esc(fmtDate(k))}</h2></div><button class="close" onclick="quickDialog.close()">×</button></div>${strength.map(s=>`<div class="card session-card clickable" onclick="addStrengthAndOpen('${k}','${s.code}')"><div class="code">${s.code}</div><div><strong>${esc(s.title)}</strong><p>${esc(s.goal)}</p></div><div class="chev">›</div></div>`).join("")}</div>`;quickDialog.showModal();
+}
+function addStrengthAndOpen(k,code){
+  const p=makePlan(code,{note:"Ajoutée depuis l’onglet Muscu"});state.planned[k]=state.planned[k]||[];state.planned[k].push(p);save();quickDialog.close();openSession(code,k,p.id);
 }
 
 function setActivityMode(mode){activityMode=mode;render()}
@@ -588,14 +610,14 @@ function activityCodesOn(k){
   historyOn(k).forEach(h=>{const dc=displayCode(h.code);if(!items.some(x=>x.done&&x.code===dc))items.push({code:dc,type:h.type,done:true})});
   return items;
 }
-function activityLegend(){return `<div class="row wrap"><span class="badge accent">A/B/C = muscu</span><span class="badge blue">D = course</span><span class="badge good">contour = fait</span></div>`}
+function activityLegend(){return `<div class="row wrap"><span class="badge accent">A/B/C = muscu</span><span class="badge blue">D1/D2/… = course</span><span class="badge good">contour = fait</span></div>`}
 function activityHistorySummary(){
   const hs=[...state.history].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,10);
   return `<div class="section-title"><h2>Dernières activités</h2><span class="small">détail conservé dans les stats</span></div><section class="card">${hs.length?hs.map(h=>`<div class="kpi"><div><strong>${esc(fmtDate(historyDateKey(h)))} · ${esc(displayCode(h.code))}</strong><div class="small">${h.type==="run"?esc(runVariantLabel(h.code)):esc(sessionBy(h.code)?.title||"")}${h.duration?` · ${h.duration} min`:""}</div></div><span class="badge good">✓</span></div>`).join(""):`<p class="muted">Aucune activité enregistrée.</p>`}</section>`;
 }
 function renderActivityMonth(){
   const first=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth(),1,12),gridStart=startOfWeek(first),days=Array.from({length:42},(_,i)=>addDays(gridStart,i));
-  view.innerHTML=`<div class="section-title"><div><h2>Activité</h2><div class="small">Planning lisible : A · B · C · D</div></div><span class="badge">mois</span></div>${activitySegments()}<section class="card"><div class="calendar-head"><button class="ghost" onclick="moveMonth(-1)">‹</button><div class="calendar-title">${esc(monthTitle(first))}</div><div class="row"><button class="ghost" onclick="goTodayCalendar()">Aujourd’hui</button><button class="ghost" onclick="moveMonth(1)">›</button></div></div>${activityLegend()}<div class="calendar-weekdays" style="margin-top:10px"><div>Lun</div><div>Mar</div><div>Mer</div><div>Jeu</div><div>Ven</div><div>Sam</div><div>Dim</div></div><div class="calendar-grid">${days.map(d=>calendarDay(d,first.getMonth())).join("")}</div></section>${renderDayDetail(selectedDate)}${activityHistorySummary()}`;
+  view.innerHTML=`<div class="section-title"><div><h2>Activité</h2><div class="small">Planning lisible : A · B · C · Dx</div></div><span class="badge">mois</span></div>${activitySegments()}<section class="card"><div class="calendar-head"><button class="ghost" onclick="moveMonth(-1)">‹</button><div class="calendar-title">${esc(monthTitle(first))}</div><div class="row"><button class="ghost" onclick="goTodayCalendar()">Aujourd’hui</button><button class="ghost" onclick="moveMonth(1)">›</button></div></div>${activityLegend()}<div class="calendar-weekdays" style="margin-top:10px"><div>Lun</div><div>Mar</div><div>Mer</div><div>Jeu</div><div>Ven</div><div>Sam</div><div>Dim</div></div><div class="calendar-grid">${days.map(d=>calendarDay(d,first.getMonth())).join("")}</div></section>${renderDayDetail(selectedDate)}${activityHistorySummary()}`;
 }
 function renderActivityWeek(){
   const base=startOfWeek(parseDateKey(selectedDate)),days=Array.from({length:7},(_,i)=>addDays(base,i));
@@ -606,11 +628,11 @@ function moveActivityWeek(n){selectedDate=dateKey(addDays(startOfWeek(parseDateK
 function renderActivityYear(){
   const y=calendarCursor.getFullYear();
   const cards=Array.from({length:12},(_,m)=>yearMonthCard(y,m)).join("");
-  view.innerHTML=`<div class="section-title"><div><h2>Activité</h2><div class="small">Vue annuelle A/B/C/D</div></div><span class="badge">${y}</span></div>${activitySegments()}<section class="card"><div class="calendar-head"><button class="ghost" onclick="moveActivityYear(-1)">‹</button><div class="calendar-title">${y}</div><button class="ghost" onclick="moveActivityYear(1)">›</button></div>${activityLegend()}<div class="year-grid" style="margin-top:12px">${cards}</div></section>${activityHistorySummary()}`;
+  view.innerHTML=`<div class="section-title"><div><h2>Activité</h2><div class="small">Vue annuelle A/B/C/Dx</div></div><span class="badge">${y}</span></div>${activitySegments()}<section class="card"><div class="calendar-head"><button class="ghost" onclick="moveActivityYear(-1)">‹</button><div class="calendar-title">${y}</div><button class="ghost" onclick="moveActivityYear(1)">›</button></div>${activityLegend()}<div class="year-grid" style="margin-top:12px">${cards}</div></section>${activityHistorySummary()}`;
 }
 function yearMonthCard(y,m){
   const start=new Date(y,m,1,12),end=new Date(y,m+1,0,12),counts={A:0,B:0,C:0,D:0},done={A:0,B:0,C:0,D:0};
-  for(let d=new Date(start);d<=end;d=addDays(d,1)){activityCodesOn(dateKey(d)).forEach(x=>{counts[x.code]=(counts[x.code]||0)+1;if(x.done)done[x.code]=(done[x.code]||0)+1})}
+  for(let d=new Date(start);d<=end;d=addDays(d,1)){activityCodesOn(dateKey(d)).forEach(x=>{const key=x.type==="run"?"D":x.code;if(counts[key]===undefined)return;counts[key]++;if(x.done)done[key]++})}
   return `<button class="year-card" onclick="openActivityMonth(${y},${m})"><strong>${start.toLocaleDateString('fr-FR',{month:'short'})}</strong><div class="year-counts"><span>A ${done.A}/${counts.A}</span><span>B ${done.B}/${counts.B}</span><span>C ${done.C}/${counts.C}</span><span class="runtext">D ${done.D}/${counts.D}</span></div></button>`;
 }
 function moveActivityYear(n){calendarCursor=new Date(calendarCursor.getFullYear()+n,calendarCursor.getMonth(),1,12);render()}
@@ -635,8 +657,10 @@ function historyCompact(h){return `<div class="history-item"><div class="row bet
 function moveMonth(n){calendarCursor=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth()+n,1,12);render()}
 function goTodayCalendar(){calendarCursor=new Date(new Date().getFullYear(),new Date().getMonth(),1,12);selectedDate=todayKey();render()}
 function selectCalendarDay(k){selectedDate=k;calendarCursor=new Date(parseDateKey(k).getFullYear(),parseDateKey(k).getMonth(),1,12);render()}
+function hasRunOn(k,excludePlanId=null){return plansOn(k).some(p=>p.id!==excludePlanId&&isRunCode(p.code)&&p.status!=="skipped")||historyOn(k).some(h=>h.type==="run")}
 function addPlanForDate(k,code){
   state.planned[k]=state.planned[k]||[];
+  if(isRunCode(code)&&hasRunOn(k)){alert("Une course est déjà prévue ou effectuée ce jour. Maximum : 1 séance course par jour.");return;}
   if(code==="REST")state.planned[k].push(makePlan("REST",{title:"Repos / marche"}));else state.planned[k].push(makePlan(code));
   save();quickDialog.close();selectedDate=k;activeTab="activity";render();
 }
@@ -647,6 +671,7 @@ function movePlanDialog(k,id){
 }
 function confirmMovePlan(oldK,id){
   const newK=document.getElementById("moveDate").value;if(!newK)return;const p=planById(oldK,id);if(!p)return;
+  if(isRunCode(p.code)&&newK!==oldK&&hasRunOn(newK)){alert("Une course existe déjà à cette date. Maximum : 1 séance course par jour.");return;}
   state.planned[oldK]=(state.planned[oldK]||[]).filter(x=>x.id!==id);if(!state.planned[oldK].length)delete state.planned[oldK];
   state.planned[newK]=state.planned[newK]||[];state.planned[newK].push(p);save();quickDialog.close();selectedDate=newK;calendarCursor=new Date(parseDateKey(newK).getFullYear(),parseDateKey(newK).getMonth(),1,12);render();
 }
@@ -685,32 +710,51 @@ function runningCoachAdvice(){
   const sess=sessionBy(code);return {code,session:sess,why,fun,next,knee};
 }
 function runCalendarDay(d,currentMonth){
-  const k=dateKey(d),runs=[];plansOn(k).filter(p=>isRunCode(p.code)&&p.status!=="skipped").forEach(p=>runs.push({done:p.status==="done"}));historyOn(k).filter(h=>h.type==="run").forEach(()=>runs.push({done:true}));
+  const k=dateKey(d),plans=plansOn(k).filter(p=>isRunCode(p.code)&&p.status!=="skipped"),hist=historyOn(k).filter(h=>h.type==="run");
+  const code=hist[0]?.code||plans[0]?.code;const done=hist.length>0||plans.some(p=>p.status==="done");
   const cls=["day",d.getMonth()!==currentMonth?"other":"",k===todayKey()?"today":""].filter(Boolean).join(" ");
-  return `<div class="${cls}" onclick="selectedDate='${k}';calendarCursor=new Date(${d.getFullYear()},${d.getMonth()},1,12);activeTab='activity';activityMode='month';render()"><div class="daynum">${d.getDate()}</div>${runs.length?`<div class="daydots"><span class="dot run ${runs.some(x=>x.done)?"done":""}">D</span></div>`:""}</div>`;
+  return `<div class="${cls}" onclick="selectedDate='${k}';calendarCursor=new Date(${d.getFullYear()},${d.getMonth()},1,12);activeTab='activity';activityMode='month';render()"><div class="daynum">${d.getDate()}</div>${code?`<div class="daydots"><span class="dot run ${done?"done":""}">${esc(displayCode(code))}</span></div>`:""}</div>`;
 }
 function runFollowupList(){
   const hs=state.history.filter(h=>h.type==="run").sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,6);
   if(!hs.length)return `<p class="muted">Après ta première D, le suivi genou apparaîtra ici.</p>`;
   return hs.map(h=>{const k=h.run?.knee||{};const pending=k.oneHour==null||k.nextMorning==null||k.after48h==null;return `<div class="kpi"><div><strong>${esc(fmtDate(historyDateKey(h)))} · ${esc(runVariantLabel(h.code))}</strong><div class="small">départ ${k.start??"—"} · 1 h ${k.oneHour??"—"} · J+1 ${k.nextMorning??"—"} · 48 h ${k.after48h??"—"}</div></div><button class="mini ${pending?"":"good"}" onclick="editKnee('${h.id}')">${pending?"Compléter":"Modifier"}</button></div>`}).join("");
 }
-function renderRunning(){
-  const first=new Date(runCursor.getFullYear(),runCursor.getMonth(),1,12),gridStart=startOfWeek(first),days=Array.from({length:42},(_,i)=>addDays(gridStart,i)),monthRuns=plannedRunsInMonth(first),ad=runningCoachAdvice(),s=ad.session,next=ad.next;
-  view.innerHTML=`<div class="section-title"><div><h2>Course · D</h2><div class="small">objectif 10 km &lt; 50 min · variété + efficacité</div></div><span class="badge blue">coach</span></div>
-  <section class="card hero"><div class="row between"><span class="badge blue">PROCHAINE D CONSEILLÉE</span>${kneeBadge()}</div><div class="big" style="margin-top:10px">${esc(s.title)}</div><p class="muted">${esc(ad.why)}</p><div class="card soft"><strong>Version ludique</strong><p class="small">${esc(ad.fun)}</p></div><div class="notice ${ad.knee.level}">${esc(ad.knee.text)}</div><div class="action-grid"><button class="primary" onclick="planCoachRun()">Adapter la prochaine D</button><button class="secondary" onclick="openSession('${s.code}','${todayKey()}',null)">Faire cette D aujourd’hui</button></div>${next?`<div class="small" style="margin-top:10px">Actuellement prévu : ${esc(fmtDate(next.date))} · ${esc(runVariantLabel(next.plan.code))}</div>`:""}</section>
-  <section class="card"><div class="calendar-head"><button class="ghost" onclick="moveRunMonth(-1)">‹</button><div class="calendar-title">${esc(monthTitle(first))}</div><button class="ghost" onclick="moveRunMonth(1)">›</button></div><div class="calendar-weekdays"><div>Lun</div><div>Mar</div><div>Mer</div><div>Jeu</div><div>Ven</div><div>Sam</div><div>Dim</div></div><div class="calendar-grid">${days.map(d=>runCalendarDay(d,first.getMonth())).join("")}</div></section>
-  <div class="section-title"><h2>Planning D du mois</h2><span class="badge">${monthRuns.length} prévue(s)</span></div><section class="card">${monthRuns.length?monthRuns.map(x=>runPlanRow(x.date,x.plan)).join(""):`<p class="muted">Aucune course planifiée ce mois-ci.</p>`}</section>
-  <div class="section-title"><h2>Suivi genoux après D</h2><span class="small">1 h · J+1 · 48 h</span></div><section class="card">${runFollowupList()}</section>
-  <div class="section-title"><h2>Variantes</h2><span class="small">pour ne pas courir toujours pareil</span></div>${state.sessions.filter(x=>x.type==="run").map(x=>`<div class="card session-card clickable" onclick="openSession('${x.code}','${todayKey()}',null)"><div class="code run">D</div><div><strong>${esc(x.title)}</strong><p>${esc(x.goal)} · ≈ ${x.duration} min</p></div><div class="chev">›</div></div>`).join("")}`;
+function todayRunRow(k=todayKey()){
+  const p=plansOn(k).find(x=>isRunCode(x.code)&&x.status!=="skipped");
+  const h=historyOn(k).find(x=>x.type==="run");
+  if(h)return `<div class="today-entry"><div class="code run">${esc(displayCode(h.code))}</div><div><strong>${esc(runVariantLabel(h.code))}</strong><div class="small">Effectuée · ${h.duration||"—"} min</div></div><span class="badge good">✓</span></div>`;
+  if(p)return `<div class="today-entry"><div class="code run">${esc(displayCode(p.code))}</div><div><strong>${esc(runVariantLabel(p.code))}</strong><div class="small">Prévue${p.runMain?` · ${esc(p.runMain)}`:""}</div></div>${p.status==="done"?`<span class="badge good">✓</span>`:`<button class="mini good" onclick="openSession('${p.code}','${k}','${p.id}')">Démarrer</button>`}</div>`;
+  return `<div class="notice">Aucune course aujourd’hui. Maximum : 1 D par jour.</div>`;
 }
-function runPlanRow(k,p){const s=sessionBy(p.code);return `<div class="run-plan-row"><div><div class="small">${esc(fmtDate(k))}</div><strong>D · ${esc(s?.title||planTitle(p))}</strong><div class="small">${esc(p.runMain||s?.run?.main||"")}</div>${p.note?`<div class="tiny">${esc(p.note)}</div>`:""}</div><div class="plan-actions">${p.status==="done"?`<span class="badge good">✓</span>`:`<button class="mini" onclick="movePlanDialog('${k}','${p.id}')">Déplacer</button>`}</div></div>`}
+function chooseRunSession(k=todayKey()){
+  if(hasRunOn(k)){alert("Une course est déjà prévue ou effectuée aujourd’hui. Maximum : 1 séance course par jour.");return;}
+  const runs=state.sessions.filter(s=>s.type==="run");
+  document.getElementById("quickDialogContent").innerHTML=`<div class="dialog-inner"><div class="dialog-head"><div><div class="small">CHOISIR UNE SÉANCE COURSE</div><h2 style="margin:0">${esc(fmtDate(k))}</h2></div><button class="close" onclick="quickDialog.close()">×</button></div>${runs.map(s=>`<div class="card session-card clickable" onclick="addRunAndOpen('${k}','${s.code}')"><div class="code run">${esc(displayCode(s.code))}</div><div><strong>${esc(s.title)}</strong><p>${esc(s.goal)} · ≈ ${s.duration} min</p></div><div class="chev">›</div></div>`).join("")}</div>`;quickDialog.showModal();
+}
+function addRunAndOpen(k,code){
+  if(hasRunOn(k)){alert("Une course est déjà prévue ou effectuée ce jour. Maximum : 1 séance course par jour.");return;}
+  const p=makePlan(code,{note:"Ajoutée depuis l’onglet Course"});state.planned[k]=state.planned[k]||[];state.planned[k].push(p);save();quickDialog.close();openSession(code,k,p.id);
+}
+function runLibraryDetails(){
+  return state.sessions.filter(s=>s.type==="run").map(s=>{const r=s.run||{};return `<div class="run-detail"><div class="row between"><div><span class="badge blue">${esc(displayCode(s.code))}</span><h3 style="margin:7px 0 0">${esc(s.title)}</h3></div><span class="small">≈ ${s.duration} min</span></div><div class="small" style="margin-top:5px">${esc(s.goal)}</div><div class="run-block">${r.warmup?`<strong>Échauffement :</strong> ${r.warmup} min<br>`:""}<strong>Bloc :</strong> ${esc(r.main||"")}${r.recovery?`<br><strong>Récupération :</strong> ${esc(r.recovery)}`:""}${r.cooldown?`<br><strong>Retour au calme :</strong> ${esc(r.cooldown)}`:""}</div><div class="tiny" style="margin-top:6px">${esc(s.note||"")}</div></div>`}).join("");
+}
+function renderRunning(){
+  const k=todayKey(),first=new Date(runCursor.getFullYear(),runCursor.getMonth(),1,12),gridStart=startOfWeek(first),days=Array.from({length:42},(_,i)=>addDays(gridStart,i)),monthRuns=plannedRunsInMonth(first),ad=runningCoachAdvice(),s=ad.session,next=ad.next;
+  view.innerHTML=`<div class="section-title"><div><div class="small">${esc(fmtLongDate(k))}</div><h2>Course · Dx</h2></div><span class="badge blue">objectif 10 km</span></div>
+  <section class="card"><h3>Aujourd’hui</h3><div class="today-list" style="margin-top:10px">${todayRunRow(k)}</div><button class="primary full" style="margin-top:12px" onclick="chooseRunSession('${k}')" ${hasRunOn(k)?"disabled":""}>+ Ajouter une course</button></section>
+  <section class="card hero"><div class="row between"><span class="badge blue">CONSEIL COACH · ${esc(displayCode(ad.code))}</span>${kneeBadge()}</div><div class="big" style="margin-top:10px">${esc(s.title)}</div><p class="muted">${esc(ad.why)}</p><div class="card soft"><strong>Version ludique</strong><p class="small">${esc(ad.fun)}</p></div><div class="notice ${ad.knee.level}">${esc(ad.knee.text)}</div>${next?`<div class="small" style="margin-top:10px">Prochaine prévue : ${esc(fmtDate(next.date))} · ${esc(displayCode(next.plan.code))} · ${esc(runVariantLabel(next.plan.code))}</div>`:""}<button class="secondary full" style="margin-top:10px" onclick="planCoachRun()">Adapter la prochaine course du programme</button></section>
+  <div class="section-title"><h2>Programme mensuel</h2><span class="badge">${monthRuns.length} D</span></div><section class="card"><div class="calendar-head"><button class="ghost" onclick="moveRunMonth(-1)">‹</button><div class="calendar-title">${esc(monthTitle(first))}</div><button class="ghost" onclick="moveRunMonth(1)">›</button></div><div class="calendar-weekdays"><div>Lun</div><div>Mar</div><div>Mer</div><div>Jeu</div><div>Ven</div><div>Sam</div><div>Dim</div></div><div class="calendar-grid">${days.map(d=>runCalendarDay(d,first.getMonth())).join("")}</div>${monthRuns.length?`<div style="margin-top:12px">${monthRuns.map(x=>runPlanRow(x.date,x.plan)).join("")}</div>`:`<p class="muted">Aucune course planifiée ce mois-ci.</p>`}</section>
+  <div class="section-title"><h2>Détail des séances Dx</h2><span class="small">plusieurs options pour varier</span></div><section class="card">${runLibraryDetails()}</section>
+  <div class="section-title"><h2>Suivi genoux après D</h2><span class="small">1 h · J+1 · 48 h</span></div><section class="card">${runFollowupList()}</section>`;
+}
+function runPlanRow(k,p){const s=sessionBy(p.code);return `<div class="run-plan-row"><div><div class="small">${esc(fmtDate(k))}</div><strong>${esc(displayCode(p.code))} · ${esc(s?.title||planTitle(p))}</strong><div class="small">${esc(p.runMain||s?.run?.main||"")}</div>${p.note?`<div class="tiny">${esc(p.note)}</div>`:""}</div><div class="plan-actions">${p.status==="done"?`<span class="badge good">✓</span>`:`<button class="mini" onclick="movePlanDialog('${k}','${p.id}')">Déplacer</button>`}</div></div>`}
 function moveRunMonth(n){runCursor=new Date(runCursor.getFullYear(),runCursor.getMonth()+n,1,12);render()}
 function planCoachRun(){
   const ad=runningCoachAdvice(),next=ad.next;
   if(next){next.plan.code=ad.code;next.plan.plannedDuration=ad.session.duration;next.plan.runMain=ad.session.run?.main||"";next.plan.note=`Adapté par le coach : ${ad.why}`;save();runCursor=new Date(parseDateKey(next.date).getFullYear(),parseDateKey(next.date).getMonth(),1,12);render();return}
-  const start=parseDateKey(todayKey());let target=null;for(let i=0;i<7;i++){const k=dateKey(addDays(start,i));if(!plansOn(k).some(p=>isRunCode(p.code))){target=k;break}}target=target||todayKey();state.planned[target]=state.planned[target]||[];state.planned[target].push(makePlan(ad.code,{plannedDuration:ad.session.duration,runMain:ad.session.run?.main||"",note:`Conseil coach : ${ad.why}`}));save();runCursor=new Date(parseDateKey(target).getFullYear(),parseDateKey(target).getMonth(),1,12);render();
+  const start=parseDateKey(todayKey());let target=null;for(let i=0;i<7;i++){const k=dateKey(addDays(start,i));if(!hasRunOn(k)){target=k;break}}target=target||dateKey(addDays(start,7));state.planned[target]=state.planned[target]||[];state.planned[target].push(makePlan(ad.code,{plannedDuration:ad.session.duration,runMain:ad.session.run?.main||"",note:`Conseil coach : ${ad.why}`}));save();runCursor=new Date(parseDateKey(target).getFullYear(),parseDateKey(target).getMonth(),1,12);render();
 }
-
 function renderHistory(){
   const hs=[...state.history].sort((a,b)=>new Date(b.date)-new Date(a.date));
   view.innerHTML=`<div class="section-title"><h2>Historique</h2><span class="badge">${hs.length} séance(s)</span></div><section class="card">${hs.length?hs.map(h=>historyItem(h)).join(""):`<p class="muted">Aucune séance enregistrée pour l’instant.</p>`}</section>`;
@@ -726,38 +770,30 @@ function editKnee(id){
 function nullableNumber(id){const v=document.getElementById(id).value;return v===""?null:+v}
 function saveKnee(id){const h=state.history.find(x=>x.id===id);if(!h?.run)return;h.run.knee={start:nullableNumber("kStart"),after2k:nullableNumber("k2"),oneHour:nullableNumber("k1h"),nextMorning:nullableNumber("kNext"),after48h:nullableNumber("k48")};save();quickDialog.close();render()}
 
-function plannedCompletion(days=28){
-  const end=parseDateKey(todayKey()),start=addDays(end,-days+1);let planned=0,done=0;
-  Object.keys(state.planned).forEach(k=>{const d=parseDateKey(k);if(d>=start&&d<=end)plansOn(k).forEach(p=>{if(p.code!=="REST"&&p.status!=="skipped"){planned++;if(p.status==="done"||historyOn(k).some(h=>h.code===p.code))done++}})});
-  return {planned,done,pct:planned?Math.round(done/planned*100):0};
-}
-function squatSnapshot(){
-  const hs=state.history.filter(h=>h.type==="strength"&&h.strength?.["Squat au banc"]).sort((a,b)=>new Date(b.date)-new Date(a.date));
-  if(!hs.length)return null;const sets=hs[0].strength["Squat au banc"].filter(s=>s.done);if(!sets.length)return null;return {date:historyDateKey(hs[0]),sets,text:sets.map(s=>`${s.kg||0}kg×${s.reps||0}${s.rir!==undefined&&s.rir!==""?` RIR${s.rir}`:""}`).join(" · ")};
-}
-function correlationKneeAfterC(){
-  const runs=state.history.filter(h=>h.run?.knee?.oneHour!=null);
-  const afterC=[],without=[];
-  runs.forEach(r=>{
-    const rt=new Date(r.date).getTime();
-    const cRecent=state.history.some(h=>h.code==="C"&&new Date(h.date).getTime()<rt&&(rt-new Date(h.date).getTime())<=48*3600000);
-    (cRecent?afterC:without).push(num(r.run.knee.oneHour));
+function strengthRecords(){
+  const map=new Map();
+  state.history.filter(h=>h.type==="strength"&&h.strength).forEach(h=>{
+    Object.entries(h.strength).forEach(([name,sets])=>{
+      (Array.isArray(sets)?sets:[]).filter(x=>x&&x.done&&num(x.kg)>0).forEach(x=>{
+        const cur=map.get(name);if(!cur||num(x.kg)>cur.kg)map.set(name,{name,kg:num(x.kg),date:historyDateKey(h),code:h.code});
+      });
+    });
   });
-  if(afterC.length>=2&&without.length>=2){const a=avg(afterC),b=avg(without);const diff=a-b;return {ready:true,text:`Douleur à 1 h : ${a.toFixed(1)}/10 quand une C précède de <48 h, contre ${b.toFixed(1)}/10 sinon (${diff>=0?"+":""}${diff.toFixed(1)}).`};}
-  return {ready:false,text:"Il faut au moins 2 sorties avec suivi genou dans chaque situation (avec/sans C dans les 48 h) pour calculer cette corrélation."};
+  const order=[];state.sessions.filter(s=>s.type==="strength").forEach(s=>s.exercises.forEach(e=>{if(!order.includes(e.name))order.push(e.name)}));
+  const extra=[...map.keys()].filter(n=>!order.includes(n));
+  return [...order,...extra].map(name=>map.get(name)||{name,kg:null,date:null,code:null});
+}
+function currentLevelSnapshot(){
+  const recent28=state.history.filter(h=>daysAgo(h.date)<=28),muscu=recent28.filter(h=>h.type==="strength").length,runs=recent28.filter(h=>h.type==="run").length;
+  const weightedSets=recent28.filter(h=>h.type==="strength").reduce((n,h)=>n+Object.values(h.strength||{}).reduce((m,sets)=>m+(Array.isArray(sets)?sets.filter(x=>x?.done&&num(x.kg)>0).length:0),0),0);
+  let label="Reprise";if(muscu>=8&&weightedSets>=24)label="Rythme installé";else if(muscu>=4&&weightedSets>=10)label="En progression";
+  return {label,muscu,runs,weightedSets,knee:kneeStatus()};
 }
 function renderStats(){
-  const weak=weaknessModel(),runs=state.history.filter(h=>h.run),strengths=state.history.filter(h=>h.type==="strength"),comp=plannedCompletion(28),squat=squatSnapshot(),corr=correlationKneeAfterC(),knee=kneeStatus();
-  const avgRpe=state.history.length?(state.history.reduce((a,h)=>a+num(h.rpe),0)/state.history.length).toFixed(1):"—";
-  const lastSpecific=lastOf("R6")||lastOf("R4");
-  view.innerHTML=`<div class="section-title"><h2>Analyse coach</h2><span class="badge accent">v${APP_VERSION}</span></div>
-    <section class="card hero"><div class="row between"><div><h3>État actuel</h3><div class="big">${esc(knee.label)}</div></div>${kneeBadge()}</div><p class="muted">${esc(knee.text)}</p></section>
-    <div class="metric-grid"><div class="metric"><div class="v">${comp.pct}%</div><div class="l">Planning réalisé · 28 j</div></div><div class="metric"><div class="v">${runs.length}</div><div class="l">Running enregistrés</div></div><div class="metric"><div class="v">${strengths.length}</div><div class="l">Musculation</div></div><div class="metric"><div class="v">${avgRpe}</div><div class="l">RPE moyen</div></div></div>
-    <section class="card"><h3>Objectif 10 km</h3><div class="kpi"><span>Allure cible</span><strong>5:00/km</strong></div><div class="kpi"><span>Dernière séance spécifique</span><strong>${lastSpecific?.run?.paceSec?secToPace(lastSpecific.run.paceSec):"À mesurer"}</strong></div><div class="kpi"><span>Temps cible</span><strong>&lt; 50:00</strong></div></section>
-    <section class="card"><h3>Progression jambes</h3>${squat?`<div class="kpi"><div><strong>Squat au banc</strong><div class="small">${esc(fmtDate(squat.date))}</div></div><strong>${esc(squat.text)}</strong></div>`:`<p class="muted">Pas encore de squat au banc enregistré.</p>`}</section>
-    <section class="card"><h3>Corrélation muscu ↔ genoux</h3><p class="small">${esc(corr.text)}</p></section>
-    <section class="card"><h3>Hiérarchie des besoins</h3>${weak.map((w,i)=>`<div class="rank"><span class="ranknum">${i+1}</span><div><strong>${esc(w.label)}</strong><div class="small">${esc(w.detail)}</div></div><span>${Math.round(w.need)}%</span></div>`).join("")}</section>
-    <button class="ghost full" onclick="activeTab='history';render()">Voir l’historique détaillé</button>`;
+  const records=strengthRecords(),lvl=currentLevelSnapshot();
+  view.innerHTML=`<div class="section-title"><div><h2>Records & niveau</h2><div class="small">synthèse simple de tes données</div></div><span class="badge accent">v${APP_VERSION}</span></div>
+  <section class="card hero"><div class="row between"><div><div class="small">NIVEAU ACTUEL</div><div class="big">${esc(lvl.label)}</div></div>${kneeBadge()}</div><div class="level-line"><span>Muscu sur 28 jours</span><strong>${lvl.muscu} séance(s)</strong></div><div class="level-line"><span>Course sur 28 jours</span><strong>${lvl.runs} séance(s)</strong></div><div class="level-line"><span>Séries chargées enregistrées</span><strong>${lvl.weightedSets}</strong></div><div class="level-line"><span>Tolérance genoux</span><strong>${esc(lvl.knee.label)}</strong></div><p class="small" style="margin-bottom:0">Ce niveau décrit ta régularité actuelle dans l’app, pas un classement par rapport à d’autres sportifs.</p></section>
+  <div class="section-title"><h2>Records musculation</h2><span class="small">poids maximal enregistré · reps non classées</span></div><section class="card">${records.map(r=>`<div class="record-row"><div><strong>${esc(r.name)}</strong><div class="small">${r.date?`${esc(r.code)} · ${esc(fmtDate(r.date))}`:"Aucun poids enregistré"}</div></div><div class="record-weight">${r.kg!=null?`${r.kg} kg`:"—"}</div></div>`).join("")}</section>`;
 }
 
 function renderSettings(){
@@ -766,7 +802,7 @@ function renderSettings(){
     <section class="card"><h3>État du jour</h3><div class="form-grid"><div><label>Récupération 1–5</label><input id="setReadiness" type="number" min="1" max="5" value="${s.readiness}"></div><div><label>Fatigue jambes 1–5</label><input id="setLegs" type="number" min="1" max="5" value="${s.legs}"></div><div><label>Douleur genoux 0–10</label><input id="setKnee" type="number" min="0" max="10" step=".5" value="${s.kneeToday||0}"></div><div><label>Temps disponible</label><select id="setAvailable"><option ${s.availableMin==30?"selected":""}>30</option><option ${s.availableMin==45?"selected":""}>45</option><option ${s.availableMin==60?"selected":""}>60</option></select></div></div><button class="primary full" style="margin-top:12px" onclick="saveDaily()">Recalculer ma séance</button></section>
     <section class="card"><h3>Garmin</h3><div class="form-grid"><div><label>Score endurance</label><input id="gEnd" type="number" value="${s.enduranceScore}"></div><div><label>VO₂ max</label><input id="gVo2" type="number" value="${s.vo2max}"></div><div><label>Score montée</label><input id="gClimb" type="number" value="${s.climbScore}"></div><div><label>Endurance montée</label><input id="gClimbEnd" type="number" value="${s.climbEndurance}"></div><div><label>Puissance montée</label><input id="gClimbPow" type="number" value="${s.climbPower}"></div></div><button class="secondary full" style="margin-top:12px" onclick="saveGarmin()">Enregistrer Garmin</button></section>
     <section class="card"><h3>Séances muscu</h3><p class="small">Tu peux modifier A, B ou C sans perdre l’historique. Format : Nom | séries | reps | repos.</p><div class="action-grid"><button class="secondary" onclick="editStrength('A')">Modifier A</button><button class="secondary" onclick="editStrength('B')">Modifier B</button><button class="secondary" onclick="editStrength('C')">Modifier C</button></div></section>
-    <section class="card"><h3>Planning</h3><p class="small">Activité affiche seulement A/B/C/D. L’onglet Course détaille les variantes de D et le conseil du coach.</p><button class="ghost full" onclick="rebuildPlan()">Reconstruire le cycle à partir de lundi</button></section>
+    <section class="card"><h3>Planning</h3><p class="small">Activité affiche A/B/C et les variantes D1/D2/… L’onglet Course contient le programme et le détail de chaque Dx.</p><button class="ghost full" onclick="rebuildPlan()">Reconstruire le cycle à partir de lundi</button></section>
     <section class="card"><h3>Sauvegarde</h3><div class="action-grid"><button class="secondary" onclick="exportData()">Exporter JSON</button><label class="secondary" style="text-align:center;margin:0">Importer JSON<input id="importFile" type="file" accept="application/json" onchange="importData(this.files[0])" style="display:none"></label><button class="ghost" onclick="clearCaches()">Forcer mise à jour</button></div><div class="small" style="margin-top:10px">Version ${APP_VERSION} · données stockées sur cet appareil.</div></section>
     <section class="card"><h3>Règles d’entraînement</h3><div class="notice">Pas de 1RM ni de répétitions forcées. Respiration continue sous charge. Les consignes de ton équipe médicale priment sur l’app. Arrête l’effort en cas de symptôme inhabituel, gonflement important, blocage ou dérobement du genou.</div></section>`;
 }
@@ -783,20 +819,24 @@ function chooseSession(second=false,k=todayKey(),planningOnly=false){
   ${planningOnly?`<div class="card session-card clickable" onclick="addPlanForDate('${k}','REST')"><div class="code rest">—</div><div><strong>Repos / marche</strong><p>Journée de récupération planifiée</p></div><div class="chev">›</div></div>`:""}</div>`;quickDialog.showModal();
 }
 function addSecondAndOpen(k,code){
-  const p=makePlan(code,{note:"Deuxième séance du jour"});state.planned[k]=state.planned[k]||[];state.planned[k].push(p);save();quickDialog.close();
+  if(isRunCode(code)&&hasRunOn(k)){alert("Une course est déjà prévue ou effectuée ce jour. Maximum : 1 séance course par jour.");return;}
+  const p=makePlan(code,{note:"Séance supplémentaire du jour"});state.planned[k]=state.planned[k]||[];state.planned[k].push(p);save();quickDialog.close();
   if(k<=todayKey())openSession(code,k,p.id);else{selectedDate=k;activeTab="activity";render()}
 }
 function planAndOpen(code,k){quickDialog.close();openSession(code,k,null)}
 
 let workoutDraft=null,restTimer=null,restRemaining=0,workoutTimer=null,workoutStart=0;
 function openSession(code,k=todayKey(),planId=null){
-  const s=sessionBy(code);if(!s)return;const p=planId?planById(k,planId):null;workoutDraft={code,dateKey:k,planId,plan:p};restRemaining=0;workoutStart=Date.now();
+  const s=sessionBy(code);if(!s)return;
+  if(s.type==="run"&&!planId){const existing=plansOn(k).find(x=>isRunCode(x.code)&&x.status==="planned");if(existing&&existing.code===code)planId=existing.id;else if(hasRunOn(k)){alert("Une course est déjà prévue ou effectuée ce jour. Maximum : 1 séance course par jour.");return;}}
+  if(s.type==="run"&&historyOn(k).some(h=>h.type==="run")){alert("Une course est déjà enregistrée ce jour. Maximum : 1 séance course par jour.");return;}
+  const p=planId?planById(k,planId):null;workoutDraft={code,dateKey:k,planId,plan:p};restRemaining=0;workoutStart=Date.now();
   const c=document.getElementById("sessionDialogContent");
   if(s.type==="strength"){
     c.innerHTML=`<div class="dialog-inner"><div class="dialog-head"><div><div class="small">${esc(s.code)} · MUSCULATION · ${esc(fmtDate(k))}</div><h2 style="margin:0">${esc(s.title)}</h2></div><button class="close" onclick="closeSession()">×</button></div><div class="row between"><span id="elapsedBox" class="elapsed">00:00</span><span class="badge">objectif ≤ ${state.settings.maxSessionMin} min</span></div><div id="timerBox"></div><div class="notice">${esc(p?.note||s.note)}</div>${s.exercises.map((e,ei)=>exerciseHTML(s,e,ei)).join("")}<div class="form-grid"><div><label>RPE séance 1–10</label><input id="workRpe" type="number" min="1" max="10" step=".5" value="7"></div><div><label>Douleur genou max 0–10</label><input id="strengthKnee" type="number" min="0" max="10" step=".5" value="${state.settings.kneeToday||0}"></div></div><label>Notes</label><textarea id="workNotes" placeholder="Technique, amplitude, sensations…"></textarea><button class="primary full" style="margin-top:14px" onclick="finishStrength()">Terminer et analyser</button></div>`;
   }else{
     const run=s.run||{};const main=p?.runMain||run.main;const dur=p?.plannedDuration||s.duration;
-    c.innerHTML=`<div class="dialog-inner"><div class="dialog-head"><div><div class="small">D · COURSE · ${esc(fmtDate(k))}</div><h2 style="margin:0">${esc(s.title)}</h2></div><button class="close" onclick="closeSession()">×</button></div><div class="row between"><span id="elapsedBox" class="elapsed">00:00</span><span class="badge ${kneeStatus().level}">${esc(kneeStatus().label)}</span></div><div class="card soft"><h3>Plan</h3>${run.warmup?`<p><strong>Échauffement :</strong> ${run.warmup} min</p>`:""}<p><strong>Bloc :</strong> ${esc(main)}</p>${run.recovery?`<p><strong>Récupération :</strong> ${esc(run.recovery)}</p>`:""}${run.cooldown?`<p><strong>Retour au calme :</strong> ${esc(run.cooldown)}</p>`:""}<div class="small">${esc(p?.note||s.note)}</div></div><div class="form-grid"><div><label>Durée (min)</label><input id="runDuration" type="number" value="${dur}"></div><div><label>Distance (km)</label><input id="runDistance" type="number" step=".01" placeholder="ex. 8.2"></div><div><label>Allure moy. (mm:ss/km)</label><input id="runPace" placeholder="ex. 5:18"></div><div><label>FC moy.</label><input id="runHr" type="number"></div><div><label>Cadence (ppm)</label><input id="runCadence" type="number"></div><div><label>D+ (m)</label><input id="runElev" type="number"></div><div><label>RPE 1–10</label><input id="runRpe" type="number" min="1" max="10" step=".5" value="${s.code==="R1"?3.5:7}"></div><div><label>Douleur genou au départ 0–10</label><input id="kneeStart" type="number" min="0" max="10" step=".5" value="${state.settings.kneeToday||0}"></div><div><label>Douleur après 2 km / fin</label><input id="knee2k" type="number" min="0" max="10" step=".5"></div></div><label>Notes / sensations</label><textarea id="runNotes" placeholder="Souffle, jambes, terrain, douleur autour de la rotule…"></textarea><div class="notice" style="margin-top:10px">Après la séance, ouvre l’onglet Course puis « Suivi genoux après D » pour noter la douleur à 1 h, J+1 et 48 h. C’est ce qui permet au coach de valider ou non les séances rapides.</div><button class="primary full" style="margin-top:14px" onclick="finishRun()">Enregistrer et analyser</button></div>`;
+    c.innerHTML=`<div class="dialog-inner"><div class="dialog-head"><div><div class="small">${esc(displayCode(s.code))} · COURSE · ${esc(fmtDate(k))}</div><h2 style="margin:0">${esc(s.title)}</h2></div><button class="close" onclick="closeSession()">×</button></div><div class="row between"><span id="elapsedBox" class="elapsed">00:00</span><span class="badge ${kneeStatus().level}">${esc(kneeStatus().label)}</span></div><div class="card soft"><h3>Plan</h3>${run.warmup?`<p><strong>Échauffement :</strong> ${run.warmup} min</p>`:""}<p><strong>Bloc :</strong> ${esc(main)}</p>${run.recovery?`<p><strong>Récupération :</strong> ${esc(run.recovery)}</p>`:""}${run.cooldown?`<p><strong>Retour au calme :</strong> ${esc(run.cooldown)}</p>`:""}<div class="small">${esc(p?.note||s.note)}</div></div><div class="form-grid"><div><label>Durée (min)</label><input id="runDuration" type="number" value="${dur}"></div><div><label>Distance (km)</label><input id="runDistance" type="number" step=".01" placeholder="ex. 8.2"></div><div><label>Allure moy. (mm:ss/km)</label><input id="runPace" placeholder="ex. 5:18"></div><div><label>FC moy.</label><input id="runHr" type="number"></div><div><label>Cadence (ppm)</label><input id="runCadence" type="number"></div><div><label>D+ (m)</label><input id="runElev" type="number"></div><div><label>RPE 1–10</label><input id="runRpe" type="number" min="1" max="10" step=".5" value="${s.code==="R1"?3.5:7}"></div><div><label>Douleur genou au départ 0–10</label><input id="kneeStart" type="number" min="0" max="10" step=".5" value="${state.settings.kneeToday||0}"></div><div><label>Douleur après 2 km / fin</label><input id="knee2k" type="number" min="0" max="10" step=".5"></div></div><label>Notes / sensations</label><textarea id="runNotes" placeholder="Souffle, jambes, terrain, douleur autour de la rotule…"></textarea><div class="notice" style="margin-top:10px">Après la séance, ouvre l’onglet Course puis « Suivi genoux après D » pour noter la douleur à 1 h, J+1 et 48 h. C’est ce qui permet au coach de valider ou non les séances rapides.</div><button class="primary full" style="margin-top:14px" onclick="finishRun()">Enregistrer et analyser</button></div>`;
   }
   sessionDialog.showModal();startWorkoutClock();
 }
@@ -804,16 +844,18 @@ function startWorkoutClock(){clearInterval(workoutTimer);function paint(){const 
 function lastExerciseSets(code,name){const last=state.history.filter(h=>h.code===code&&h.strength?.[name]).sort((a,b)=>new Date(b.date)-new Date(a.date))[0];return last?last.strength[name]:null}
 function parseRepNumber(v){const m=String(v??"").match(/\d+/);return m?+m[0]:0}
 function targetRepHigh(txt){const nums=(String(txt).match(/\d+/g)||[]).map(Number);return nums.length?Math.max(...nums):0}
-function previousEx(code,name){const sets=lastExerciseSets(code,name);if(!sets)return "Aucun historique";const vals=sets.filter(x=>x.done).map(x=>`${x.kg||0}kg×${x.reps||0}${x.rir!==undefined&&x.rir!==""?` RIR${x.rir}`:x.rpe?` RPE${x.rpe}`:""}`);return vals.length?`Dernière fois : ${vals.join(" · ")}`:"Aucun historique"}
+function isTimedExercise(e){return e?.unit==="min"||/(gainage|planche|plank)/i.test(e?.name||"")}
+function refSetText(e,x){if(!x||!x.done)return "—";if(isTimedExercise(e))return `${x.kg?`${x.kg}kg/`:""}${x.reps||"—"} min`;return `${x.kg||0}kg×${x.reps||0}`}
+function previousEx(code,e){const sets=lastExerciseSets(code,e.name);if(!sets)return "Aucun historique";const vals=sets.filter(x=>x.done).map(x=>refSetText(e,x));return vals.length?`Dernière fois : ${vals.join(" · ")}`:"Aucun historique"}
 function suggestedLoad(code,e){
-  const sets=lastExerciseSets(code,e.name);if(!sets)return null;const done=sets.filter(x=>x.done&&num(x.kg)>0);if(!done.length)return null;
+  if(isTimedExercise(e))return null;const sets=lastExerciseSets(code,e.name);if(!sets)return null;const done=sets.filter(x=>x.done&&num(x.kg)>0);if(!done.length)return null;
   const base=done[done.length-1].kg;const high=targetRepHigh(e.reps);
   const ready=done.length>=Math.min(e.sets,2)&&done.every(x=>parseRepNumber(x.reps)>=high && ((x.rir!=null&&x.rir!==""&&num(x.rir)>=2)||(x.rpe&&num(x.rpe)<=8)));
   const next=ready?num(base)+num(e.increment||2.5):num(base);return {kg:next,ready};
 }
 function exerciseHTML(s,e,ei){
-  const last=lastExerciseSets(s.code,e.name)||[];const sug=suggestedLoad(s.code,e);const rows=Array.from({length:e.sets},(_,si)=>{const prev=last[si]||last[last.length-1]||{};return `<div class="set-grid"><strong>${si+1}</strong><input id="kg_${ei}_${si}" type="number" step=".5" placeholder="kg" value="${prev.kg||""}"><input id="reps_${ei}_${si}" inputmode="numeric" placeholder="${esc(e.reps)}" value="${prev.reps||""}"><input id="rir_${ei}_${si}" type="number" min="0" max="5" step="1" placeholder="RIR"><button class="checkset" id="done_${ei}_${si}" onclick="toggleSet(${ei},${si},${e.rest})">✓</button></div>`}).join("");
-  return `<div class="exercise"><div class="ex-head"><div><div class="ex-title">${esc(e.name)}</div><div class="previous">${esc(previousEx(s.code,e.name))}</div>${sug?`<div class="suggestion">Proposition : ${sug.kg} kg · ${sug.ready?"petite progression":"même charge, consolider les reps"}</div>`:""}</div><span class="badge">${e.sets}×${esc(e.reps)}</span></div><div class="small" style="margin-top:7px">Série · kg · reps · RIR · ✓</div>${rows}</div>`;
+  const last=lastExerciseSets(s.code,e.name)||[],timed=isTimedExercise(e),sug=suggestedLoad(s.code,e);const rows=Array.from({length:e.sets},(_,si)=>{const prev=last[si]||last[last.length-1]||{},ref=last[si]?refSetText(e,last[si]):(last.length?refSetText(e,last[last.length-1]):"—");return `<div class="set-grid"><strong>${si+1}</strong><div class="refcell">${esc(ref)}</div><input id="kg_${ei}_${si}" type="number" step=".5" placeholder="kg" value="${prev.kg||""}"><input id="reps_${ei}_${si}" ${timed?'type="number" step=".1" inputmode="decimal"':'inputmode="numeric"'} placeholder="${timed?'min':esc(e.reps)}" value="${prev.reps||""}"><input id="rir_${ei}_${si}" type="number" min="0" max="5" step="1" placeholder="RIR"><button class="checkset" id="done_${ei}_${si}" onclick="toggleSet(${ei},${si},${e.rest})">✓</button></div>`}).join("");
+  return `<div class="exercise"><div class="ex-head"><div><div class="ex-title">${esc(e.name)}</div>${sug?`<div class="suggestion">Proposition : ${sug.kg} kg · ${sug.ready?"petite progression":"même charge, consolider les reps"}</div>`:""}</div><span class="badge">${e.sets}×${esc(e.reps)}${timed?" min":""}</span></div><div class="small" style="margin-top:7px">Série · Réf · kg · ${timed?"min":"reps"} · RIR · ✓</div>${rows}</div>`;
 }
 function toggleSet(ei,si,rest){const btn=document.getElementById(`done_${ei}_${si}`);btn.classList.toggle("done");if(btn.classList.contains("done"))startRest(rest)}
 function startRest(sec){clearInterval(restTimer);restRemaining=sec;paintTimer();restTimer=setInterval(()=>{restRemaining--;paintTimer();if(restRemaining<=0){clearInterval(restTimer);if(navigator.vibrate)navigator.vibrate([120,80,120])}},1000)}
@@ -826,6 +868,7 @@ function finishStrength(){
   state.history.push(h);markPlanDone(workoutDraft.dateKey,workoutDraft.planId,s.code,h.id);save();closeSession();activeTab="today";render();showPostAnalysis(h);
 }
 function finishRun(){
+  if(historyOn(workoutDraft.dateKey).some(h=>h.type==="run")){alert("Une course est déjà enregistrée ce jour. Maximum : 1 séance course par jour.");return;}
   const s=sessionBy(workoutDraft.code),dist=num(document.getElementById("runDistance").value),dur=num(document.getElementById("runDuration").value)||(workoutDraft.plan?.plannedDuration||s.duration);let pace=paceToSec(document.getElementById("runPace").value);if(!pace&&dist)pace=dur*60/dist;
   const h={id:uid(),code:s.code,type:"run",date:historyTimestampForKey(workoutDraft.dateKey),dateKey:workoutDraft.dateKey,duration:dur,rpe:num(document.getElementById("runRpe").value),notes:document.getElementById("runNotes").value,prescription:workoutDraft.plan?.runMain||s.run?.main||"",run:{distance:dist,paceSec:pace,hr:num(document.getElementById("runHr").value),cadence:num(document.getElementById("runCadence").value),elev:num(document.getElementById("runElev").value),knee:{start:nullableNumber("kneeStart"),after2k:nullableNumber("knee2k"),oneHour:null,nextMorning:null,after48h:null}}};
   state.history.push(h);markPlanDone(workoutDraft.dateKey,workoutDraft.planId,s.code,h.id);save();closeSession();activeTab="today";render();showPostAnalysis(h);
@@ -849,7 +892,7 @@ async function clearCaches(){if("caches" in window){for(const k of await caches.
 let deferredPrompt=null;
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;document.getElementById("installBtn").classList.remove("hidden")});
 document.getElementById("installBtn").onclick=async()=>{if(deferredPrompt){deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;document.getElementById("installBtn").classList.add("hidden")}};
-if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=3.1.1").catch(()=>{}))}
+if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=3.2.0").catch(()=>{}))}
 
 function boot(){
   try{render()}catch(err){console.error(err);const v=document.getElementById("view");if(v){v.innerHTML=`<section class="card hero"><h2>Réparation nécessaire</h2><p>L’application a rencontré une donnée locale incompatible.</p><button class="primary full" id="repairBtn">Réparer sans supprimer l’historique</button><button class="ghost full" style="margin-top:8px" id="resetBtn">Réinitialiser l’application</button><p class="small" style="margin-top:10px">Erreur : ${esc(err?.message||String(err))}</p></section>`;document.getElementById("repairBtn").onclick=()=>{state=normalizeState(state);save();location.reload()};document.getElementById("resetBtn").onclick=()=>{if(confirm("Réinitialiser les données locales ?")){localStorage.removeItem(STORE);location.reload()}}}}
