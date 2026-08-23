@@ -1,367 +1,804 @@
 <!doctype html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#111827">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Muscu">
-<title>Muscu</title>
-<link rel="manifest" href="./manifest.json?v=3">
-<link rel="icon" href="./icon-192.png">
-<style>
-:root{--bg:#0b1220;--card:#111827;--card2:#172033;--muted:#94a3b8;--text:#f8fafc;--accent:#22c55e;--accent2:#38bdf8;--warn:#f59e0b;--danger:#ef4444;--line:#25334a}
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);padding-bottom:84px}
-button,input,select{font:inherit}.app{max-width:840px;margin:auto;padding:14px}.top{display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#0b1220ee;padding:10px 0 14px;z-index:7;backdrop-filter:blur(8px)}
-.brand{display:flex;gap:10px;align-items:center}.logo{width:42px;height:42px;border-radius:14px;background:var(--accent);color:#052e16;display:grid;place-items:center;font-weight:900;font-size:22px}
-h1,h2,h3{margin-top:0}.muted{color:var(--muted)}.small{font-size:13px}.tiny{font-size:11px}
-.card,.exercise{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:18px;padding:15px;margin-bottom:13px}
-.hero{background:radial-gradient(circle at 100% 0,#22c55e25,transparent 35%),linear-gradient(180deg,var(--card2),var(--card))}
-.row{display:flex;gap:9px;align-items:center}.between{justify-content:space-between}.wrap{flex-wrap:wrap}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:11px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-@media(max-width:620px){.grid2,.grid3{grid-template-columns:1fr}}
-.btn{border:0;border-radius:13px;padding:11px 13px;background:#243149;color:white;font-weight:750;min-height:44px}.primary{background:var(--accent);color:#052e16}.blue{background:var(--accent2);color:#082f49}.warn{background:var(--warn);color:#422006}.danger{background:#431b1d;color:#fecaca}.ghost{background:transparent;border:1px solid var(--line)}
-.tag{display:inline-block;padding:5px 9px;border-radius:999px;background:#1f2a44;color:#cbd5e1;font-size:12px;margin:5px 5px 0 0}
-.exercise{background:#0f172a}.lastbox{background:#111c30;border:1px solid #2c3d59;border-radius:12px;padding:10px;margin:10px 0}.lastline{font-size:13px;color:#dbeafe}
-.setrow{display:grid;grid-template-columns:42px 1fr 1fr 86px;gap:7px;align-items:center;margin-top:8px}.setrow input,.field{width:100%;background:#0b1220;border:1px solid #334155;color:white;border-radius:10px;padding:9px}.done{background:#12301f!important;border-color:#166534!important}
-.timer{display:none;position:fixed;left:50%;bottom:82px;transform:translateX(-50%);width:min(780px,calc(100% - 24px));background:#101827;border:1px solid #334155;border-radius:16px;padding:12px;z-index:30;box-shadow:0 12px 40px #0008}.timer.show{display:flex;justify-content:space-between;align-items:center}.time{font-size:26px;font-weight:900}
-nav{position:fixed;bottom:0;left:0;right:0;height:74px;background:#09101bf2;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);z-index:20;padding-bottom:env(safe-area-inset-bottom)}
-nav button{background:none;border:0;color:var(--muted);font-weight:700;font-size:11px;padding:5px 1px}nav button.active{color:var(--accent)}.ico{display:block;font-size:19px;margin-bottom:2px}.hidden{display:none!important}
-.history{border-bottom:1px solid var(--line);padding:12px 0}.history:last-child{border-bottom:0}.notice{background:#2a2413;border:1px solid #5f4a15;color:#fde68a;border-radius:14px;padding:12px;font-size:13px}
-.day{display:grid;grid-template-columns:76px 1fr;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}.day:last-child{border-bottom:0}.today{color:var(--accent);font-weight:900}
-.kpi{background:#0f172a;border:1px solid var(--line);border-radius:15px;padding:14px}.kpi .n{font-size:28px;font-weight:900}.kpi .l{font-size:12px;color:var(--muted)}
-.exlib{border-bottom:1px solid var(--line);padding:11px 0}.exlib:last-child{border-bottom:0}.chart{width:100%;height:170px;background:#0f172a;border:1px solid var(--line);border-radius:14px;display:block}
-.sectionlabel{font-size:11px;color:var(--muted);font-weight:800;letter-spacing:.06em}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f1115" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <title>Coach 10K + Force</title>
+  <link rel="manifest" href="./manifest.webmanifest?v=3.1.0" />
+  <link rel="icon" href="./icon-192.png?v=3.1.0" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=3.1.0" />
+  <style>
+:root{
+  --bg:#0b0d10;--panel:#14171c;--panel2:#1b1f25;--line:#2a3038;
+  --text:#f5f7fa;--muted:#9aa4b2;--accent:#ff8a24;--good:#31c76a;
+  --blue:#4d8dff;--purple:#8567ff;--danger:#ff4d55;--warn:#f1c75b;
+  --shadow:0 10px 30px rgba(0,0,0,.25)
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+body{min-height:100vh}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px;background:linear-gradient(180deg,#0b0d10 78%,rgba(11,13,16,.78));backdrop-filter:blur(10px)}
+.eyebrow{font-size:10px;letter-spacing:.16em;color:var(--accent);font-weight:800}
+h1{font-size:24px;margin:2px 0 0}h2{font-size:19px;margin:0 0 12px}h3{font-size:16px;margin:0 0 8px}p{line-height:1.42}
+#view{padding:6px 14px 98px;max-width:900px;margin:auto}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:15px;margin:10px 0;box-shadow:var(--shadow)}
+.card.soft{background:var(--panel2)}
+.hero{padding:18px;background:linear-gradient(135deg,#181d23,#211b17);border-color:#3b3026}
+.row{display:flex;gap:10px;align-items:center}.between{justify-content:space-between}.wrap{flex-wrap:wrap}.grow{flex:1}
+.badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 9px;font-size:12px;font-weight:800;background:#252a31;color:#dfe5ec}
+.badge.accent{background:#3a2513;color:#ffb66e}.badge.good{background:#143221;color:#72e99a}.badge.warn{background:#3a2d12;color:#ffd169}.badge.blue{background:#132744;color:#79adff}.badge.danger{background:#3b191d;color:#ff8d93}
+.big{font-size:30px;font-weight:900;letter-spacing:-.03em}
+.metric-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.metric{background:#111419;border:1px solid #252b33;border-radius:14px;padding:12px}.metric .v{font-size:22px;font-weight:900}.metric .l{font-size:11px;color:var(--muted);margin-top:3px}
+.primary,.secondary,.danger,.ghost{border:0;border-radius:13px;padding:12px 14px;font-weight:850}
+.primary{background:var(--accent);color:#121212}.secondary{background:#252b33;color:var(--text)}.danger{background:#3c191d;color:#ff858c}.ghost{background:transparent;border:1px solid var(--line);color:var(--text);padding:9px 12px}
+.primary:disabled,.secondary:disabled,.ghost:disabled{opacity:.45;cursor:not-allowed}
+.action-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}.full{width:100%}
+.small{font-size:12px;color:var(--muted)}.tiny{font-size:10px;color:var(--muted)}.muted{color:var(--muted)}.accent{color:var(--accent)}
+.scorebar{height:9px;border-radius:10px;background:#272c33;overflow:hidden;margin-top:7px}.scorebar>span{display:block;height:100%;border-radius:10px;background:linear-gradient(90deg,var(--danger),var(--accent),var(--good))}
+.session-card{display:grid;grid-template-columns:48px 1fr auto;gap:12px;align-items:center}.session-card.clickable{cursor:pointer}
+.code{width:48px;height:48px;display:grid;place-items:center;border-radius:15px;background:#282017;color:#ffad5f;font-size:18px;font-weight:950}.code.run{background:#14243e;color:#79aaff}.code.rest{background:#20242a;color:#aab4c0}
+.session-card p{margin:3px 0 0;color:var(--muted);font-size:13px}.chev{font-size:24px;color:#707b89}
+.section-title{display:flex;justify-content:space-between;align-items:end;margin:20px 2px 8px}.section-title h2{margin:0}
+.bottom-nav{position:fixed;z-index:30;bottom:0;left:0;right:0;display:grid;grid-template-columns:repeat(6,1fr);padding:7px 3px calc(7px + env(safe-area-inset-bottom));background:#101317;border-top:1px solid #272d34}
+.nav-btn{background:none;border:0;color:#808a97;display:grid;gap:2px;place-items:center;padding:4px 0;min-width:0}.nav-btn span{font-size:18px}.nav-btn small{font-size:9px;white-space:nowrap}.nav-btn.active{color:var(--accent)}
+input,select,textarea{width:100%;background:#0e1115;border:1px solid #303741;color:var(--text);border-radius:12px;padding:11px}textarea{min-height:80px;resize:vertical}
+label{display:block;font-size:12px;font-weight:750;color:#c3cbd5;margin:10px 0 5px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.exercise{border-top:1px solid #293039;padding:13px 0}.exercise:first-child{border-top:0}.ex-head{display:flex;justify-content:space-between;gap:10px;align-items:start}.ex-title{font-weight:900}.previous{font-size:11px;color:#8e99a7;margin-top:2px}.suggestion{font-size:11px;color:#ffb66e;margin-top:3px}
+.set-grid{display:grid;grid-template-columns:32px 1fr 1fr 1fr 44px;gap:6px;align-items:center;margin-top:8px}.set-grid input{padding:9px 6px;text-align:center}.checkset{width:42px;height:42px;border:1px solid #39414b;background:#20252c;color:#fff;border-radius:11px}.checkset.done{background:#183724;color:#65df91;border-color:#245c39}
+.timerbar{position:sticky;top:70px;z-index:10;background:#172019;border:1px solid #27472f;border-radius:14px;padding:10px 12px;margin:8px 0;display:flex;align-items:center;justify-content:space-between}.timerbig{font-size:22px;font-weight:950;color:#72e99a}.elapsed{font-size:13px;font-weight:800;color:#d7dee7}
+dialog{width:min(720px,calc(100% - 18px));max-height:88vh;overflow:auto;border:1px solid #343b45;border-radius:20px;background:#111419;color:var(--text);padding:0;box-shadow:0 30px 80px rgba(0,0,0,.6)}dialog::backdrop{background:rgba(0,0,0,.72)}
+.dialog-inner{padding:17px}.dialog-head{position:sticky;top:0;background:#111419;z-index:4;display:flex;justify-content:space-between;align-items:center;padding:4px 0 10px}.close{width:38px;height:38px;border-radius:50%;border:1px solid #363e47;background:#20252b;color:#fff}
+.history-item{padding:12px 0;border-bottom:1px solid #282e36}.history-item:last-child{border-bottom:0}.history-meta{font-size:12px;color:var(--muted);margin-top:3px}
+.kpi{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid #282e36}.kpi:last-child{border-bottom:0}.kpi strong{font-size:18px}
+.rank{display:grid;grid-template-columns:28px 1fr auto;gap:9px;align-items:center;padding:10px 0;border-bottom:1px solid #282e36}.rank:last-child{border-bottom:0}.ranknum{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:#2a2f36;font-size:12px;font-weight:900}
+.notice{font-size:12px;line-height:1.45;background:#171b20;border-left:3px solid var(--accent);padding:11px 12px;border-radius:8px}.notice.good{border-left-color:var(--good)}.notice.warn{border-left-color:var(--warn)}.notice.danger{border-left-color:var(--danger)}
+.compat{font-size:12px;padding:7px 9px;border-radius:10px;display:inline-block;margin-top:6px}.compat.ok{background:#173321;color:#7fe19e}.compat.mid{background:#352d16;color:#f1cc68}.compat.no{background:#3b191d;color:#ff8d93}
+.segment{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:#111419;padding:4px;border-radius:13px}.segment button{border:0;background:transparent;color:#a3adba;padding:9px;border-radius:10px;font-weight:850}.segment button.active{background:#2a3038;color:white}
+
+.calendar-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 0 12px}.calendar-title{font-size:18px;font-weight:900;text-transform:capitalize}.calendar-weekdays,.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.calendar-weekdays div{text-align:center;font-size:10px;color:var(--muted);font-weight:800;padding:4px 0}
+.day{min-height:74px;border:1px solid #292f36;background:#101318;border-radius:12px;padding:6px;position:relative;cursor:pointer;overflow:hidden}.day.other{opacity:.42}.day.today{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}.day.selected{background:#1d232a}.daynum{font-size:11px;font-weight:850}.daydots{display:flex;gap:3px;flex-wrap:wrap;margin-top:6px}.dot{font-size:9px;font-weight:900;padding:3px 4px;border-radius:6px;background:#2a3038;color:#d9e0e8}.dot.run{background:#132744;color:#79adff}.dot.strength{background:#3a2513;color:#ffb66e}.dot.done{outline:1px solid #31c76a}.dot.rest{background:#252a31;color:#aab4c0}.daymore{font-size:9px;color:var(--muted);margin-top:3px}
+.day-plan{display:grid;grid-template-columns:42px 1fr auto;gap:9px;align-items:center;padding:10px 0;border-bottom:1px solid #282e36}.day-plan:last-child{border-bottom:0}.day-plan .code{width:42px;height:42px;font-size:14px}.plan-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.mini{border:1px solid #353d47;background:#20252c;color:#fff;border-radius:9px;padding:7px 8px;font-size:11px;font-weight:800}.mini.good{background:#173321;color:#7fe19e}.mini.danger{background:#3b191d;color:#ff8d93}
+.statusline{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.statusdot{width:10px;height:10px;border-radius:50%;background:#7d8794}.statusdot.good{background:var(--good)}.statusdot.warn{background:var(--warn)}.statusdot.danger{background:var(--danger)}
+.progressline{height:8px;background:#272c33;border-radius:9px;overflow:hidden}.progressline span{display:block;height:100%;background:var(--good)}
+
+
+.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}.week-day{min-height:105px;border:1px solid #292f36;background:#101318;border-radius:13px;padding:8px;cursor:pointer}.week-day.today{border-color:var(--accent)}.week-day.selected{background:#1d232a}.week-day>strong{display:block;font-size:20px;margin:4px 0 7px}
+.year-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.year-card{background:#101318;color:var(--text);border:1px solid #2b3139;border-radius:14px;padding:12px;text-align:left}.year-card strong{text-transform:capitalize}.year-counts{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:8px;font-size:11px;color:var(--muted)}.year-counts .runtext{color:#79adff}
+.run-plan-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid #282e36}.run-plan-row:last-child{border-bottom:0}
+@media(max-width:620px){.week-grid{grid-template-columns:repeat(7,minmax(42px,1fr));overflow-x:auto}.week-day{min-width:42px;padding:6px}.week-day .dot{display:block;margin-bottom:3px}.year-grid{grid-template-columns:1fr 1fr}}
+
+@media(max-width:380px){.nav-btn small{font-size:8px}.bottom-nav{padding-left:0;padding-right:0}.day{min-height:66px;padding:5px}.dot{font-size:8px}.set-grid{grid-template-columns:28px 1fr 1fr 1fr 40px}}
+@media(min-width:650px){.metric-grid{grid-template-columns:repeat(4,1fr)}.action-grid{grid-template-columns:repeat(3,1fr)}.day{min-height:92px}}
+
+  </style>
 </head>
 <body>
-<div class="app">
-<div class="top">
-  <div class="brand"><div class="logo">M</div><div><h1 style="margin:0">Muscu</h1><div class="small muted">Planning • exos • stats • V3</div></div></div>
-  <button class="btn ghost" id="installBtn" hidden>Installer</button>
-</div>
+  <div id="app">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">COACH ADAPTATIF · V3.0</div>
+        <h1>10K + Force</h1>
+      </div>
+      <button id="installBtn" class="ghost hidden">Installer</button>
+    </header>
 
-<main id="homeView">
-<section class="card hero">
-  <div class="sectionlabel">PROCHAINE SÉANCE</div>
-  <h2 id="nextSessionTitle">Planning à définir</h2>
-  <p class="muted" id="nextSessionText">Choisis tes jours dans Planning.</p>
-  <div class="row wrap">
-    <button class="btn primary" onclick="startSession('A')">Séance A</button>
-    <button class="btn blue" onclick="startSession('B')">Séance B</button>
-    <button class="btn warn" onclick="startSession('C')">Séance C</button>
+    <main id="view">
+      <section class="card"><p class="muted">Chargement du coach…</p></section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Navigation">
+      <button data-tab="today" class="nav-btn active"><span>◉</span><small>Aujourd’hui</small></button>
+      <button data-tab="activity" class="nav-btn"><span>▦</span><small>Activité</small></button>
+      <button data-tab="sessions" class="nav-btn"><span>≡</span><small>Muscu</small></button>
+      <button data-tab="running" class="nav-btn"><span>⌁</span><small>Course</small></button>
+      <button data-tab="stats" class="nav-btn"><span>↗</span><small>Analyse</small></button>
+      <button data-tab="settings" class="nav-btn"><span>⚙</span><small>Réglages</small></button>
+    </nav>
   </div>
-</section>
-<div class="grid3">
-  <div class="kpi"><div class="n" id="homeCount">0</div><div class="l">séances</div></div>
-  <div class="kpi"><div class="n" id="homeSets">0</div><div class="l">séries validées</div></div>
-  <div class="kpi"><div class="n" id="homeVolume">0</div><div class="l">kg volume</div></div>
-</div>
-<section class="card" style="margin-top:13px">
-  <div class="sectionlabel">DERNIÈRE SÉANCE</div>
-  <div id="lastWorkout" style="font-weight:800;margin-top:5px">Aucune</div>
-</section>
-<div class="notice">La séance du 21/08/2026 est préchargée une seule fois si ton historique est vide. Ensuite, toutes les nouvelles séances sont enregistrées depuis l’app.</div>
-</main>
 
-<main id="planView" class="hidden">
-<h2>Planning semaine</h2>
-<section class="card">
-  <p class="small muted">Pour chaque jour : repos, course, séance A, B ou C.</p>
-  <div id="weekPlan"></div>
-</section>
-<section class="card">
-  <b>A</b> : Dos • Biceps • Épaules<br>
-  <b>B</b> : Pectoraux • Triceps — à calibrer demain<br>
-  <b>C</b> : Jambes • Mollets • Avant-bras — provisoire
-</section>
-</main>
+  <dialog id="sessionDialog"><div id="sessionDialogContent"></div></dialog>
+  <dialog id="quickDialog"><div id="quickDialogContent"></div></dialog>
 
-<main id="workoutView" class="hidden">
-<div class="row between wrap">
-  <div><div class="sectionlabel">SÉANCE EN COURS</div><h2 id="workoutTitle"></h2></div>
-  <button class="btn ghost" onclick="cancelWorkout()">Quitter</button>
-</div>
-<div id="exerciseList"></div>
-<button class="btn primary" style="width:100%" onclick="finishWorkout()">Terminer et enregistrer</button>
-</main>
+  <script>
+const APP_VERSION = "3.1.0";
+const STORE = "coach10k_force_v2"; // même clé pour conserver les données v2
+const LIBRARY_VERSION = 4;
 
-<main id="exercisesView" class="hidden">
-<h2>Exercices</h2>
-<section class="card">
-<div class="row between wrap">
-  <div><div class="sectionlabel">BIBLIOTHÈQUE</div><b>Références enregistrées</b></div>
-  <select id="groupFilter" class="field" style="max-width:180px" onchange="renderExercises()">
-    <option value="all">Tous</option><option>Dos</option><option>Biceps</option><option>Épaules</option><option>Pectoraux</option><option>Triceps</option><option>Jambes</option><option>Mollets</option><option>Avant-bras</option><option>Gainage</option>
-  </select>
-</div>
-<div id="exerciseLibrary"></div>
-</section>
-</main>
-
-<main id="statsView" class="hidden">
-<h2>Stats</h2>
-<div class="grid3">
-  <div class="kpi"><div class="n" id="statSessions">0</div><div class="l">séances</div></div>
-  <div class="kpi"><div class="n" id="statSets">0</div><div class="l">séries</div></div>
-  <div class="kpi"><div class="n" id="statVolume">0</div><div class="l">kg volume total</div></div>
-</div>
-<section class="card" style="margin-top:13px"><h3>Activité — 8 semaines</h3><canvas id="activityChart" class="chart" width="700" height="170"></canvas></section>
-<section class="card"><h3>Meilleures charges</h3><div id="bestList"></div></section>
-<section class="card"><h3>Historique</h3><div id="historyList"></div></section>
-</main>
-
-<main id="settingsView" class="hidden">
-<h2>Réglages</h2>
-<section class="card">
-  <h3>Sauvegarde</h3>
-  <p class="small muted">Les données restent dans le navigateur. Exporte avant un changement de téléphone.</p>
-  <div class="row wrap">
-    <button class="btn blue" onclick="exportData()">Exporter JSON</button>
-    <label class="btn ghost">Importer JSON<input id="importInput" type="file" accept="application/json" hidden></label>
-    <button class="btn danger" onclick="clearData()">Effacer</button>
-  </div>
-</section>
-<section class="card">
-<h3>Repos par défaut</h3>
-<div class="grid2">
-<label>Gros exercices<select class="field" id="bigRest"><option value="90">90 s</option><option value="120" selected>120 s</option><option value="150">150 s</option><option value="180">180 s</option></select></label>
-<label>Petits exercices<select class="field" id="smallRest"><option value="45">45 s</option><option value="60">60 s</option><option value="75" selected>75 s</option><option value="90">90 s</option></select></label>
-</div>
-</section>
-</main>
-</div>
-
-<div class="timer" id="timerBar">
-<div><div class="small muted">REPOS</div><div class="time" id="timerText">02:00</div></div>
-<div class="row"><button class="btn ghost" onclick="addTimer(30)">+30 s</button><button class="btn primary" onclick="stopTimer()">Stop</button></div>
-</div>
-
-<nav>
-<button id="navHome" class="active" onclick="showView('home')"><span class="ico">🏠</span>Accueil</button>
-<button id="navPlan" onclick="showView('plan')"><span class="ico">📅</span>Planning</button>
-<button id="navExercises" onclick="showView('exercises')"><span class="ico">🏋️</span>Exos</button>
-<button id="navStats" onclick="showView('stats')"><span class="ico">📊</span>Stats</button>
-<button id="navSettings" onclick="showView('settings')"><span class="ico">⚙️</span>Réglages</button>
-</nav>
-
-<script>
-const KEY='muscu-data-v1', SKEY='muscu-settings-v1', PKEY='muscu-plan-v1', SEEDKEY='muscu-seed-2026-08-21-v1';
-const DAYS=['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
-
-const templates={
-A:{name:'Séance A — Dos / Biceps / Épaules',exercises:[
-{name:'Tirage poulie haute',group:'Dos',target:'3 × 8–10',weight:60,sets:3,reps:9,rest:'big'},
-{name:'Rowing poulie basse',group:'Dos',target:'3 × 8–10',weight:70,sets:3,reps:9,rest:'big'},
-{name:'Pullover poulie haute',group:'Dos',target:'3 × 10–12',weight:20,sets:3,reps:12,rest:'small'},
-{name:'Curl haltères assis',group:'Biceps',target:'3 × 6–8',weight:17,sets:3,reps:7,rest:'small'},
-{name:'Face pull',group:'Épaules',target:'3 × 12–15',weight:15,sets:3,reps:12,rest:'small'},
-{name:'Élévation latérale poulie',group:'Épaules',target:'3 × 12–15',weight:5,sets:3,reps:12,rest:'small'},
-{name:'Planche',group:'Gainage',target:'1–2 × 30–45 s',weight:0,sets:1,reps:45,unit:'sec',rest:'small'},
-{name:'Planche latérale',group:'Gainage',target:'30 s / côté',weight:0,sets:2,reps:30,unit:'sec',rest:'small'},
-{name:'Dead bug',group:'Gainage',target:'10 / côté',weight:0,sets:1,reps:10,rest:'small'}]},
-B:{name:'Séance B — Pectoraux / Triceps',exercises:[
-{name:'Développé couché barre',group:'Pectoraux',target:'3 × 8–10',weight:'',sets:3,reps:8,rest:'big'},
-{name:'Développé incliné',group:'Pectoraux',target:'3 × 8–10',weight:'',sets:3,reps:8,rest:'big'},
-{name:'Écarté poulie ou haltères',group:'Pectoraux',target:'2–3 × 10–15',weight:'',sets:3,reps:12,rest:'small'},
-{name:'Extension triceps corde',group:'Triceps',target:'3 × 10–15',weight:'',sets:3,reps:12,rest:'small'},
-{name:'Extension triceps au-dessus tête',group:'Triceps',target:'2 × 10–15',weight:'',sets:2,reps:12,rest:'small'}]},
-C:{name:'Séance C — Jambes / Mollets / Avant-bras',exercises:[
-{name:'Squat vers banc',group:'Jambes',target:'3 × 8–10',weight:'',sets:3,reps:8,rest:'big'},
-{name:'Leg extension',group:'Jambes',target:'3 × 10–15',weight:'',sets:3,reps:12,rest:'small'},
-{name:'Hip thrust',group:'Jambes',target:'3 × 10–12',weight:'',sets:3,reps:10,rest:'big'},
-{name:'Leg curl',group:'Jambes',target:'3 × 10–12',weight:'',sets:3,reps:10,rest:'small'},
-{name:'Mollets debout',group:'Mollets',target:'3 × 12–15',weight:'',sets:3,reps:12,rest:'small'},
-{name:'Curl marteau léger',group:'Avant-bras',target:'2 × 10–12',weight:'',sets:2,reps:10,rest:'small'}]}
+const defaults = {
+  libraryVersion: LIBRARY_VERSION,
+  settings: {
+    target10kSec: 50*60,
+    maxSessionMin: 60,
+    enduranceScore: 5840,
+    climbScore: 40,
+    climbEndurance: 17,
+    climbPower: 32,
+    vo2max: 47,
+    readiness: 4,
+    legs: 2,
+    kneeToday: 0,
+    availableMin: 60,
+    allowDouble: true,
+    runPlanVersion: 1
+  },
+  sessions: [
+    {
+      code:"A", type:"strength", title:"Muscu A — dos / biceps", duration:55, hardLegs:false,
+      goal:"Force haut du corps / tirage",
+      note:"Séance A modifiable. Garde 2–3 répétitions en réserve et une respiration continue.",
+      exercises:[
+        {name:"Tirage vertical",sets:4,reps:"6-8",rest:105,increment:2.5},
+        {name:"Rowing poulie ou barre",sets:4,reps:"8",rest:90,increment:2.5},
+        {name:"Rowing unilatéral poulie",sets:3,reps:"8/côté",rest:75,increment:2.5},
+        {name:"Face pull",sets:3,reps:"12",rest:60,increment:2.5},
+        {name:"Curl biceps",sets:3,reps:"8-10",rest:75,increment:1},
+        {name:"Curl marteau",sets:2,reps:"10",rest:60,increment:1}
+      ]
+    },
+    {
+      code:"B", type:"strength", title:"Muscu B — pectoraux / épaules / triceps", duration:55, hardLegs:false,
+      goal:"Force et entretien du haut du corps",
+      note:"Charge modérée, pas d’échec. Vise 2–3 RIR sur les mouvements principaux.",
+      exercises:[
+        {name:"Développé couché",sets:4,reps:"8",rest:120,increment:2.5},
+        {name:"Développé incliné",sets:3,reps:"8-10",rest:90,increment:2.5},
+        {name:"Écartés à la poulie",sets:3,reps:"10-12",rest:60,increment:1},
+        {name:"Élévations latérales poulie",sets:3,reps:"12",rest:60,increment:1},
+        {name:"Extension triceps poulie",sets:3,reps:"10",rest:75,increment:1},
+        {name:"Extension triceps au-dessus de la tête",sets:2,reps:"10-12",rest:60,increment:1}
+      ]
+    },
+    {
+      code:"C", type:"strength", title:"Muscu C — jambes / tronc", duration:58, hardLegs:true,
+      goal:"Force utile à la course, quadriceps, chaîne postérieure et stabilité",
+      note:"Squat au banc : 3×8, descente contrôlée ≈3 s, contact léger avec le banc. Ne poursuis pas si la douleur du genou augmente nettement.",
+      exercises:[
+        {name:"Squat au banc",sets:3,reps:"8",rest:120,increment:2.5},
+        {name:"Soulevé de terre roumain",sets:3,reps:"8",rest:105,increment:2.5},
+        {name:"Step-up bas",sets:3,reps:"8/jambe",rest:90,increment:1},
+        {name:"Leg curl à la poulie",sets:3,reps:"10-12",rest:75,increment:1},
+        {name:"Mollets debout",sets:3,reps:"12-15",rest:60,increment:2.5},
+        {name:"Pallof press",sets:3,reps:"10/côté",rest:45,increment:1}
+      ]
+    },
+    {code:"R1",type:"run",title:"Endurance fondamentale",duration:45,hardLegs:false,goal:"Base aérobie / récupération",note:"Allure très facile, terrain plat si les genoux sont sensibles. Conversation possible, RPE 3–4.",run:{warmup:0,main:"40–50 min facile",recovery:"",cooldown:""}},
+    {code:"R2",type:"run",title:"Fractionné court",duration:48,hardLegs:true,goal:"Vitesse / économie de course",note:"Uniquement si le suivi genou est favorable. Rapide mais contrôlé, jamais sprint maximal.",run:{warmup:14,main:"8 × 1 min rapide",recovery:"1 min lente entre répétitions",cooldown:"10–12 min facile"}},
+    {code:"R3",type:"run",title:"Seuil / tempo",duration:52,hardLegs:true,goal:"Tenir un effort soutenu",note:"Difficile mais contrôlé, RPE ≈7. À remplacer par R1 si réaction du genou retardée.",run:{warmup:12,main:"3 × 8 min soutenues",recovery:"2 min faciles",cooldown:"10 min facile"}},
+    {code:"R4",type:"run",title:"Spécifique 10 km",duration:52,hardLegs:true,goal:"Rendre 5:00/km durable",note:"Objectif 10 km < 50 min. Ne pas accélérer au-delà du plan pour gagner la séance.",run:{warmup:12,main:"4 × 1 km à 5:00–5:10/km",recovery:"2 min faciles",cooldown:"8–10 min facile"}},
+    {code:"R5",type:"run",title:"Côtes",duration:48,hardLegs:true,goal:"Puissance + endurance en montée",note:"À réintroduire lorsque les genoux tolèrent bien le plat. Effort énergique contrôlé, redescente tranquille.",run:{warmup:14,main:"6 × 60–75 s en côte",recovery:"redescente lente ≈2 min",cooldown:"10–12 min facile"}},
+    {code:"R6",type:"run",title:"Test / course 10 km",duration:60,hardLegs:true,goal:"Mesurer l’objectif sub-50",note:"À faire uniquement si les deux semaines précédentes ont été bien tolérées et sans réaction retardée importante.",run:{warmup:12,main:"10 km régulier — départ prudent vers 5:05/km puis ajustement",recovery:"",cooldown:"5–10 min très facile"}},
+    {code:"R7",type:"run",title:"Fartlek ludique",duration:46,hardLegs:true,goal:"Vitesse sans regarder constamment la montre",note:"À utiliser quand les genoux sont bien tolérés. Les accélérations restent contrôlées, jamais en sprint.",run:{warmup:12,main:"10 × 1 min vive / 1 min facile, au ressenti",recovery:"1 min très facile",cooldown:"10–12 min facile"}},
+    {code:"R8",type:"run",title:"Progressive / negative split",duration:50,hardLegs:false,goal:"Endurance + maîtrise d’allure",note:"Départ volontairement lent, puis accélération douce. Si les genoux réagissent, rester intégralement en endurance facile.",run:{warmup:0,main:"20 min faciles + 15 min régulières + 10 min légèrement plus actives",recovery:"",cooldown:"5 min très faciles"}}
+  ],
+  history: [],
+  planned: {},
+  planInitialized: false,
+  updatedAt: new Date().toISOString()
 };
 
-let state=load(),current=null,timerId=null,timerEnd=0,deferredPrompt=null;
+function clone(x){return JSON.parse(JSON.stringify(x))}
+function uid(){return (crypto.randomUUID?crypto.randomUUID():`${Date.now()}_${Math.random().toString(16).slice(2)}`)}
+function pad(n){return String(n).padStart(2,"0")}
+function dateKey(d=new Date()){return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`}
+function parseDateKey(k){const [y,m,d]=String(k).split("-").map(Number);return new Date(y,m-1,d,12,0,0)}
+function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x}
+function startOfWeek(d){const x=new Date(d);const day=(x.getDay()+6)%7;x.setDate(x.getDate()-day);x.setHours(12,0,0,0);return x}
+function nextMonday(d=new Date()){const x=new Date(d);x.setHours(12,0,0,0);const delta=(8-x.getDay())%7;return addDays(x,delta===0?0:delta)}
+function monthTitle(d){return d.toLocaleDateString("fr-FR",{month:"long",year:"numeric"})}
+function fmtDate(isoOrKey){const d=String(isoOrKey).length===10?parseDateKey(isoOrKey):new Date(isoOrKey);return d.toLocaleDateString("fr-FR",{weekday:"short",day:"2-digit",month:"short"})}
+function fmtLongDate(k){return parseDateKey(k).toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}
+function historyDateKey(h){return h.dateKey||dateKey(new Date(h.date))}
 
-function load(){try{return JSON.parse(localStorage.getItem(KEY))||{workouts:[]}}catch{return{workouts:[]}}}
-function save(){localStorage.setItem(KEY,JSON.stringify(state));refreshHome()}
-function settings(){try{return JSON.parse(localStorage.getItem(SKEY))||{bigRest:120,smallRest:75}}catch{return{bigRest:120,smallRest:75}}}
-function plan(){try{return JSON.parse(localStorage.getItem(PKEY))||['rest','A','run','rest','B','run','rest']}catch{return['rest','A','run','rest','B','run','rest']}}
-function savePlan(p){localStorage.setItem(PKEY,JSON.stringify(p));refreshHome()}
-function saveSettings(){localStorage.setItem(SKEY,JSON.stringify({bigRest:+bigRest.value,smallRest:+smallRest.value}))}
-function rest(t){let s=settings();return t==='big'?s.bigRest:s.smallRest}
+function normalizePlanEntry(p){
+  if(typeof p==="string") return {id:uid(),code:p,status:"planned"};
+  if(!p||typeof p!=="object") return null;
+  return Object.assign({id:uid(),code:"R1",status:"planned"},p);
+}
+function normalizePlanned(planned){
+  const out={};
+  if(!planned||typeof planned!=="object") return out;
+  Object.keys(planned).forEach(k=>{
+    const arr=Array.isArray(planned[k])?planned[k]:[];
+    out[k]=arr.map(normalizePlanEntry).filter(Boolean);
+  });
+  return out;
+}
+function normalizeState(parsed){
+  const base=clone(defaults);
+  if(!parsed||typeof parsed!=="object") return base;
+  base.settings=Object.assign({},base.settings,parsed.settings||{});
+  base.history=Array.isArray(parsed.history)?parsed.history:[];
+  base.planned=normalizePlanned(parsed.planned);
+  base.planInitialized=!!parsed.planInitialized || Object.keys(base.planned).length>0;
+  base.updatedAt=parsed.updatedAt||base.updatedAt;
 
-function seedTodayIfNeeded(){
-  if(localStorage.getItem(SEEDKEY)) return;
-  if(!state.workouts.length){
-    state.workouts.push({
-      key:'A',
-      name:'Séance A — Dos / Biceps / Épaules',
-      startedAt:'2026-08-21T18:00:00+02:00',
-      finishedAt:'2026-08-21T19:30:00+02:00',
-      seeded:true,
-      exercises:[
-        {name:'Tirage poulie haute',group:'Dos',target:'3 × 8–10',entries:[
-          {weight:60,reps:9,feel:'moyen',done:true},{weight:60,reps:9,feel:'moyen',done:true},{weight:60,reps:9,feel:'moyen',done:true}]},
-        {name:'Rowing poulie basse',group:'Dos',target:'3 × 8–10',entries:[
-          {weight:60,reps:10,feel:'facile',done:true},{weight:70,reps:9,feel:'moyen',done:true},{weight:70,reps:10,feel:'moyen',done:true}]},
-        {name:'Pullover poulie haute',group:'Dos',target:'3 × 10–12',entries:[
-          {weight:20,reps:12,feel:'moyen',done:true},{weight:20,reps:12,feel:'moyen',done:true},{weight:20,reps:12,feel:'moyen',done:true}]},
-        {name:'Curl haltères assis',group:'Biceps',target:'3 × 6–8',entries:[
-          {weight:17,reps:7,feel:'moyen',done:true},{weight:17,reps:6,feel:'moyen',done:true},{weight:17,reps:7,feel:'moyen',done:true}]},
-        {name:'Face pull',group:'Épaules',target:'3 × 12–15',entries:[
-          {weight:15,reps:12,feel:'moyen',done:true},{weight:15,reps:12,feel:'moyen',done:true},{weight:15,reps:12,feel:'moyen',done:true}]},
-        {name:'Élévation latérale poulie',group:'Épaules',target:'3 × 12–15',entries:[
-          {weight:5,reps:12,feel:'moyen',done:true},{weight:5,reps:12,feel:'moyen',done:true},{weight:5,reps:12,feel:'moyen',done:true}]},
-        {name:'Planche',group:'Gainage',target:'1–2 × 30–45 s',unit:'sec',entries:[
-          {weight:0,reps:45,feel:'moyen',done:true}]},
-        {name:'Planche latérale',group:'Gainage',target:'30 s / côté',unit:'sec',entries:[
-          {weight:0,reps:30,feel:'moyen',done:true},{weight:0,reps:30,feel:'moyen',done:true}]},
-        {name:'Dead bug',group:'Gainage',target:'10 / côté',entries:[
-          {weight:0,reps:10,feel:'moyen',done:true}]}
-      ]
+  const oldSessions=Array.isArray(parsed.sessions)?parsed.sessions:[];
+  if(oldSessions.length){
+    // Migration v2/v3 -> v3.1 : conserver les exercices personnalisés A/B/C,
+    // puis compléter la bibliothèque running avec les nouvelles variantes ludiques.
+    base.sessions=defaults.sessions.map(d=>{
+      const old=oldSessions.find(s=>s.code===d.code);
+      if(!old)return clone(d);
+      if(d.type==="strength"&&Array.isArray(old.exercises)&&old.exercises.length){
+        return Object.assign({},d,old,{code:d.code,type:"strength",hardLegs:d.hardLegs,exercises:old.exercises});
+      }
+      return Object.assign({},d,old,{code:d.code,type:d.type,hardLegs:d.hardLegs});
     });
-    save();
   }
-  localStorage.setItem(SEEDKEY,'1');
+  base.settings.runPlanVersion=num(parsed.settings?.runPlanVersion||0);
+  base.libraryVersion=LIBRARY_VERSION;
+  return base;
+}
+function load(){
+  try{const raw=localStorage.getItem(STORE);return raw?normalizeState(JSON.parse(raw)):clone(defaults)}catch(e){return clone(defaults)}
+}
+let state=load();
+function save(){state.updatedAt=new Date().toISOString();state.libraryVersion=LIBRARY_VERSION;localStorage.setItem(STORE,JSON.stringify(state))}
+function esc(s=""){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function secToPace(sec){if(!isFinite(sec)||sec<=0)return "—";const m=Math.floor(sec/60),s=Math.round(sec%60);return `${m}:${String(s).padStart(2,"0")}/km`}
+function paceToSec(txt){if(!txt)return null;const m=String(txt).match(/(\d+)\s*[:']\s*(\d+)/);return m?(+m[1]*60 + +m[2]):null}
+function sessionBy(code){return state.sessions.find(s=>s.code===code)}
+function isRunCode(code){const ss=sessionBy(code);return ss?.type==="run"||String(code).startsWith("R")}
+function displayCode(code){return code==="REST"?"—":(String(code).startsWith("R")||sessionBy(code)?.type==="run")?"D":code}
+function displayType(code){const s=sessionBy(code);return s?.type==="run"?"COURSE":"MUSCU"}
+function runVariantLabel(code){const s=sessionBy(code);return s?.type==="run"?s.title:"Course"}
+function daysAgo(iso){return (Date.now()-new Date(iso).getTime())/86400000}
+function recent(code,days=14){return state.history.filter(h=>h.code===code&&daysAgo(h.date)<=days)}
+function lastOf(code){return state.history.filter(h=>h.code===code).sort((a,b)=>new Date(b.date)-new Date(a.date))[0]}
+function completedLast(days=7){return state.history.filter(h=>daysAgo(h.date)<=days).length}
+function hardLast(days=7){return state.history.filter(h=>daysAgo(h.date)<=days&&sessionBy(h.code)?.hardLegs).length}
+function lastHardDays(){const hard=state.history.filter(h=>sessionBy(h.code)?.hardLegs).sort((a,b)=>new Date(b.date)-new Date(a.date))[0];return hard?daysAgo(hard.date):99}
+function num(v){const x=+v;return isFinite(x)?x:0}
+function avg(arr){return arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:null}
+
+function makePlan(code,opts={}){return Object.assign({id:uid(),code,status:"planned"},opts)}
+function starterWeeks(){
+  // 8 semaines : reprise articulaire d'abord, puis variété progressive.
+  return [
+    [
+      makePlan("A",{note:"Reprise force haut du corps."}),
+      makePlan("R1",{plannedDuration:38,runMain:"35–40 min très faciles, terrain plat",note:"D facile : priorité à la tolérance des genoux."}),
+      makePlan("B"),
+      makePlan("R1",{plannedDuration:35,runMain:"30–35 min faciles + 6 × 20 s de cadence souple",note:"Petit jeu de cadence, sans sprint."}),
+      makePlan("C",{note:"Squat au banc 3×8, charge modérée, RIR 2–3."}),
+      makePlan("REST",{title:"Repos / marche",note:"Récupération. Marche douce possible."}),
+      makePlan("R1",{plannedDuration:45,runMain:"45 min faciles, terrain plat"})
+    ],
+    [
+      makePlan("A"),
+      makePlan("R8",{plannedDuration:42,runMain:"25 min faciles + 10 min un peu plus actives + 5 min faciles",note:"Progressive douce uniquement si douleur ≤2/10."}),
+      makePlan("B"),
+      makePlan("R1",{plannedDuration:40,runMain:"40 min faciles avec 4 changements de parcours ou de rythme très doux"}),
+      makePlan("C",{note:"Même charge ou petite progression seulement si bien tolérée."}),
+      makePlan("REST",{title:"Repos / marche"}),
+      makePlan("R1",{plannedDuration:50,runMain:"50 min faciles"})
+    ],
+    [
+      makePlan("A"),
+      makePlan("R7",{plannedDuration:44,runMain:"8 × 1 min vive / 1 min facile au ressenti",note:"D ludique : seulement si genou vert ; sinon 40 min faciles."}),
+      makePlan("B"),
+      makePlan("R1",{plannedDuration:40,runMain:"40 min faciles, sans objectif d’allure"}),
+      makePlan("C"),
+      makePlan("REST",{title:"Repos / marche"}),
+      makePlan("R8",{plannedDuration:50,runMain:"30 min faciles + 15 min régulières + 5 min faciles"})
+    ],
+    [
+      makePlan("A"),
+      makePlan("R3",{plannedDuration:48,runMain:"2 × 8 min tempo, récup 3 min faciles",note:"Soutenu mais contrôlé. Si réaction retardée : D facile."}),
+      makePlan("B"),
+      makePlan("R1",{plannedDuration:42,runMain:"40–45 min faciles"}),
+      makePlan("C"),
+      makePlan("REST",{title:"Repos / marche"}),
+      makePlan("R8",{plannedDuration:55,runMain:"35 min faciles + 15 min progressives + 5 min faciles"})
+    ],
+    [
+      makePlan("A"),
+      makePlan("R5",{plannedDuration:46,runMain:"6 × 45–60 s en côte douce, redescente lente",note:"Seulement si deux semaines bien tolérées ; sinon fartlek plat ou D facile."}),
+      makePlan("B"),
+      makePlan("R1",{plannedDuration:42,runMain:"40–45 min faciles"}),
+      makePlan("C"),
+      makePlan("REST",{title:"Repos / marche"}),
+      makePlan("R1",{plannedDuration:55,runMain:"55 min faciles, parcours agréable"})
+    ],
+    [
+      makePlan("A"),
+      makePlan("R2",{plannedDuration:48,runMain:"10 × 1 min rapide / 1 min lente",note:"Rapide, jamais sprint maximal."}),
+      makePlan("B"),
+      makePlan("R1",{plannedDuration:45,runMain:"45 min faciles"}),
+      makePlan("C"),
+      makePlan("REST",{title:"Repos / marche"}),
+      makePlan("R8",{plannedDuration:58,runMain:"35 min faciles + 15 min régulières + 8 min faciles"})
+    ],
+    [
+      makePlan("A"),
+      makePlan("R4",{plannedDuration:52,runMain:"4 × 1 km à 5:05 → 5:00/km, récup 2 min",note:"Spécifique 10 km, dernier km contrôlé."}),
+      makePlan("B"),
+      makePlan("R7",{plannedDuration:40,runMain:"6 × 90 s au ressenti / 90 s faciles",note:"Séance courte et ludique, sans chasse au chrono."}),
+      makePlan("C"),
+      makePlan("REST",{title:"Repos / marche"}),
+      makePlan("R1",{plannedDuration:55,runMain:"55 min faciles"})
+    ],
+    [
+      makePlan("A",{note:"Semaine allégée : ne cherche pas à battre les charges."}),
+      makePlan("R3",{plannedDuration:44,runMain:"2 × 7 min tempo, récup 3 min",note:"Volume réduit avant le test."}),
+      makePlan("B",{note:"Volume modéré."}),
+      makePlan("R1",{plannedDuration:35,runMain:"35 min très faciles"}),
+      makePlan("REST",{title:"Repos jambes",note:"Pas de C cette semaine pour arriver frais."}),
+      makePlan("REST",{title:"Repos / marche"}),
+      makePlan("R6",{plannedDuration:60,runMain:"Test 10 km : départ vers 5:05/km puis stabiliser autour de 5:00/km si tout va bien",note:"Seulement si genou vert. Sinon D facile 45 min et test reporté."})
+    ]
+  ];
+}
+function ensureStarterPlan(){
+  if(state.planInitialized||Object.keys(state.planned).length){state.planInitialized=true;return}
+  const start=nextMonday(new Date());
+  starterWeeks().forEach((week,wi)=>week.forEach((entry,di)=>{
+    const k=dateKey(addDays(start,wi*7+di));
+    state.planned[k]=state.planned[k]||[];
+    state.planned[k].push(entry);
+  }));
+  state.planInitialized=true;save();
+}
+ensureStarterPlan();
+function ensureRunningPlanV1(){
+  if(num(state.settings.runPlanVersion)>=1)return;
+  const start=nextMonday(new Date()), weeks=starterWeeks();
+  // On conserve A/B/C, repos et séances déjà effectuées ; seuls les D futurs planifiés sont renouvelés.
+  Object.keys(state.planned).forEach(k=>{
+    if(k>=dateKey(start))state.planned[k]=(state.planned[k]||[]).filter(p=>p.status==="done"||!isRunCode(p.code));
+  });
+  weeks.forEach((week,wi)=>week.forEach((entry,di)=>{
+    if(!isRunCode(entry.code))return;
+    const k=dateKey(addDays(start,wi*7+di));state.planned[k]=state.planned[k]||[];state.planned[k].push(entry);
+  }));
+  state.settings.runPlanVersion=1;save();
+}
+ensureRunningPlanV1();
+
+function kneeStatus(){
+  const today=num(state.settings.kneeToday);
+  const runs=state.history.filter(h=>h.run&&daysAgo(h.date)<=14).sort((a,b)=>new Date(b.date)-new Date(a.date));
+  const values=[];
+  runs.slice(0,4).forEach(h=>{
+    const k=h.run.knee||{};
+    [k.start,k.after2k,k.oneHour,k.nextMorning,k.after48h].forEach(v=>{if(v!==""&&v!=null&&isFinite(+v))values.push(+v)});
+  });
+  const recentFollow=runs.slice(0,3).map(h=>h.run.knee||{});
+  const red = today>=4 || recentFollow.some(k=>num(k.oneHour)>=5||num(k.nextMorning)>=4||num(k.after48h)>=3);
+  const warn = today>=2.5 || recentFollow.some(k=>num(k.oneHour)>=3||num(k.nextMorning)>=2||num(k.after48h)>=2);
+  const complete=recentFollow.filter(k=>k.oneHour!=null&&k.nextMorning!=null);
+  const green = today<=1 && complete.length>=2 && complete.every(k=>num(k.oneHour)<=2&&num(k.nextMorning)<=1&&(k.after48h==null||num(k.after48h)<=1));
+  if(red)return {level:"danger",label:"Genou rouge",text:"Réaction élevée : évite aujourd’hui les séances de course rapides et les grosses charges jambes."};
+  if(warn)return {level:"warn",label:"Genou orange",text:"Tolérance encore limite : privilégie facile/plat et garde les séances dures en attente."};
+  if(green)return {level:"good",label:"Genou vert",text:"Les dernières sorties semblent bien tolérées : progression prudente possible."};
+  return {level:"mid",label:"Genou à suivre",text:values.length?"Données partielles : complète le suivi 1 h / lendemain pour fiabiliser le planning.":"Pas encore assez de données post-course pour valider les séances rapides."};
 }
 
-function showView(n){
-  ['home','plan','workout','exercises','stats','settings'].forEach(v=>document.getElementById(v+'View').classList.toggle('hidden',v!==n));
-  ['Home','Plan','Exercises','Stats','Settings'].forEach(v=>{let e=document.getElementById('nav'+v);if(e)e.classList.toggle('active',v.toLowerCase()===n)});
-  if(n==='plan')renderPlan(); if(n==='exercises')renderExercises(); if(n==='stats')renderStats();
-  if(n==='settings'){let s=settings();bigRest.value=s.bigRest;smallRest.value=s.smallRest}
-  scrollTo(0,0)
+function weaknessModel(){
+  const s=state.settings;
+  const r4=lastOf("R4"), r6=lastOf("R6");
+  const pace=(r6&&r6.run?.paceSec)||(r4&&r4.run?.paceSec)||null;
+  const tenKNeed=pace?Math.max(0,Math.min(100,(pace-300)*2+35)):55;
+  const enduranceNeed=Math.max(20,Math.min(95,70-Math.min(30,recent("R1",10).length*12)));
+  return [
+    {key:"climbEndurance",label:"Endurance en montée",need:Math.max(0,100-num(s.climbEndurance)),detail:`Garmin ${s.climbEndurance}`},
+    {key:"climbPower",label:"Puissance en montée",need:Math.max(0,100-num(s.climbPower)),detail:`Garmin ${s.climbPower}`},
+    {key:"10k",label:"Spécifique 10 km",need:tenKNeed,detail:pace?`Dernière allure spécifique ${secToPace(pace)}`:"Pas encore assez de données spécifiques"},
+    {key:"aerobic",label:"Endurance fondamentale",need:enduranceNeed,detail:`${recent("R1",10).length+recent("R8",10).length} D faciles/progressives sur 10 jours`}
+  ].sort((a,b)=>b.need-a.need);
+}
+function scoreSession(code){
+  const s=state.settings, weak=weaknessModel(), top=weak[0]?.key;
+  const knee=kneeStatus();
+  let score=50,reasons=[];
+  const hDays=lastHardDays(),legs=num(s.legs),readiness=num(s.readiness),sess=sessionBy(code);
+  if(code==="R5"){score+=(100-num(s.climbEndurance))*.25+(100-num(s.climbPower))*.2;reasons.push("cible la montée")}
+  if(code==="C"){score+=(100-num(s.climbPower))*.18;reasons.push("renforce les jambes et la stabilité")}
+  if(code==="R4"||code==="R6"){score+=top==="10k"?32:16;reasons.push("spécifique à l’objectif 5:00/km")}
+  if(code==="R3"){score+=top==="10k"?26:12;reasons.push("développe la tenue d’allure")}
+  if(code==="R2"||code==="R7"){score+=12;reasons.push(code==="R7"?"apporte de la vitesse avec un format ludique":"travaille vitesse et économie") }
+  if(code==="R1"||code==="R8"){score+=20+(hDays<1.5?24:0)+(legs>=4?20:0);reasons.push(code==="R8"?"développe l’endurance avec une allure progressive":"favorise récupération et base aérobie") }
+  if(code==="A"||code==="B"){score+=14+(hDays<1.2?16:0);reasons.push("entretient la force sans grosse contrainte jambes")}
+  if(sess?.hardLegs&&hDays<1.25){score-=50;reasons.push("forte charge jambes récente")}
+  if(sess?.hardLegs&&legs>=4){score-=40;reasons.push("jambes fatiguées")}
+  if(sess?.hardLegs&&readiness<=2){score-=35;reasons.push("récupération basse")}
+  if(hardLast(7)>=3&&sess?.hardLegs){score-=25;reasons.push("déjà beaucoup de séances exigeantes")}
+  const last=lastOf(code);if(last&&daysAgo(last.date)<2.5){score-=22;reasons.push("séance identique récente")}
+  if(sess?.duration>num(s.availableMin)){score-=80;reasons.push("dépasse le temps disponible")}
+  if(knee.level==="danger"){
+    if(sess?.type==="run") score-=code==="R1"?30:100;
+    if(code==="C")score-=85;
+  }else if(knee.level==="warn"){
+    if(sess?.hardLegs&&sess?.type==="run")score-=70;
+    if(code==="C")score-=35;
+  }
+  return {code,score,reasons};
+}
+function recommendation(){return state.sessions.map(x=>scoreSession(x.code)).sort((a,b)=>b.score-a.score)}
+function compat(a,b){
+  const A=sessionBy(a),B=sessionBy(b);if(!A||!B)return {lvl:"mid",txt:"À évaluer"};
+  if(a===b)return {lvl:"no",txt:"Même séance"};
+  if(A.hardLegs&&B.hardLegs)return {lvl:"no",txt:"Deux fortes charges jambes"};
+  if((A.code==="C"&&B.type==="run")||(B.code==="C"&&A.type==="run")){
+    if(A.code==="R1"||B.code==="R1")return {lvl:"mid",txt:"Possible seulement très facile et bien récupéré"};
+    return {lvl:"no",txt:"À éviter le même jour"};
+  }
+  if((A.type==="strength"&&!A.hardLegs&&B.code==="R1")||(B.type==="strength"&&!B.hardLegs&&A.code==="R1"))return {lvl:"ok",txt:"Bon doublé"};
+  if(A.hardLegs||B.hardLegs)return {lvl:"mid",txt:"Possible avec plusieurs heures d’écart"};
+  return {lvl:"ok",txt:"Compatible"};
 }
 
-function getLastExercise(name){
-  for(const w of state.workouts){
-    const ex=w.exercises.find(e=>e.name===name);
-    if(ex && ex.entries && ex.entries.some(s=>s.done)) return ex;
+function plansOn(k){return state.planned[k]||[]}
+function historyOn(k){return state.history.filter(h=>historyDateKey(h)===k)}
+function planById(k,id){return plansOn(k).find(p=>p.id===id)}
+function firstActivePlan(k){return plansOn(k).find(p=>p.status==="planned")}
+function todayDecision(){
+  const k=todayKey();const p=firstActivePlan(k);const knee=kneeStatus();
+  if(p){
+    if(p.code==="REST")return {rest:true,plan:p,reason:p.note||"Journée de récupération prévue au calendrier."};
+    const s=sessionBy(p.code);
+    if(s&&(s.hardLegs||s.type==="run")&&knee.level==="danger"){
+      const safe=recommendation().find(r=>["A","B"].includes(r.code))||recommendation()[0];
+      return {code:safe.code,plan:p,overridden:true,reason:`${displayCode(p.code)} était prévu, mais ${knee.label.toLowerCase()} : proposition plus prudente aujourd’hui.`};
+    }
+    if(s?.hardLegs&&s.type==="run"&&knee.level==="warn"){
+      return {code:"R1",plan:p,overridden:true,reason:`${displayCode(p.code)} était prévu, mais le suivi genou est orange : une D facile est proposée à la place.`};
+    }
+    return {code:p.code,plan:p,reason:`Séance prévue au planning aujourd’hui${p.note?` : ${p.note}`:"."}`};
   }
+  const best=recommendation()[0];return {code:best.code,reason:best.reasons[0]||"meilleur compromis selon les données enregistrées"};
+}
+function todayKey(){return dateKey(new Date())}
+
+let activeTab="today";
+let activityMode="month";
+let calendarCursor=new Date(new Date().getFullYear(),new Date().getMonth(),1,12);
+let selectedDate=todayKey();
+let runCursor=new Date(new Date().getFullYear(),new Date().getMonth(),1,12);
+const view=document.getElementById("view");
+const quickDialog=document.getElementById("quickDialog");
+const sessionDialog=document.getElementById("sessionDialog");
+document.querySelectorAll(".nav-btn").forEach(b=>b.onclick=()=>{activeTab=b.dataset.tab;render()});
+
+function render(){
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.tab===activeTab));
+  ({today:renderToday,activity:renderActivity,sessions:renderSessions,running:renderRunning,history:renderHistory,stats:renderStats,settings:renderSettings}[activeTab]||renderToday)();
+}
+function kneeBadge(){const k=kneeStatus();const cls=k.level==="mid"?"":k.level;return `<span class="badge ${cls}">${esc(k.label)}</span>`}
+function renderToday(){
+  const dec=todayDecision(),knee=kneeStatus(),today=new Date().toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"});
+  const planned=plansOn(todayKey());const upcoming=upcomingPlans(7);
+  let hero="";
+  if(dec.rest){
+    hero=`<section class="card hero"><div class="row between"><span class="badge">REPOS</span><span class="small">Activité</span></div><div class="big" style="margin-top:10px">Récupération</div><p class="muted">${esc(dec.reason)}</p><div class="notice ${knee.level}">${esc(knee.text)}</div><div class="action-grid"><button class="secondary" onclick="chooseSession(false,'${todayKey()}')">Faire une séance</button><button class="secondary" onclick="activeTab='activity';render()">Voir activité</button></div></section>`;
+  }else{
+    const s=sessionBy(dec.code);
+    const planArg=dec.plan?`,'${todayKey()}','${dec.plan.id}'`:`,'${todayKey()}',null`;
+    hero=`<section class="card hero">
+      <div class="row between"><span class="badge ${s.type==="run"?"blue":"accent"}">${esc(displayCode(s.code))} · ${s.type==="run"?"COURSE":"MUSCU"}</span><span class="small">≈ ${dec.plan?.plannedDuration||s.duration} min</span></div>
+      <div class="big" style="margin-top:10px">${esc(s.title)}</div>
+      <p class="muted">${esc(dec.reason)}</p>
+      ${dec.overridden?`<div class="notice warn"><strong>Planning adapté :</strong> ${esc(displayCode(dec.plan.code))} reste dans le planning mais n’est pas prioritaire aujourd’hui.</div>`:""}
+      <div class="notice ${knee.level}"><strong>${esc(knee.label)} :</strong> ${esc(knee.text)}</div>
+      <div class="action-grid"><button class="primary" onclick="openSession('${s.code}'${planArg})">Démarrer ${displayCode(s.code)}</button><button class="secondary" onclick="chooseSession(false,'${todayKey()}')">Changer</button><button class="secondary" onclick="chooseSession(true,'${todayKey()}')">+ 2e séance</button></div>
+    </section>`;
+  }
+  view.innerHTML=`
+    <div class="section-title"><div><div class="small">${esc(today)}</div><h2>Aujourd’hui</h2></div><div class="row wrap">${kneeBadge()}<span class="badge good">${completedLast(7)} / 7 j</span></div></div>
+    ${hero}
+    ${planned.length?`<section class="card"><div class="row between"><h3 style="margin:0">Prévu aujourd’hui</h3><button class="ghost" onclick="selectedDate='${todayKey()}';activeTab='activity';render()">Gérer</button></div>${planned.map(p=>planRow(p,todayKey())).join("")}</section>`:""}
+    <div class="section-title"><h2>7 prochains jours</h2><button class="ghost" onclick="activeTab='activity';render()">Activité</button></div>
+    <section class="card">${upcoming.length?upcoming.map(x=>`<div class="kpi"><div><strong>${esc(fmtDate(x.date))} · ${esc(displayCode(x.plan.code))}</strong><div class="small">${esc(planTitle(x.plan))}${x.plan.note?` · ${esc(x.plan.note)}`:""}</div></div><span class="badge ${isRunCode(x.plan.code)?"blue":x.plan.code==="REST"?"":"accent"}">${x.plan.status==="done"?"✓":"prévu"}</span></div>`).join(""):`<p class="muted">Rien de planifié.</p>`}</section>
+    <div class="section-title"><h2>Suivi rapide</h2><span class="small">modifie les recommandations</span></div>
+    <div class="metric-grid"><div class="metric"><div class="v">${state.settings.kneeToday||0}/10</div><div class="l">Douleur genou aujourd’hui</div></div><div class="metric"><div class="v">${state.settings.readiness}/5</div><div class="l">Récupération</div></div><div class="metric"><div class="v">${state.settings.legs}/5</div><div class="l">Fatigue jambes</div></div><div class="metric"><div class="v">5:00</div><div class="l">Allure cible 10 km</div></div></div>
+    <button class="secondary full" style="margin-top:10px" onclick="activeTab='settings';render()">Mettre à jour l’état du jour</button>`;
+}
+function planTitle(p){if(p.code==="REST")return p.title||"Repos";return p.title||sessionBy(p.code)?.title||p.code}
+function upcomingPlans(days){
+  const out=[],start=parseDateKey(todayKey());
+  for(let i=0;i<days;i++){
+    const k=dateKey(addDays(start,i));plansOn(k).forEach(p=>{if(p.status!=="skipped")out.push({date:k,plan:p})});
+  }
+  return out;
+}
+function sessionCard(s,open=false){return `<div class="card session-card ${open?"clickable":""}" ${open?`onclick="openSession('${s.code}','${todayKey()}',null)"`:""}><div class="code ${s.type==="run"?"run":""}">${esc(displayCode(s.code))}</div><div><strong>${esc(s.title)}</strong><p>${esc(s.goal)} · ≈ ${s.duration} min</p></div><div class="chev">›</div></div>`}
+function renderSessions(){
+  const strength=state.sessions.filter(s=>s.type==="strength");
+  view.innerHTML=`<div class="section-title"><h2>Musculation</h2><span class="small">simple · efficace · A/B/C</span></div>${strength.map(s=>sessionCard(s,true)).join("")}
+  <section class="card"><div class="notice">A, B et C restent volontairement simples. On ajustera surtout B et C à partir de tes vraies séances, charges, reps et sensations.</div></section>
+  <button class="secondary full" onclick="chooseSession(true,'${todayKey()}')">+ Ajouter une 2e séance aujourd’hui</button>`;
+}
+
+function setActivityMode(mode){activityMode=mode;render()}
+function activitySegments(){return `<div class="segment"><button class="${activityMode==="week"?"active":""}" onclick="setActivityMode('week')">Semaine</button><button class="${activityMode==="month"?"active":""}" onclick="setActivityMode('month')">Mois</button><button class="${activityMode==="year"?"active":""}" onclick="setActivityMode('year')">Année</button></div>`}
+function renderActivity(){
+  if(activityMode==="week")return renderActivityWeek();
+  if(activityMode==="year")return renderActivityYear();
+  return renderActivityMonth();
+}
+function activityCodesOn(k){
+  const items=[];
+  plansOn(k).filter(p=>p.status!=="skipped"&&p.code!=="REST").forEach(p=>items.push({code:displayCode(p.code),type:isRunCode(p.code)?"run":"strength",done:p.status==="done"}));
+  historyOn(k).forEach(h=>{const dc=displayCode(h.code);if(!items.some(x=>x.done&&x.code===dc))items.push({code:dc,type:h.type,done:true})});
+  return items;
+}
+function activityLegend(){return `<div class="row wrap"><span class="badge accent">A/B/C = muscu</span><span class="badge blue">D = course</span><span class="badge good">contour = fait</span></div>`}
+function activityHistorySummary(){
+  const hs=[...state.history].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,10);
+  return `<div class="section-title"><h2>Dernières activités</h2><span class="small">détail conservé dans les stats</span></div><section class="card">${hs.length?hs.map(h=>`<div class="kpi"><div><strong>${esc(fmtDate(historyDateKey(h)))} · ${esc(displayCode(h.code))}</strong><div class="small">${h.type==="run"?esc(runVariantLabel(h.code)):esc(sessionBy(h.code)?.title||"")}${h.duration?` · ${h.duration} min`:""}</div></div><span class="badge good">✓</span></div>`).join(""):`<p class="muted">Aucune activité enregistrée.</p>`}</section>`;
+}
+function renderActivityMonth(){
+  const first=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth(),1,12),gridStart=startOfWeek(first),days=Array.from({length:42},(_,i)=>addDays(gridStart,i));
+  view.innerHTML=`<div class="section-title"><div><h2>Activité</h2><div class="small">Planning lisible : A · B · C · D</div></div><span class="badge">mois</span></div>${activitySegments()}<section class="card"><div class="calendar-head"><button class="ghost" onclick="moveMonth(-1)">‹</button><div class="calendar-title">${esc(monthTitle(first))}</div><div class="row"><button class="ghost" onclick="goTodayCalendar()">Aujourd’hui</button><button class="ghost" onclick="moveMonth(1)">›</button></div></div>${activityLegend()}<div class="calendar-weekdays" style="margin-top:10px"><div>Lun</div><div>Mar</div><div>Mer</div><div>Jeu</div><div>Ven</div><div>Sam</div><div>Dim</div></div><div class="calendar-grid">${days.map(d=>calendarDay(d,first.getMonth())).join("")}</div></section>${renderDayDetail(selectedDate)}${activityHistorySummary()}`;
+}
+function renderActivityWeek(){
+  const base=startOfWeek(parseDateKey(selectedDate)),days=Array.from({length:7},(_,i)=>addDays(base,i));
+  view.innerHTML=`<div class="section-title"><div><h2>Activité</h2><div class="small">Semaine du ${esc(fmtDate(dateKey(base)))}</div></div><span class="badge">semaine</span></div>${activitySegments()}<section class="card"><div class="calendar-head"><button class="ghost" onclick="moveActivityWeek(-1)">‹</button><div class="calendar-title">${esc(fmtDate(dateKey(base)))} → ${esc(fmtDate(dateKey(days[6])))}</div><button class="ghost" onclick="moveActivityWeek(1)">›</button></div>${activityLegend()}<div class="week-grid" style="margin-top:12px">${days.map(d=>weekActivityDay(d)).join("")}</div></section>${renderDayDetail(selectedDate)}${activityHistorySummary()}`;
+}
+function weekActivityDay(d){const k=dateKey(d),codes=activityCodesOn(k);return `<div class="week-day ${k===todayKey()?"today":""} ${k===selectedDate?"selected":""}" onclick="selectCalendarDay('${k}')"><div class="small">${d.toLocaleDateString('fr-FR',{weekday:'short'})}</div><strong>${d.getDate()}</strong><div class="daydots">${codes.map(x=>`<span class="dot ${x.type==="run"?"run":"strength"} ${x.done?"done":""}">${esc(x.code)}</span>`).join("")||`<span class="tiny">—</span>`}</div></div>`}
+function moveActivityWeek(n){selectedDate=dateKey(addDays(startOfWeek(parseDateKey(selectedDate)),n*7));calendarCursor=new Date(parseDateKey(selectedDate).getFullYear(),parseDateKey(selectedDate).getMonth(),1,12);render()}
+function renderActivityYear(){
+  const y=calendarCursor.getFullYear();
+  const cards=Array.from({length:12},(_,m)=>yearMonthCard(y,m)).join("");
+  view.innerHTML=`<div class="section-title"><div><h2>Activité</h2><div class="small">Vue annuelle A/B/C/D</div></div><span class="badge">${y}</span></div>${activitySegments()}<section class="card"><div class="calendar-head"><button class="ghost" onclick="moveActivityYear(-1)">‹</button><div class="calendar-title">${y}</div><button class="ghost" onclick="moveActivityYear(1)">›</button></div>${activityLegend()}<div class="year-grid" style="margin-top:12px">${cards}</div></section>${activityHistorySummary()}`;
+}
+function yearMonthCard(y,m){
+  const start=new Date(y,m,1,12),end=new Date(y,m+1,0,12),counts={A:0,B:0,C:0,D:0},done={A:0,B:0,C:0,D:0};
+  for(let d=new Date(start);d<=end;d=addDays(d,1)){activityCodesOn(dateKey(d)).forEach(x=>{counts[x.code]=(counts[x.code]||0)+1;if(x.done)done[x.code]=(done[x.code]||0)+1})}
+  return `<button class="year-card" onclick="openActivityMonth(${y},${m})"><strong>${start.toLocaleDateString('fr-FR',{month:'short'})}</strong><div class="year-counts"><span>A ${done.A}/${counts.A}</span><span>B ${done.B}/${counts.B}</span><span>C ${done.C}/${counts.C}</span><span class="runtext">D ${done.D}/${counts.D}</span></div></button>`;
+}
+function moveActivityYear(n){calendarCursor=new Date(calendarCursor.getFullYear()+n,calendarCursor.getMonth(),1,12);render()}
+function openActivityMonth(y,m){calendarCursor=new Date(y,m,1,12);selectedDate=dateKey(new Date(y,m,1,12));activityMode="month";render()}
+
+function calendarDay(d,currentMonth){
+  const k=dateKey(d),codes=activityCodesOn(k);
+  const cls=["day",d.getMonth()!==currentMonth?"other":"",k===todayKey()?"today":"",k===selectedDate?"selected":""].filter(Boolean).join(" ");
+  return `<div class="${cls}" onclick="selectCalendarDay('${k}')"><div class="daynum">${d.getDate()}</div><div class="daydots">${codes.slice(0,3).map(x=>`<span class="dot ${x.type==="run"?"run":x.type==="strength"?"strength":"rest"} ${x.done?"done":""}">${esc(x.code)}</span>`).join("")}</div>${codes.length>3?`<div class="daymore">+${codes.length-3}</div>`:""}</div>`;
+}
+function renderDayDetail(k){
+  const plans=plansOn(k),hs=historyOn(k),isFuture=k>todayKey();
+  return `<div class="section-title"><div><div class="small">${esc(fmtLongDate(k))}</div><h2>Détail du jour</h2></div><button class="primary" onclick="chooseSession(false,'${k}',true)">+ Planifier</button></div>
+  <section class="card"><h3>Prévu</h3>${plans.length?plans.map(p=>planRow(p,k,isFuture)).join(""):`<p class="muted">Aucune séance prévue.</p>`}</section>
+  <section class="card"><h3>Effectué</h3>${hs.length?hs.map(h=>historyCompact(h)).join(""):`<p class="muted">Aucune séance enregistrée ce jour.</p>`}</section>`;
+}
+function planRow(p,k,isFuture=k>todayKey()){
+  const s=p.code==="REST"?null:sessionBy(p.code);const type=s?.type||"rest";const done=p.status==="done";
+  return `<div class="day-plan"><div class="code ${type==="run"?"run":type==="rest"?"rest":""}">${esc(displayCode(p.code))}</div><div><strong>${esc(planTitle(p))}</strong><div class="small">${done?"Effectué":p.status==="skipped"?"Sauté":"Prévu"}${p.plannedDuration?` · ${p.plannedDuration} min`:""}${p.runMain?` · ${esc(p.runMain)}`:""}</div>${p.note?`<div class="tiny">${esc(p.note)}</div>`:""}</div><div class="plan-actions">${p.code!=="REST"&&!done?`<button class="mini good" ${isFuture?"disabled":""} onclick="event.stopPropagation();openSession('${p.code}','${k}','${p.id}')">${isFuture?"À venir":"Démarrer"}</button>`:""}${!done?`<button class="mini" onclick="event.stopPropagation();movePlanDialog('${k}','${p.id}')">Déplacer</button>`:""}<button class="mini danger" onclick="event.stopPropagation();removePlan('${k}','${p.id}')">×</button></div></div>`;
+}
+function historyCompact(h){return `<div class="history-item"><div class="row between"><div><strong>${esc(displayCode(h.code))} · ${esc(sessionBy(h.code)?.title||h.title||"")}</strong><div class="history-meta">RPE ${h.rpe||"—"}${h.duration?` · ${h.duration} min`:""}</div></div><span class="badge good">✓</span></div>${h.run?`<div class="small">${h.run.distance?`${h.run.distance} km · `:""}${h.run.paceSec?secToPace(h.run.paceSec):""}${h.run.cadence?` · ${h.run.cadence} ppm`:""}</div>`:""}</div>`}
+function moveMonth(n){calendarCursor=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth()+n,1,12);render()}
+function goTodayCalendar(){calendarCursor=new Date(new Date().getFullYear(),new Date().getMonth(),1,12);selectedDate=todayKey();render()}
+function selectCalendarDay(k){selectedDate=k;calendarCursor=new Date(parseDateKey(k).getFullYear(),parseDateKey(k).getMonth(),1,12);render()}
+function addPlanForDate(k,code){
+  state.planned[k]=state.planned[k]||[];
+  if(code==="REST")state.planned[k].push(makePlan("REST",{title:"Repos / marche"}));else state.planned[k].push(makePlan(code));
+  save();quickDialog.close();selectedDate=k;activeTab="activity";render();
+}
+function removePlan(k,id){if(confirm("Retirer cette entrée du calendrier ?")){state.planned[k]=(state.planned[k]||[]).filter(p=>p.id!==id);if(!state.planned[k].length)delete state.planned[k];save();render()}}
+function movePlanDialog(k,id){
+  const p=planById(k,id);if(!p)return;
+  document.getElementById("quickDialogContent").innerHTML=`<div class="dialog-inner"><div class="dialog-head"><h2 style="margin:0">Déplacer ${esc(p.code)}</h2><button class="close" onclick="quickDialog.close()">×</button></div><label>Nouvelle date</label><input id="moveDate" type="date" value="${k}"><button class="primary full" style="margin-top:12px" onclick="confirmMovePlan('${k}','${id}')">Déplacer</button></div>`;quickDialog.showModal();
+}
+function confirmMovePlan(oldK,id){
+  const newK=document.getElementById("moveDate").value;if(!newK)return;const p=planById(oldK,id);if(!p)return;
+  state.planned[oldK]=(state.planned[oldK]||[]).filter(x=>x.id!==id);if(!state.planned[oldK].length)delete state.planned[oldK];
+  state.planned[newK]=state.planned[newK]||[];state.planned[newK].push(p);save();quickDialog.close();selectedDate=newK;calendarCursor=new Date(parseDateKey(newK).getFullYear(),parseDateKey(newK).getMonth(),1,12);render();
+}
+
+function plannedRunsInMonth(cursor=runCursor){
+  const y=cursor.getFullYear(),m=cursor.getMonth(),out=[];
+  Object.keys(state.planned).sort().forEach(k=>{const d=parseDateKey(k);if(d.getFullYear()===y&&d.getMonth()===m)plansOn(k).forEach(p=>{if(isRunCode(p.code)&&p.status!=="skipped")out.push({date:k,plan:p})})});
+  return out;
+}
+function nextPlannedRun(){
+  const start=parseDateKey(todayKey());
+  for(let i=0;i<28;i++){const k=dateKey(addDays(start,i));const p=plansOn(k).find(x=>isRunCode(x.code)&&x.status==="planned");if(p)return {date:k,plan:p}}
   return null;
 }
-function lastSummary(ex){
-  if(!ex) return 'Aucune référence enregistrée';
-  return ex.entries.filter(s=>s.done).map(s=>ex.unit==='sec'?`${s.reps}s`:`${s.weight||0}kg × ${s.reps}`).join(' / ');
-}
-function prefillFromLast(template){
-  const last=getLastExercise(template.name);
-  const entries=[];
-  for(let i=0;i<template.sets;i++){
-    let src=last && last.entries.filter(s=>s.done)[i];
-    entries.push({
-      weight: src && src.weight!==undefined ? src.weight : template.weight,
-      reps: src && src.reps!==undefined ? src.reps : template.reps,
-      feel:'moyen',done:false
-    });
+function lastRunCodes(n=3){return state.history.filter(h=>h.type==="run").sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,n).map(h=>h.code)}
+function runningCoachAdvice(){
+  const knee=kneeStatus(),next=nextPlannedRun(),lastCodes=lastRunCodes(3),lastHard=lastHardDays(),weak=weaknessModel()[0]?.key;
+  let code="R1",why="Construire la tolérance et l’endurance sans ajouter de fatigue inutile.",fun="Choisis un parcours agréable et cours uniquement au ressenti.";
+  if(knee.level==="danger"){
+    code="R1";why="La réaction des genoux est trop élevée pour une séance rapide. Priorité au plat, facile, et à une durée réduite.";fun="Fais un aller-retour : demi-tour à mi-temps, sans regarder l’allure.";
+  }else if(knee.level==="warn"){
+    code="R1";why="Les genoux sont encore en zone orange. On garde une D facile mais on peut la rendre moins monotone sans accélérations franches.";fun="Toutes les 8 minutes, 20 s de pas légèrement plus courts, puis retour facile.";
+  }else if(knee.level==="mid"){
+    code="R1";why="Le suivi à 1 h / J+1 / 48 h n’est pas encore assez complet pour valider une D rapide. On construit d’abord une base sûre.";fun="Choisis un trajet en boucle : à chaque tour, change seulement le point d’attention (posture, respiration, cadence), pas la vitesse.";
+  }else{
+    const candidates=weak==="climbPower"||weak==="climbEndurance"?["R5","R7","R8","R3"]:weak==="10k"?["R4","R3","R7","R2"]:["R8","R7","R3","R2"];
+    code=candidates.find(c=>!lastCodes.includes(c))||candidates[0];
+    if(lastHard<2.5){code="R1";why="Une charge jambes exigeante est récente : aujourd’hui, une D facile donnera plus de bénéfice qu’une deuxième séance dure.";fun="Course exploration : change une rue ou un chemin habituel, sans changer l’intensité.";}
+    else if(code==="R5"){why="Tes indicateurs de montée restent prioritaires : une petite dose de côte travaille puissance et technique sans faire une longue séance.";fun="Choisis une côte courte et régulière ; compte les répétitions, pas la vitesse.";}
+    else if(code==="R4"){why="Le prochain levier pour le 10 km est de rendre l’allure proche de 5:00/km plus familière, sans courir toute la séance vite.";fun="Chaque répétition est un mini-défi de régularité : cherche l’écart d’allure le plus faible.";}
+    else if(code==="R3"){why="Le tempo améliore la capacité à tenir une allure soutenue, utile pour ton objectif 10 km.";fun="Cours les blocs au ressenti 7/10 et regarde l’allure seulement après.";}
+    else if(code==="R7"){why="Le fartlek apporte de la vitesse avec moins de rigidité qu’un fractionné au chrono et évite la monotonie.";fun="Sur chaque minute vive, choisis un repère devant toi plutôt qu’une vitesse précise.";}
+    else if(code==="R8"){why="Une progressive développe l’endurance et la maîtrise d’allure avec une charge mécanique plus douce qu’un fractionné.";fun="Objectif : chaque tiers légèrement plus rapide que le précédent, sans sprint final.";}
+    else {why="Un peu de vitesse courte est utile, à condition que les genoux restent calmes après les sorties.";fun="Alterne une minute vive / une minute facile et arrête les répétitions si la foulée se dégrade.";}
   }
-  return entries;
+  const sess=sessionBy(code);return {code,session:sess,why,fun,next,knee};
 }
-function startSession(k){
-  current={key:k,name:templates[k].name,startedAt:new Date().toISOString(),exercises:templates[k].exercises.map(e=>({...e,entries:prefillFromLast(e)}))};
-  workoutTitle.textContent=current.name;renderWorkout();showView('workout')
+function runCalendarDay(d,currentMonth){
+  const k=dateKey(d),runs=[];plansOn(k).filter(p=>isRunCode(p.code)&&p.status!=="skipped").forEach(p=>runs.push({done:p.status==="done"}));historyOn(k).filter(h=>h.type==="run").forEach(()=>runs.push({done:true}));
+  const cls=["day",d.getMonth()!==currentMonth?"other":"",k===todayKey()?"today":""].filter(Boolean).join(" ");
+  return `<div class="${cls}" onclick="selectedDate='${k}';calendarCursor=new Date(${d.getFullYear()},${d.getMonth()},1,12);activeTab='activity';activityMode='month';render()"><div class="daynum">${d.getDate()}</div>${runs.length?`<div class="daydots"><span class="dot run ${runs.some(x=>x.done)?"done":""}">D</span></div>`:""}</div>`;
 }
-function renderWorkout(){
-  exerciseList.innerHTML='';
-  current.exercises.forEach((e,ei)=>{
-    const last=getLastExercise(e.name);
-    let b=document.createElement('section');b.className='exercise';
-    b.innerHTML=`<div class="row between wrap"><div><h3>${e.name}</h3><div class="small muted">${e.group} • Objectif ${e.target}</div></div><span class="tag">${e.rest==='big'?'Repos long':'Repos court'}</span></div>
-      <div class="lastbox"><div class="sectionlabel">DERNIÈRE FOIS</div><div class="lastline">${lastSummary(last)}</div></div>`;
-    e.entries.forEach((s,si)=>{
-      let r=document.createElement('div');r.className='setrow'+(s.done?' done':'');
-      r.innerHTML=`<b class="small">S${si+1}</b><input type="number" step=".5" value="${s.weight}" placeholder="kg" ${e.unit==='sec'?'disabled':''} onchange="upd(${ei},${si},'weight',this.value)"><input type="number" step="1" value="${s.reps}" onchange="upd(${ei},${si},'reps',this.value)"><button class="btn ${s.done?'primary':''}" onclick="toggleSet(${ei},${si},this)">${s.done?'✓ Fait':'Valider'}</button>`;
-      b.appendChild(r)
-    });
-    let f=document.createElement('div');f.className='row wrap';f.style.marginTop='10px';
-    f.innerHTML=`<span class="small muted">Ressenti :</span><select class="field" style="max-width:150px" onchange="setFeel(${ei},this.value)"><option>facile</option><option selected>moyen</option><option>dur</option></select>`;
-    b.appendChild(f);exerciseList.appendChild(b)
-  })
+function runFollowupList(){
+  const hs=state.history.filter(h=>h.type==="run").sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,6);
+  if(!hs.length)return `<p class="muted">Après ta première D, le suivi genou apparaîtra ici.</p>`;
+  return hs.map(h=>{const k=h.run?.knee||{};const pending=k.oneHour==null||k.nextMorning==null||k.after48h==null;return `<div class="kpi"><div><strong>${esc(fmtDate(historyDateKey(h)))} · ${esc(runVariantLabel(h.code))}</strong><div class="small">départ ${k.start??"—"} · 1 h ${k.oneHour??"—"} · J+1 ${k.nextMorning??"—"} · 48 h ${k.after48h??"—"}</div></div><button class="mini ${pending?"":"good"}" onclick="editKnee('${h.id}')">${pending?"Compléter":"Modifier"}</button></div>`}).join("");
 }
-function upd(ei,si,k,v){current.exercises[ei].entries[si][k]=v===''?'':Number(v)}
-function setFeel(ei,v){let s=[...current.exercises[ei].entries].reverse().find(x=>x.done);if(s)s.feel=v}
-function toggleSet(ei,si,btn){let s=current.exercises[ei].entries[si];s.done=!s.done;btn.textContent=s.done?'✓ Fait':'Valider';btn.classList.toggle('primary',s.done);btn.parentElement.classList.toggle('done',s.done);if(s.done)startTimer(rest(current.exercises[ei].rest))}
-function startTimer(sec){stopTimer(false);timerEnd=Date.now()+sec*1000;timerBar.classList.add('show');tick();timerId=setInterval(tick,250)}
-function tick(){let l=Math.max(0,Math.ceil((timerEnd-Date.now())/1000));timerText.textContent=String(Math.floor(l/60)).padStart(2,'0')+':'+String(l%60).padStart(2,'0');if(l<=0){stopTimer();if(navigator.vibrate)navigator.vibrate([150,80,150])}}
-function addTimer(s){timerEnd+=s*1000;tick()}
-function stopTimer(h=true){if(timerId){clearInterval(timerId);timerId=null}if(h!==false)timerBar.classList.remove('show')}
-function finishWorkout(){if(!current.exercises.some(e=>e.entries.some(s=>s.done))&&!confirm('Aucune série validée. Enregistrer quand même ?'))return;current.finishedAt=new Date().toISOString();state.workouts.unshift(JSON.parse(JSON.stringify(current)));save();current=null;stopTimer();showView('home')}
-function cancelWorkout(){if(confirm('Quitter sans enregistrer ?')){current=null;stopTimer();showView('home')}}
-
-function renderPlan(){
-  let p=plan(), jsDay=(new Date().getDay()+6)%7;
-  weekPlan.innerHTML=DAYS.map((d,i)=>`<div class="day"><div class="${i===jsDay?'today':''}">${d}${i===jsDay?'<div class="tiny">Aujourd’hui</div>':''}</div><select class="field" onchange="changePlan(${i},this.value)"><option value="rest" ${p[i]==='rest'?'selected':''}>Repos</option><option value="run" ${p[i]==='run'?'selected':''}>Course</option><option value="A" ${p[i]==='A'?'selected':''}>Séance A</option><option value="B" ${p[i]==='B'?'selected':''}>Séance B</option><option value="C" ${p[i]==='C'?'selected':''}>Séance C</option></select></div>`).join('')
+function renderRunning(){
+  const first=new Date(runCursor.getFullYear(),runCursor.getMonth(),1,12),gridStart=startOfWeek(first),days=Array.from({length:42},(_,i)=>addDays(gridStart,i)),monthRuns=plannedRunsInMonth(first),ad=runningCoachAdvice(),s=ad.session,next=ad.next;
+  view.innerHTML=`<div class="section-title"><div><h2>Course · D</h2><div class="small">objectif 10 km &lt; 50 min · variété + efficacité</div></div><span class="badge blue">coach</span></div>
+  <section class="card hero"><div class="row between"><span class="badge blue">PROCHAINE D CONSEILLÉE</span>${kneeBadge()}</div><div class="big" style="margin-top:10px">${esc(s.title)}</div><p class="muted">${esc(ad.why)}</p><div class="card soft"><strong>Version ludique</strong><p class="small">${esc(ad.fun)}</p></div><div class="notice ${ad.knee.level}">${esc(ad.knee.text)}</div><div class="action-grid"><button class="primary" onclick="planCoachRun()">Adapter la prochaine D</button><button class="secondary" onclick="openSession('${s.code}','${todayKey()}',null)">Faire cette D aujourd’hui</button></div>${next?`<div class="small" style="margin-top:10px">Actuellement prévu : ${esc(fmtDate(next.date))} · ${esc(runVariantLabel(next.plan.code))}</div>`:""}</section>
+  <section class="card"><div class="calendar-head"><button class="ghost" onclick="moveRunMonth(-1)">‹</button><div class="calendar-title">${esc(monthTitle(first))}</div><button class="ghost" onclick="moveRunMonth(1)">›</button></div><div class="calendar-weekdays"><div>Lun</div><div>Mar</div><div>Mer</div><div>Jeu</div><div>Ven</div><div>Sam</div><div>Dim</div></div><div class="calendar-grid">${days.map(d=>runCalendarDay(d,first.getMonth())).join("")}</div></section>
+  <div class="section-title"><h2>Planning D du mois</h2><span class="badge">${monthRuns.length} prévue(s)</span></div><section class="card">${monthRuns.length?monthRuns.map(x=>runPlanRow(x.date,x.plan)).join(""):`<p class="muted">Aucune course planifiée ce mois-ci.</p>`}</section>
+  <div class="section-title"><h2>Suivi genoux après D</h2><span class="small">1 h · J+1 · 48 h</span></div><section class="card">${runFollowupList()}</section>
+  <div class="section-title"><h2>Variantes</h2><span class="small">pour ne pas courir toujours pareil</span></div>${state.sessions.filter(x=>x.type==="run").map(x=>`<div class="card session-card clickable" onclick="openSession('${x.code}','${todayKey()}',null)"><div class="code run">D</div><div><strong>${esc(x.title)}</strong><p>${esc(x.goal)} · ≈ ${x.duration} min</p></div><div class="chev">›</div></div>`).join("")}`;
 }
-function changePlan(i,v){let p=plan();p[i]=v;savePlan(p);renderPlan()}
-
-function allExercises(){
-  let map={};
-  Object.values(templates).forEach(t=>t.exercises.forEach(e=>map[e.name]={...e}));
-  state.workouts.forEach(w=>w.exercises.forEach(e=>{
-    if(!map[e.name])map[e.name]={...e};
-    let done=e.entries.filter(x=>x.done&&Number(x.weight)>0);
-    if(done.length)map[e.name].best=Math.max(map[e.name].best||0,...done.map(x=>Number(x.weight)));
-    if(done.length)map[e.name].last=done.map(x=>`${x.weight}×${x.reps}`).join(' / ');
-  }));
-  return Object.values(map)
-}
-function renderExercises(){
-  let f=groupFilter.value,a=allExercises().filter(e=>f==='all'||e.group===f);
-  exerciseLibrary.innerHTML=a.map(e=>`<div class="exlib"><div class="row between wrap"><div><b>${e.name}</b><div class="small muted">${e.group||''} • ${e.target||''}</div>${e.last?`<div class="small" style="margin-top:4px">Dernière : ${e.last}</div>`:''}</div><div style="text-align:right"><div class="small muted">Meilleure charge</div><b>${e.best||e.weight||'—'}${(e.best||e.weight)?' kg':''}</b></div></div></div>`).join('')
+function runPlanRow(k,p){const s=sessionBy(p.code);return `<div class="run-plan-row"><div><div class="small">${esc(fmtDate(k))}</div><strong>D · ${esc(s?.title||planTitle(p))}</strong><div class="small">${esc(p.runMain||s?.run?.main||"")}</div>${p.note?`<div class="tiny">${esc(p.note)}</div>`:""}</div><div class="plan-actions">${p.status==="done"?`<span class="badge good">✓</span>`:`<button class="mini" onclick="movePlanDialog('${k}','${p.id}')">Déplacer</button>`}</div></div>`}
+function moveRunMonth(n){runCursor=new Date(runCursor.getFullYear(),runCursor.getMonth()+n,1,12);render()}
+function planCoachRun(){
+  const ad=runningCoachAdvice(),next=ad.next;
+  if(next){next.plan.code=ad.code;next.plan.plannedDuration=ad.session.duration;next.plan.runMain=ad.session.run?.main||"";next.plan.note=`Adapté par le coach : ${ad.why}`;save();runCursor=new Date(parseDateKey(next.date).getFullYear(),parseDateKey(next.date).getMonth(),1,12);render();return}
+  const start=parseDateKey(todayKey());let target=null;for(let i=0;i<7;i++){const k=dateKey(addDays(start,i));if(!plansOn(k).some(p=>isRunCode(p.code))){target=k;break}}target=target||todayKey();state.planned[target]=state.planned[target]||[];state.planned[target].push(makePlan(ad.code,{plannedDuration:ad.session.duration,runMain:ad.session.run?.main||"",note:`Conseil coach : ${ad.why}`}));save();runCursor=new Date(parseDateKey(target).getFullYear(),parseDateKey(target).getMonth(),1,12);render();
 }
 
-function workoutStats(){
-  let sets=0,vol=0,reps=0;
-  state.workouts.forEach(w=>w.exercises.forEach(e=>e.entries.filter(s=>s.done).forEach(s=>{sets++;reps+=Number(s.reps)||0;if(!e.unit)vol+=(Number(s.weight)||0)*(Number(s.reps)||0)})));
-  return{sets,vol:Math.round(vol),reps}
+function renderHistory(){
+  const hs=[...state.history].sort((a,b)=>new Date(b.date)-new Date(a.date));
+  view.innerHTML=`<div class="section-title"><h2>Historique</h2><span class="badge">${hs.length} séance(s)</span></div><section class="card">${hs.length?hs.map(h=>historyItem(h)).join(""):`<p class="muted">Aucune séance enregistrée pour l’instant.</p>`}</section>`;
 }
-function refreshHome(){
-  let s=workoutStats();homeCount.textContent=state.workouts.length;homeSets.textContent=s.sets;homeVolume.textContent=s.vol.toLocaleString('fr-FR');
-  let w=state.workouts[0];lastWorkout.textContent=w?w.name+' • '+new Date(w.finishedAt||w.startedAt).toLocaleDateString('fr-FR'):'Aucune';
-  let p=plan(),today=(new Date().getDay()+6)%7,found=null;
-  for(let step=0;step<7;step++){let i=(today+step)%7;if(['A','B','C'].includes(p[i])){found={step,i,type:p[i]};break}}
-  if(found){nextSessionTitle.textContent=(found.step===0?'Aujourd’hui : ':'')+'Séance '+found.type;nextSessionText.textContent=(found.step===0?'Prévue aujourd’hui':`Prévue ${DAYS[found.i].toLowerCase()}`)+' • '+templates[found.type].name.replace('Séance '+found.type+' — ','')}
-  else{nextSessionTitle.textContent='Aucune séance planifiée';nextSessionText.textContent='Va dans Planning pour choisir tes jours.'}
+function historyItem(h){
+  const knee=h.run?.knee||null;const kneeTxt=knee?`Départ ${knee.start??"—"} · 2 km/fin ${knee.after2k??"—"} · 1 h ${knee.oneHour??"—"} · J+1 ${knee.nextMorning??"—"} · 48 h ${knee.after48h??"—"}`:"";
+  return `<div class="history-item"><div class="row between"><div><strong>${esc(displayCode(h.code))} · ${esc(sessionBy(h.code)?.title||h.title||"")}</strong><div class="history-meta">${fmtDate(historyDateKey(h))} · RPE ${h.rpe||"—"}${h.duration?` · ${h.duration} min`:""}</div></div><button class="ghost" onclick="deleteHistory('${h.id}')">×</button></div>${h.run?`<div class="small" style="margin-top:6px">${h.run.distance?`${h.run.distance} km · `:""}${h.run.paceSec?secToPace(h.run.paceSec):""}${h.run.hr?` · FC ${h.run.hr}`:""}${h.run.cadence?` · cadence ${h.run.cadence}`:""}${h.run.elev?` · D+ ${h.run.elev} m`:""}</div><div class="small" style="margin-top:5px">Genoux : ${esc(kneeTxt)}</div><button class="ghost" style="margin-top:7px" onclick="editKnee('${h.id}')">Suivi genou 1 h / J+1 / 48 h</button>`:""}${h.notes?`<div class="small" style="margin-top:5px">${esc(h.notes)}</div>`:""}</div>`;
+}
+function editKnee(id){
+  const h=state.history.find(x=>x.id===id);if(!h||!h.run)return;h.run.knee=h.run.knee||{};const k=h.run.knee;
+  document.getElementById("quickDialogContent").innerHTML=`<div class="dialog-inner"><div class="dialog-head"><div><div class="small">${esc(displayCode(h.code))} · ${esc(fmtDate(historyDateKey(h)))}</div><h2 style="margin:0">Suivi des genoux</h2></div><button class="close" onclick="quickDialog.close()">×</button></div><p class="small">Note la douleur maximale des deux genoux sur 10. Cela pilote les séances rapides suivantes.</p><div class="form-grid"><div><label>Au départ</label><input id="kStart" type="number" min="0" max="10" step=".5" value="${k.start??""}"></div><div><label>Après 2 km / fin</label><input id="k2" type="number" min="0" max="10" step=".5" value="${k.after2k??""}"></div><div><label>1 h après</label><input id="k1h" type="number" min="0" max="10" step=".5" value="${k.oneHour??""}"></div><div><label>Le lendemain matin</label><input id="kNext" type="number" min="0" max="10" step=".5" value="${k.nextMorning??""}"></div><div><label>48 h après</label><input id="k48" type="number" min="0" max="10" step=".5" value="${k.after48h??""}"></div></div><button class="primary full" style="margin-top:12px" onclick="saveKnee('${id}')">Enregistrer le suivi</button></div>`;quickDialog.showModal();
+}
+function nullableNumber(id){const v=document.getElementById(id).value;return v===""?null:+v}
+function saveKnee(id){const h=state.history.find(x=>x.id===id);if(!h?.run)return;h.run.knee={start:nullableNumber("kStart"),after2k:nullableNumber("k2"),oneHour:nullableNumber("k1h"),nextMorning:nullableNumber("kNext"),after48h:nullableNumber("k48")};save();quickDialog.close();render()}
+
+function plannedCompletion(days=28){
+  const end=parseDateKey(todayKey()),start=addDays(end,-days+1);let planned=0,done=0;
+  Object.keys(state.planned).forEach(k=>{const d=parseDateKey(k);if(d>=start&&d<=end)plansOn(k).forEach(p=>{if(p.code!=="REST"&&p.status!=="skipped"){planned++;if(p.status==="done"||historyOn(k).some(h=>h.code===p.code))done++}})});
+  return {planned,done,pct:planned?Math.round(done/planned*100):0};
+}
+function squatSnapshot(){
+  const hs=state.history.filter(h=>h.type==="strength"&&h.strength?.["Squat au banc"]).sort((a,b)=>new Date(b.date)-new Date(a.date));
+  if(!hs.length)return null;const sets=hs[0].strength["Squat au banc"].filter(s=>s.done);if(!sets.length)return null;return {date:historyDateKey(hs[0]),sets,text:sets.map(s=>`${s.kg||0}kg×${s.reps||0}${s.rir!==undefined&&s.rir!==""?` RIR${s.rir}`:""}`).join(" · ")};
+}
+function correlationKneeAfterC(){
+  const runs=state.history.filter(h=>h.run?.knee?.oneHour!=null);
+  const afterC=[],without=[];
+  runs.forEach(r=>{
+    const rt=new Date(r.date).getTime();
+    const cRecent=state.history.some(h=>h.code==="C"&&new Date(h.date).getTime()<rt&&(rt-new Date(h.date).getTime())<=48*3600000);
+    (cRecent?afterC:without).push(num(r.run.knee.oneHour));
+  });
+  if(afterC.length>=2&&without.length>=2){const a=avg(afterC),b=avg(without);const diff=a-b;return {ready:true,text:`Douleur à 1 h : ${a.toFixed(1)}/10 quand une C précède de <48 h, contre ${b.toFixed(1)}/10 sinon (${diff>=0?"+":""}${diff.toFixed(1)}).`};}
+  return {ready:false,text:"Il faut au moins 2 sorties avec suivi genou dans chaque situation (avec/sans C dans les 48 h) pour calculer cette corrélation."};
 }
 function renderStats(){
-  let s=workoutStats();statSessions.textContent=state.workouts.length;statSets.textContent=s.sets;statVolume.textContent=s.vol.toLocaleString('fr-FR');
-  let best={};state.workouts.forEach(w=>w.exercises.forEach(e=>e.entries.filter(x=>x.done&&Number(x.weight)>0).forEach(x=>best[e.name]=Math.max(best[e.name]||0,Number(x.weight)))));
-  let arr=Object.entries(best).sort((a,b)=>b[1]-a[1]);bestList.innerHTML=arr.length?arr.map(([n,k])=>`<div class="history"><div class="row between"><b>${n}</b><b>${k} kg</b></div></div>`).join(''):'<div class="muted">Pas encore de données.</div>';
-  historyList.innerHTML=state.workouts.length?state.workouts.map((w,i)=>`<div class="history"><div class="row between"><b>${w.name}</b><span class="small muted">${new Date(w.finishedAt||w.startedAt).toLocaleDateString('fr-FR')}</span></div>${w.exercises.map(e=>{let ss=e.entries.filter(x=>x.done);return ss.length?`<div class="small" style="margin-top:5px"><b>${e.name}</b> : ${ss.map(x=>e.unit==='sec'?x.reps+'s':(x.weight||0)+'kg×'+x.reps).join(' / ')}</div>`:''}).join('')}<button class="btn danger" style="margin-top:10px" onclick="delWorkout(${i})">Supprimer</button></div>`).join(''):'<div class="muted">Aucune séance enregistrée.</div>';
-  drawChart()
-}
-function delWorkout(i){if(confirm('Supprimer cette séance ?')){state.workouts.splice(i,1);save();renderStats()}}
-function drawChart(){
-  let c=activityChart,ctx=c.getContext('2d'),w=c.width,h=c.height;ctx.clearRect(0,0,w,h);
-  let bins=Array(8).fill(0),now=new Date();
-  state.workouts.forEach(x=>{let d=new Date(x.finishedAt||x.startedAt),diff=Math.floor((now-d)/(7*86400000));if(diff>=0&&diff<8)bins[7-diff]++});
-  let max=Math.max(1,...bins),pad=24,bw=(w-pad*2)/8;
-  ctx.strokeStyle='#334155';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad,h-24);ctx.lineTo(w-pad,h-24);ctx.stroke();
-  for(let i=0;i<8;i++){let bh=(h-50)*(bins[i]/max),x=pad+i*bw+8,y=h-24-bh;ctx.fillStyle='#22c55e';ctx.fillRect(x,y,bw-16,bh);ctx.fillStyle='#94a3b8';ctx.font='12px system-ui';ctx.textAlign='center';ctx.fillText(String(bins[i]),x+(bw-16)/2,y-6);ctx.fillText(i===7?'Cette sem.':'S-'+(7-i),x+(bw-16)/2,h-7)}
+  const weak=weaknessModel(),runs=state.history.filter(h=>h.run),strengths=state.history.filter(h=>h.type==="strength"),comp=plannedCompletion(28),squat=squatSnapshot(),corr=correlationKneeAfterC(),knee=kneeStatus();
+  const avgRpe=state.history.length?(state.history.reduce((a,h)=>a+num(h.rpe),0)/state.history.length).toFixed(1):"—";
+  const lastSpecific=lastOf("R6")||lastOf("R4");
+  view.innerHTML=`<div class="section-title"><h2>Analyse coach</h2><span class="badge accent">v${APP_VERSION}</span></div>
+    <section class="card hero"><div class="row between"><div><h3>État actuel</h3><div class="big">${esc(knee.label)}</div></div>${kneeBadge()}</div><p class="muted">${esc(knee.text)}</p></section>
+    <div class="metric-grid"><div class="metric"><div class="v">${comp.pct}%</div><div class="l">Planning réalisé · 28 j</div></div><div class="metric"><div class="v">${runs.length}</div><div class="l">Running enregistrés</div></div><div class="metric"><div class="v">${strengths.length}</div><div class="l">Musculation</div></div><div class="metric"><div class="v">${avgRpe}</div><div class="l">RPE moyen</div></div></div>
+    <section class="card"><h3>Objectif 10 km</h3><div class="kpi"><span>Allure cible</span><strong>5:00/km</strong></div><div class="kpi"><span>Dernière séance spécifique</span><strong>${lastSpecific?.run?.paceSec?secToPace(lastSpecific.run.paceSec):"À mesurer"}</strong></div><div class="kpi"><span>Temps cible</span><strong>&lt; 50:00</strong></div></section>
+    <section class="card"><h3>Progression jambes</h3>${squat?`<div class="kpi"><div><strong>Squat au banc</strong><div class="small">${esc(fmtDate(squat.date))}</div></div><strong>${esc(squat.text)}</strong></div>`:`<p class="muted">Pas encore de squat au banc enregistré.</p>`}</section>
+    <section class="card"><h3>Corrélation muscu ↔ genoux</h3><p class="small">${esc(corr.text)}</p></section>
+    <section class="card"><h3>Hiérarchie des besoins</h3>${weak.map((w,i)=>`<div class="rank"><span class="ranknum">${i+1}</span><div><strong>${esc(w.label)}</strong><div class="small">${esc(w.detail)}</div></div><span>${Math.round(w.need)}%</span></div>`).join("")}</section>
+    <button class="ghost full" onclick="activeTab='history';render()">Voir l’historique détaillé</button>`;
 }
 
-function exportData(){
-  let p={version:3,exportedAt:new Date().toISOString(),data:state,settings:settings(),plan:plan()},
-  b=new Blob([JSON.stringify(p,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');
-  a.href=u;a.download='muscu-sauvegarde-'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(u)
+function renderSettings(){
+  const s=state.settings;
+  view.innerHTML=`<div class="section-title"><h2>Réglages & données</h2></div>
+    <section class="card"><h3>État du jour</h3><div class="form-grid"><div><label>Récupération 1–5</label><input id="setReadiness" type="number" min="1" max="5" value="${s.readiness}"></div><div><label>Fatigue jambes 1–5</label><input id="setLegs" type="number" min="1" max="5" value="${s.legs}"></div><div><label>Douleur genoux 0–10</label><input id="setKnee" type="number" min="0" max="10" step=".5" value="${s.kneeToday||0}"></div><div><label>Temps disponible</label><select id="setAvailable"><option ${s.availableMin==30?"selected":""}>30</option><option ${s.availableMin==45?"selected":""}>45</option><option ${s.availableMin==60?"selected":""}>60</option></select></div></div><button class="primary full" style="margin-top:12px" onclick="saveDaily()">Recalculer ma séance</button></section>
+    <section class="card"><h3>Garmin</h3><div class="form-grid"><div><label>Score endurance</label><input id="gEnd" type="number" value="${s.enduranceScore}"></div><div><label>VO₂ max</label><input id="gVo2" type="number" value="${s.vo2max}"></div><div><label>Score montée</label><input id="gClimb" type="number" value="${s.climbScore}"></div><div><label>Endurance montée</label><input id="gClimbEnd" type="number" value="${s.climbEndurance}"></div><div><label>Puissance montée</label><input id="gClimbPow" type="number" value="${s.climbPower}"></div></div><button class="secondary full" style="margin-top:12px" onclick="saveGarmin()">Enregistrer Garmin</button></section>
+    <section class="card"><h3>Séances muscu</h3><p class="small">Tu peux modifier A, B ou C sans perdre l’historique. Format : Nom | séries | reps | repos.</p><div class="action-grid"><button class="secondary" onclick="editStrength('A')">Modifier A</button><button class="secondary" onclick="editStrength('B')">Modifier B</button><button class="secondary" onclick="editStrength('C')">Modifier C</button></div></section>
+    <section class="card"><h3>Planning</h3><p class="small">Activité affiche seulement A/B/C/D. L’onglet Course détaille les variantes de D et le conseil du coach.</p><button class="ghost full" onclick="rebuildPlan()">Reconstruire le cycle à partir de lundi</button></section>
+    <section class="card"><h3>Sauvegarde</h3><div class="action-grid"><button class="secondary" onclick="exportData()">Exporter JSON</button><label class="secondary" style="text-align:center;margin:0">Importer JSON<input id="importFile" type="file" accept="application/json" onchange="importData(this.files[0])" style="display:none"></label><button class="ghost" onclick="clearCaches()">Forcer mise à jour</button></div><div class="small" style="margin-top:10px">Version ${APP_VERSION} · données stockées sur cet appareil.</div></section>
+    <section class="card"><h3>Règles d’entraînement</h3><div class="notice">Pas de 1RM ni de répétitions forcées. Respiration continue sous charge. Les consignes de ton équipe médicale priment sur l’app. Arrête l’effort en cas de symptôme inhabituel, gonflement important, blocage ou dérobement du genou.</div></section>`;
 }
-importInput.addEventListener('change',async e=>{
-  let f=e.target.files[0];if(!f)return;
-  try{let p=JSON.parse(await f.text()),d=p.data||p;if(!d.workouts)throw 0;if(confirm('Remplacer les données locales ?')){state=d;save();if(p.settings)localStorage.setItem(SKEY,JSON.stringify(p.settings));if(p.plan)localStorage.setItem(PKEY,JSON.stringify(p.plan));alert('Import terminé')}}
-  catch{alert('Fichier invalide')}e.target.value=''
-})
-function clearData(){if(confirm('Effacer tout l’historique local ?')){state={workouts:[]};save();renderStats()}}
-bigRest.addEventListener('change',saveSettings);smallRest.addEventListener('change',saveSettings);
+function saveDaily(){state.settings.readiness=Math.max(1,Math.min(5,num(document.getElementById("setReadiness").value)||3));state.settings.legs=Math.max(1,Math.min(5,num(document.getElementById("setLegs").value)||2));state.settings.kneeToday=Math.max(0,Math.min(10,num(document.getElementById("setKnee").value)));state.settings.availableMin=num(document.getElementById("setAvailable").value)||60;save();activeTab="today";render()}
+function saveGarmin(){state.settings.enduranceScore=num(document.getElementById("gEnd").value);state.settings.vo2max=num(document.getElementById("gVo2").value);state.settings.climbScore=num(document.getElementById("gClimb").value);state.settings.climbEndurance=num(document.getElementById("gClimbEnd").value);state.settings.climbPower=num(document.getElementById("gClimbPow").value);save();activeTab="stats";render()}
+function rebuildPlan(){if(!confirm("Remplacer toutes les séances futures non effectuées par un nouveau cycle de 8 semaines à partir de lundi ?"))return;Object.keys(state.planned).forEach(k=>{if(k>=todayKey())state.planned[k]=state.planned[k].filter(p=>p.status==="done")});state.planInitialized=false;const start=nextMonday(new Date());starterWeeks().forEach((week,wi)=>week.forEach((entry,di)=>{const k=dateKey(addDays(start,wi*7+di));state.planned[k]=state.planned[k]||[];state.planned[k].push(entry)}));state.planInitialized=true;state.settings.runPlanVersion=1;save();activeTab="activity";selectedDate=dateKey(start);calendarCursor=new Date(start.getFullYear(),start.getMonth(),1,12);render()}
 
-window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;installBtn.hidden=false});
-installBtn.addEventListener('click',async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;installBtn.hidden=true});
-
-if('serviceWorker'in navigator){
-  window.addEventListener('load',async()=>{
-    try{
-      const reg=await navigator.serviceWorker.register('./service-worker.js?v=3',{updateViaCache:'none'});
-      reg.update();
-    }catch(e){}
-  });
+function chooseSession(second=false,k=todayKey(),planningOnly=false){
+  const recs=recommendation();
+  const firstActual=historyOn(k).find(h=>h.code!=="REST")?.code||plansOn(k).find(p=>p.code!=="REST"&&p.status!=="skipped")?.code||recs[0]?.code||"A";
+  const c=document.getElementById("quickDialogContent");
+  c.innerHTML=`<div class="dialog-inner"><div class="dialog-head"><div><div class="small">${planningOnly?"PLANIFIER":second?"DEUXIÈME SÉANCE":"CHOISIR UNE SÉANCE"}</div><h2 style="margin:0">${esc(fmtDate(k))}</h2></div><button class="close" onclick="quickDialog.close()">×</button></div>
+  ${state.sessions.map(s=>{const co=second?compat(firstActual,s.code):null;const action=planningOnly?`addPlanForDate('${k}','${s.code}')`:second?`addSecondAndOpen('${k}','${s.code}')`:`planAndOpen('${s.code}','${k}')`;return `<div class="card session-card clickable" onclick="${action}"><div class="code ${s.type==="run"?"run":""}">${displayCode(s.code)}</div><div><strong>${esc(s.title)}</strong><p>${esc(s.goal)}</p>${co?`<span class="compat ${co.lvl}">${esc(co.txt)}</span>`:""}</div><div class="chev">›</div></div>`}).join("")}
+  ${planningOnly?`<div class="card session-card clickable" onclick="addPlanForDate('${k}','REST')"><div class="code rest">—</div><div><strong>Repos / marche</strong><p>Journée de récupération planifiée</p></div><div class="chev">›</div></div>`:""}</div>`;quickDialog.showModal();
 }
-seedTodayIfNeeded();
-refreshHome();
-</script>
+function addSecondAndOpen(k,code){
+  const p=makePlan(code,{note:"Deuxième séance du jour"});state.planned[k]=state.planned[k]||[];state.planned[k].push(p);save();quickDialog.close();
+  if(k<=todayKey())openSession(code,k,p.id);else{selectedDate=k;activeTab="activity";render()}
+}
+function planAndOpen(code,k){quickDialog.close();openSession(code,k,null)}
+
+let workoutDraft=null,restTimer=null,restRemaining=0,workoutTimer=null,workoutStart=0;
+function openSession(code,k=todayKey(),planId=null){
+  const s=sessionBy(code);if(!s)return;const p=planId?planById(k,planId):null;workoutDraft={code,dateKey:k,planId,plan:p};restRemaining=0;workoutStart=Date.now();
+  const c=document.getElementById("sessionDialogContent");
+  if(s.type==="strength"){
+    c.innerHTML=`<div class="dialog-inner"><div class="dialog-head"><div><div class="small">${esc(s.code)} · MUSCULATION · ${esc(fmtDate(k))}</div><h2 style="margin:0">${esc(s.title)}</h2></div><button class="close" onclick="closeSession()">×</button></div><div class="row between"><span id="elapsedBox" class="elapsed">00:00</span><span class="badge">objectif ≤ ${state.settings.maxSessionMin} min</span></div><div id="timerBox"></div><div class="notice">${esc(p?.note||s.note)}</div>${s.exercises.map((e,ei)=>exerciseHTML(s,e,ei)).join("")}<div class="form-grid"><div><label>RPE séance 1–10</label><input id="workRpe" type="number" min="1" max="10" step=".5" value="7"></div><div><label>Douleur genou max 0–10</label><input id="strengthKnee" type="number" min="0" max="10" step=".5" value="${state.settings.kneeToday||0}"></div></div><label>Notes</label><textarea id="workNotes" placeholder="Technique, amplitude, sensations…"></textarea><button class="primary full" style="margin-top:14px" onclick="finishStrength()">Terminer et analyser</button></div>`;
+  }else{
+    const run=s.run||{};const main=p?.runMain||run.main;const dur=p?.plannedDuration||s.duration;
+    c.innerHTML=`<div class="dialog-inner"><div class="dialog-head"><div><div class="small">D · COURSE · ${esc(fmtDate(k))}</div><h2 style="margin:0">${esc(s.title)}</h2></div><button class="close" onclick="closeSession()">×</button></div><div class="row between"><span id="elapsedBox" class="elapsed">00:00</span><span class="badge ${kneeStatus().level}">${esc(kneeStatus().label)}</span></div><div class="card soft"><h3>Plan</h3>${run.warmup?`<p><strong>Échauffement :</strong> ${run.warmup} min</p>`:""}<p><strong>Bloc :</strong> ${esc(main)}</p>${run.recovery?`<p><strong>Récupération :</strong> ${esc(run.recovery)}</p>`:""}${run.cooldown?`<p><strong>Retour au calme :</strong> ${esc(run.cooldown)}</p>`:""}<div class="small">${esc(p?.note||s.note)}</div></div><div class="form-grid"><div><label>Durée (min)</label><input id="runDuration" type="number" value="${dur}"></div><div><label>Distance (km)</label><input id="runDistance" type="number" step=".01" placeholder="ex. 8.2"></div><div><label>Allure moy. (mm:ss/km)</label><input id="runPace" placeholder="ex. 5:18"></div><div><label>FC moy.</label><input id="runHr" type="number"></div><div><label>Cadence (ppm)</label><input id="runCadence" type="number"></div><div><label>D+ (m)</label><input id="runElev" type="number"></div><div><label>RPE 1–10</label><input id="runRpe" type="number" min="1" max="10" step=".5" value="${s.code==="R1"?3.5:7}"></div><div><label>Douleur genou au départ 0–10</label><input id="kneeStart" type="number" min="0" max="10" step=".5" value="${state.settings.kneeToday||0}"></div><div><label>Douleur après 2 km / fin</label><input id="knee2k" type="number" min="0" max="10" step=".5"></div></div><label>Notes / sensations</label><textarea id="runNotes" placeholder="Souffle, jambes, terrain, douleur autour de la rotule…"></textarea><div class="notice" style="margin-top:10px">Après la séance, ouvre l’onglet Course puis « Suivi genoux après D » pour noter la douleur à 1 h, J+1 et 48 h. C’est ce qui permet au coach de valider ou non les séances rapides.</div><button class="primary full" style="margin-top:14px" onclick="finishRun()">Enregistrer et analyser</button></div>`;
+  }
+  sessionDialog.showModal();startWorkoutClock();
+}
+function startWorkoutClock(){clearInterval(workoutTimer);function paint(){const el=document.getElementById("elapsedBox");if(!el)return;const sec=Math.floor((Date.now()-workoutStart)/1000);el.textContent=`${pad(Math.floor(sec/60))}:${pad(sec%60)}`}paint();workoutTimer=setInterval(paint,1000)}
+function lastExerciseSets(code,name){const last=state.history.filter(h=>h.code===code&&h.strength?.[name]).sort((a,b)=>new Date(b.date)-new Date(a.date))[0];return last?last.strength[name]:null}
+function parseRepNumber(v){const m=String(v??"").match(/\d+/);return m?+m[0]:0}
+function targetRepHigh(txt){const nums=(String(txt).match(/\d+/g)||[]).map(Number);return nums.length?Math.max(...nums):0}
+function previousEx(code,name){const sets=lastExerciseSets(code,name);if(!sets)return "Aucun historique";const vals=sets.filter(x=>x.done).map(x=>`${x.kg||0}kg×${x.reps||0}${x.rir!==undefined&&x.rir!==""?` RIR${x.rir}`:x.rpe?` RPE${x.rpe}`:""}`);return vals.length?`Dernière fois : ${vals.join(" · ")}`:"Aucun historique"}
+function suggestedLoad(code,e){
+  const sets=lastExerciseSets(code,e.name);if(!sets)return null;const done=sets.filter(x=>x.done&&num(x.kg)>0);if(!done.length)return null;
+  const base=done[done.length-1].kg;const high=targetRepHigh(e.reps);
+  const ready=done.length>=Math.min(e.sets,2)&&done.every(x=>parseRepNumber(x.reps)>=high && ((x.rir!=null&&x.rir!==""&&num(x.rir)>=2)||(x.rpe&&num(x.rpe)<=8)));
+  const next=ready?num(base)+num(e.increment||2.5):num(base);return {kg:next,ready};
+}
+function exerciseHTML(s,e,ei){
+  const last=lastExerciseSets(s.code,e.name)||[];const sug=suggestedLoad(s.code,e);const rows=Array.from({length:e.sets},(_,si)=>{const prev=last[si]||last[last.length-1]||{};return `<div class="set-grid"><strong>${si+1}</strong><input id="kg_${ei}_${si}" type="number" step=".5" placeholder="kg" value="${prev.kg||""}"><input id="reps_${ei}_${si}" inputmode="numeric" placeholder="${esc(e.reps)}" value="${prev.reps||""}"><input id="rir_${ei}_${si}" type="number" min="0" max="5" step="1" placeholder="RIR"><button class="checkset" id="done_${ei}_${si}" onclick="toggleSet(${ei},${si},${e.rest})">✓</button></div>`}).join("");
+  return `<div class="exercise"><div class="ex-head"><div><div class="ex-title">${esc(e.name)}</div><div class="previous">${esc(previousEx(s.code,e.name))}</div>${sug?`<div class="suggestion">Proposition : ${sug.kg} kg · ${sug.ready?"petite progression":"même charge, consolider les reps"}</div>`:""}</div><span class="badge">${e.sets}×${esc(e.reps)}</span></div><div class="small" style="margin-top:7px">Série · kg · reps · RIR · ✓</div>${rows}</div>`;
+}
+function toggleSet(ei,si,rest){const btn=document.getElementById(`done_${ei}_${si}`);btn.classList.toggle("done");if(btn.classList.contains("done"))startRest(rest)}
+function startRest(sec){clearInterval(restTimer);restRemaining=sec;paintTimer();restTimer=setInterval(()=>{restRemaining--;paintTimer();if(restRemaining<=0){clearInterval(restTimer);if(navigator.vibrate)navigator.vibrate([120,80,120])}},1000)}
+function paintTimer(){const box=document.getElementById("timerBox");if(!box)return;if(restRemaining<=0){box.innerHTML="";return}box.innerHTML=`<div class="timerbar"><div><div class="small">RÉCUPÉRATION</div><div class="timerbig">${Math.floor(restRemaining/60)}:${pad(restRemaining%60)}</div></div><button class="ghost" onclick="restRemaining=0;paintTimer()">Passer</button></div>`}
+function historyTimestampForKey(k){const d=parseDateKey(k);const now=new Date();if(k===todayKey()){d.setHours(now.getHours(),now.getMinutes(),now.getSeconds())}else d.setHours(12,0,0);return d.toISOString()}
+function markPlanDone(k,planId,code,historyId){const arr=plansOn(k);let p=planId?arr.find(x=>x.id===planId):arr.find(x=>x.code===code&&x.status==="planned");if(p){p.status="done";p.historyId=historyId}}
+function finishStrength(){
+  const s=sessionBy(workoutDraft.code),strength={};s.exercises.forEach((e,ei)=>{strength[e.name]=Array.from({length:e.sets},(_,si)=>({kg:num(document.getElementById(`kg_${ei}_${si}`).value),reps:document.getElementById(`reps_${ei}_${si}`).value||"",rir:document.getElementById(`rir_${ei}_${si}`).value===""?null:num(document.getElementById(`rir_${ei}_${si}`).value),done:document.getElementById(`done_${ei}_${si}`).classList.contains("done")}))});
+  const elapsed=Math.max(1,Math.round((Date.now()-workoutStart)/60000));const h={id:uid(),code:s.code,type:"strength",date:historyTimestampForKey(workoutDraft.dateKey),dateKey:workoutDraft.dateKey,duration:elapsed,rpe:num(document.getElementById("workRpe").value),notes:document.getElementById("workNotes").value,strength,kneePain:num(document.getElementById("strengthKnee").value)};
+  state.history.push(h);markPlanDone(workoutDraft.dateKey,workoutDraft.planId,s.code,h.id);save();closeSession();activeTab="today";render();showPostAnalysis(h);
+}
+function finishRun(){
+  const s=sessionBy(workoutDraft.code),dist=num(document.getElementById("runDistance").value),dur=num(document.getElementById("runDuration").value)||(workoutDraft.plan?.plannedDuration||s.duration);let pace=paceToSec(document.getElementById("runPace").value);if(!pace&&dist)pace=dur*60/dist;
+  const h={id:uid(),code:s.code,type:"run",date:historyTimestampForKey(workoutDraft.dateKey),dateKey:workoutDraft.dateKey,duration:dur,rpe:num(document.getElementById("runRpe").value),notes:document.getElementById("runNotes").value,prescription:workoutDraft.plan?.runMain||s.run?.main||"",run:{distance:dist,paceSec:pace,hr:num(document.getElementById("runHr").value),cadence:num(document.getElementById("runCadence").value),elev:num(document.getElementById("runElev").value),knee:{start:nullableNumber("kneeStart"),after2k:nullableNumber("knee2k"),oneHour:null,nextMorning:null,after48h:null}}};
+  state.history.push(h);markPlanDone(workoutDraft.dateKey,workoutDraft.planId,s.code,h.id);save();closeSession();activeTab="today";render();showPostAnalysis(h);
+}
+function showPostAnalysis(h){
+  const c=document.getElementById("quickDialogContent");let msg=`Séance ${displayCode(h.code)} enregistrée.`;
+  if(h.run){const ks=h.run.knee?.start,ka=h.run.knee?.after2k;if(ks!=null&&ka!=null){msg+=ka<=ks?" La douleur n’a pas augmenté pendant la sortie.":" La douleur a augmenté pendant la sortie : le suivi à 1 h et demain sera important avant toute séance rapide."}msg+=" Pense à compléter le suivi genou dans l’onglet Course à 1 h, J+1 et 48 h."}
+  else if(h.code==="C")msg+=" La prochaine C comparera automatiquement charge, reps et RIR du squat au banc.";
+  const next=upcomingPlans(7).find(x=>x.plan.status==="planned");
+  c.innerHTML=`<div class="dialog-inner"><div class="dialog-head"><h2 style="margin:0">Analyse enregistrée</h2><button class="close" onclick="quickDialog.close()">×</button></div><p>${esc(msg)}</p>${next?`<div class="notice"><strong>Prochaine entrée du planning :</strong> ${esc(fmtDate(next.date))} · ${esc(displayCode(next.plan.code))} · ${esc(planTitle(next.plan))}</div>`:""}<button class="primary full" style="margin-top:12px" onclick="quickDialog.close()">OK</button></div>`;quickDialog.showModal();
+}
+function closeSession(){clearInterval(restTimer);clearInterval(workoutTimer);restRemaining=0;if(sessionDialog.open)sessionDialog.close()}
+function deleteHistory(id){if(confirm("Supprimer cette séance ?")){state.history=state.history.filter(h=>h.id!==id);Object.keys(state.planned).forEach(k=>plansOn(k).forEach(p=>{if(p.historyId===id){p.status="planned";delete p.historyId}}));save();render()}}
+
+function editStrength(code){const S=sessionBy(code);if(!S||S.type!=="strength")return;document.getElementById("quickDialogContent").innerHTML=`<div class="dialog-inner"><div class="dialog-head"><h2 style="margin:0">Modifier ${esc(code)}</h2><button class="close" onclick="quickDialog.close()">×</button></div><p class="small">Un exercice par ligne : Nom | séries | reps | repos en secondes</p><textarea id="strengthEditor" style="min-height:280px">${esc(S.exercises.map(e=>`${e.name} | ${e.sets} | ${e.reps} | ${e.rest}`).join("\n"))}</textarea><button class="primary full" style="margin-top:12px" onclick="saveStrength('${code}')">Enregistrer ${esc(code)}</button></div>`;quickDialog.showModal()}
+function saveStrength(code){const S=sessionBy(code);if(!S)return;const lines=document.getElementById("strengthEditor").value.split("\n").map(x=>x.trim()).filter(Boolean);const ex=lines.map(l=>{const [name,sets,reps,rest]=l.split("|").map(x=>x.trim());return {name,sets:num(sets)||3,reps:reps||"8",rest:num(rest)||90,increment:2.5}}).filter(x=>x.name);if(ex.length){S.exercises=ex;save()}quickDialog.close();render()}
+function exportData(){const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`coach-10k-force-backup-${todayKey()}.json`;a.click();URL.revokeObjectURL(a.href)}
+function importData(file){if(!file)return;const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);state=normalizeState(x);state.planInitialized=!!x.planInitialized||Object.keys(state.planned).length>0;save();alert("Import réussi.");render()}catch(e){alert("Fichier non reconnu.")}};r.readAsText(file)}
+async function clearCaches(){if("caches" in window){for(const k of await caches.keys())await caches.delete(k)}if(navigator.serviceWorker?.controller)navigator.serviceWorker.controller.postMessage({type:"SKIP_WAITING"});alert("Cache vidé. Recharge la page.");location.reload(true)}
+
+let deferredPrompt=null;
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;document.getElementById("installBtn").classList.remove("hidden")});
+document.getElementById("installBtn").onclick=async()=>{if(deferredPrompt){deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;document.getElementById("installBtn").classList.add("hidden")}};
+if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=3.1.0").catch(()=>{}))}
+
+function boot(){
+  try{render()}catch(err){console.error(err);const v=document.getElementById("view");if(v){v.innerHTML=`<section class="card hero"><h2>Réparation nécessaire</h2><p>L’application a rencontré une donnée locale incompatible.</p><button class="primary full" id="repairBtn">Réparer sans supprimer l’historique</button><button class="ghost full" style="margin-top:8px" id="resetBtn">Réinitialiser l’application</button><p class="small" style="margin-top:10px">Erreur : ${esc(err?.message||String(err))}</p></section>`;document.getElementById("repairBtn").onclick=()=>{state=normalizeState(state);save();location.reload()};document.getElementById("resetBtn").onclick=()=>{if(confirm("Réinitialiser les données locales ?")){localStorage.removeItem(STORE);location.reload()}}}}
+}
+window.addEventListener("error",e=>console.error("APP ERROR",e.error||e.message));
+boot();
+
+  </script>
 </body>
 </html>
