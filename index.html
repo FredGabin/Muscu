@@ -8,9 +8,9 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <title>Coach 10K + Force</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=3.2.0" />
-  <link rel="icon" href="./icon-192.png?v=3.2.0" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=3.2.0" />
+  <link rel="manifest" href="./manifest.webmanifest?v=3.2.1" />
+  <link rel="icon" href="./icon-192.png?v=3.2.1" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=3.2.1" />
   <style>
 :root{
   --bg:#0b0d10;--panel:#14171c;--panel2:#1b1f25;--line:#2a3038;
@@ -84,7 +84,7 @@ dialog{width:min(720px,calc(100% - 18px));max-height:88vh;overflow:auto;border:1
   <div id="app">
     <header class="topbar">
       <div>
-        <div class="eyebrow">COACH ADAPTATIF · V3.2.0</div>
+        <div class="eyebrow">COACH ADAPTATIF · V3.2.1</div>
         <h1>10K + Force</h1>
       </div>
       <button id="installBtn" class="ghost hidden">Installer</button>
@@ -108,9 +108,9 @@ dialog{width:min(720px,calc(100% - 18px));max-height:88vh;overflow:auto;border:1
   <dialog id="quickDialog"><div id="quickDialogContent"></div></dialog>
 
   <script>
-const APP_VERSION = "3.2.0";
+const APP_VERSION = "3.2.1";
 const STORE = "coach10k_force_v2"; // même clé pour conserver les données v2
-const LIBRARY_VERSION = 5;
+const LIBRARY_VERSION = 6;
 
 // Référence A conservée depuis la version précédente validée.
 // Elle sert uniquement de filet de sécurité si la v3.1.0 avait remplacé A par son modèle par défaut.
@@ -150,14 +150,14 @@ const defaults = {
     {
       code:"B", type:"strength", title:"Muscu B — pectoraux / épaules / triceps", duration:55, hardLegs:false,
       goal:"Force et entretien du haut du corps",
-      note:"Charge modérée, pas d’échec. Vise 2–3 RIR sur les mouvements principaux.",
+      note:"Séance B validée le 23/08/2026. Pas d’échec : vise environ 2 RIR et garde une respiration continue sous charge.",
       exercises:[
-        {name:"Développé couché",sets:4,reps:"8",rest:120,increment:2.5},
-        {name:"Développé incliné",sets:3,reps:"8-10",rest:90,increment:2.5},
-        {name:"Écartés à la poulie",sets:3,reps:"10-12",rest:60,increment:1},
-        {name:"Élévations latérales poulie",sets:3,reps:"12",rest:60,increment:1},
-        {name:"Extension triceps poulie",sets:3,reps:"10",rest:75,increment:1},
-        {name:"Extension triceps au-dessus de la tête",sets:2,reps:"10-12",rest:60,increment:1}
+        {name:"Développé couché",sets:4,reps:"8",rest:150,increment:2.5,note:"Référence validée : 58 kg · 10/10/7/7. Consolider 4 séries homogènes avant de monter."},
+        {name:"Développé incliné",sets:3,reps:"8-10",rest:90,increment:2.5,note:"Référence validée : 38 kg · 8/8/8."},
+        {name:"Développé épaules assis barre devant",sets:3,reps:"8-10",rest:90,increment:2.5,note:"Barre devant la tête, dossier assez vertical. Référence : 28 kg · 10/10/10."},
+        {name:"Écartés à la poulie",sets:3,reps:"10-12",rest:60,increment:1,note:"Debout, poulies mi-hauteur, mains vers le sternum. Machine : cran 12. Référence : 20 kg · 10/10/10."},
+        {name:"Push-down triceps poulie",sets:3,reps:"10-12",rest:75,increment:1,note:"Coudes fixes près du corps. Référence : 20 kg · 10/10/10."},
+        {name:"Extension triceps au-dessus de la tête",sets:3,reps:"12-15",rest:60,increment:1,note:"Référence : 15 kg · 15/15/15."}
       ]
     },
     {
@@ -261,6 +261,9 @@ function normalizeState(parsed){
         if(old&&Array.isArray(old.exercises)&&old.exercises.length)return Object.assign({},clone(LEGACY_A_REFERENCE),old,{code:"A",type:"strength",hardLegs:false,exercises:old.exercises});
         return clone(LEGACY_A_REFERENCE);
       }
+      // v3.2.1 : la séance B a été reconstruite et validée le 23/08/2026.
+      // Lors du premier passage à la bibliothèque 6, on applique ce nouveau modèle B.
+      if(d.code==="B" && num(parsed.libraryVersion)<6)return clone(d);
       if(!old)return clone(d);
       if(d.type==="strength"&&Array.isArray(old.exercises)&&old.exercises.length){
         return Object.assign({},d,old,{code:d.code,type:"strength",hardLegs:d.hardLegs,exercises:old.exercises});
@@ -289,6 +292,38 @@ function recoverKnownAWeek(){
   }
 }
 recoverKnownAWeek();
+function recoverKnownB20260823(){
+  // Valeurs validées pendant la séance B du 23/08/2026.
+  // Si une B existe déjà ce jour-là, on la corrige/complète sans créer de doublon.
+  const target="2026-08-23";
+  const existing=state.history.find(h=>h&&h.code==="B"&&historyDateKey(h)===target);
+  const source=existing?.strength||{};
+  const knownSets=(kg,reps,oldSets=[])=>reps.map((r,i)=>({kg,reps:String(r),rir:oldSets?.[i]?.rir??null,done:true}));
+  const strength={
+    "Développé couché":knownSets(58,[10,10,7,7],source["Développé couché"]),
+    "Développé incliné":knownSets(38,[8,8,8],source["Développé incliné"]),
+    "Développé épaules assis barre devant":knownSets(28,[10,10,10],source["Développé épaules assis barre devant"]||source["Élévations latérales poulie"]),
+    "Écartés à la poulie":knownSets(20,[10,10,10],source["Écartés à la poulie"]),
+    "Push-down triceps poulie":knownSets(20,[10,10,10],source["Push-down triceps poulie"]||source["Extension triceps poulie"]),
+    "Extension triceps au-dessus de la tête":knownSets(15,[15,15,15],source["Extension triceps au-dessus de la tête"])
+  };
+  let h=existing;
+  if(h){
+    h.strength=strength;
+    h.notes=[h.notes,"B validée : développé épaules barre devant ; écartés poulie machine cran 12 ; références corrigées selon la séance réelle."].filter(Boolean).join(" · ");
+    h.recovered=true;
+  }else{
+    const d=parseDateKey(target);d.setHours(21,55,0,0);
+    h={id:uid(),code:"B",type:"strength",date:d.toISOString(),dateKey:target,duration:0,rpe:0,
+      notes:"Séance B récupérée depuis les charges et répétitions validées le 23/08/2026. Écartés poulie : machine cran 12.",
+      strength,recovered:true};
+    state.history.push(h);
+  }
+  const p=plansOn(target).find(x=>x&&x.code==="B"&&x.status==="planned");
+  if(p){p.status="done";p.historyId=h.id}
+  save();
+}
+recoverKnownB20260823();
 function esc(s=""){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
 function secToPace(sec){if(!isFinite(sec)||sec<=0)return "—";const m=Math.floor(sec/60),s=Math.round(sec%60);return `${m}:${String(s).padStart(2,"0")}/km`}
 function paceToSec(txt){if(!txt)return null;const m=String(txt).match(/(\d+)\s*[:']\s*(\d+)/);return m?(+m[1]*60 + +m[2]):null}
@@ -855,7 +890,7 @@ function suggestedLoad(code,e){
 }
 function exerciseHTML(s,e,ei){
   const last=lastExerciseSets(s.code,e.name)||[],timed=isTimedExercise(e),sug=suggestedLoad(s.code,e);const rows=Array.from({length:e.sets},(_,si)=>{const prev=last[si]||last[last.length-1]||{},ref=last[si]?refSetText(e,last[si]):(last.length?refSetText(e,last[last.length-1]):"—");return `<div class="set-grid"><strong>${si+1}</strong><div class="refcell">${esc(ref)}</div><input id="kg_${ei}_${si}" type="number" step=".5" placeholder="kg" value="${prev.kg||""}"><input id="reps_${ei}_${si}" ${timed?'type="number" step=".1" inputmode="decimal"':'inputmode="numeric"'} placeholder="${timed?'min':esc(e.reps)}" value="${prev.reps||""}"><input id="rir_${ei}_${si}" type="number" min="0" max="5" step="1" placeholder="RIR"><button class="checkset" id="done_${ei}_${si}" onclick="toggleSet(${ei},${si},${e.rest})">✓</button></div>`}).join("");
-  return `<div class="exercise"><div class="ex-head"><div><div class="ex-title">${esc(e.name)}</div>${sug?`<div class="suggestion">Proposition : ${sug.kg} kg · ${sug.ready?"petite progression":"même charge, consolider les reps"}</div>`:""}</div><span class="badge">${e.sets}×${esc(e.reps)}${timed?" min":""}</span></div><div class="small" style="margin-top:7px">Série · Réf · kg · ${timed?"min":"reps"} · RIR · ✓</div>${rows}</div>`;
+  return `<div class="exercise"><div class="ex-head"><div><div class="ex-title">${esc(e.name)}</div>${e.note?`<div class="previous">${esc(e.note)}</div>`:""}${sug?`<div class="suggestion">Proposition : ${sug.kg} kg · ${sug.ready?"petite progression":"même charge, consolider les reps"}</div>`:""}</div><span class="badge">${e.sets}×${esc(e.reps)}${timed?" min":""}</span></div><div class="small" style="margin-top:7px">Série · Réf · kg · ${timed?"min":"reps"} · RIR · ✓</div>${rows}</div>`;
 }
 function toggleSet(ei,si,rest){const btn=document.getElementById(`done_${ei}_${si}`);btn.classList.toggle("done");if(btn.classList.contains("done"))startRest(rest)}
 function startRest(sec){clearInterval(restTimer);restRemaining=sec;paintTimer();restTimer=setInterval(()=>{restRemaining--;paintTimer();if(restRemaining<=0){clearInterval(restTimer);if(navigator.vibrate)navigator.vibrate([120,80,120])}},1000)}
@@ -892,7 +927,7 @@ async function clearCaches(){if("caches" in window){for(const k of await caches.
 let deferredPrompt=null;
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;document.getElementById("installBtn").classList.remove("hidden")});
 document.getElementById("installBtn").onclick=async()=>{if(deferredPrompt){deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;document.getElementById("installBtn").classList.add("hidden")}};
-if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=3.2.0").catch(()=>{}))}
+if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=3.2.1").catch(()=>{}))}
 
 function boot(){
   try{render()}catch(err){console.error(err);const v=document.getElementById("view");if(v){v.innerHTML=`<section class="card hero"><h2>Réparation nécessaire</h2><p>L’application a rencontré une donnée locale incompatible.</p><button class="primary full" id="repairBtn">Réparer sans supprimer l’historique</button><button class="ghost full" style="margin-top:8px" id="resetBtn">Réinitialiser l’application</button><p class="small" style="margin-top:10px">Erreur : ${esc(err?.message||String(err))}</p></section>`;document.getElementById("repairBtn").onclick=()=>{state=normalizeState(state);save();location.reload()};document.getElementById("resetBtn").onclick=()=>{if(confirm("Réinitialiser les données locales ?")){localStorage.removeItem(STORE);location.reload()}}}}
