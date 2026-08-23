@@ -1,16 +1,24 @@
-# Coach 10K + Force v2.1 — correctif écran figé
+# Muscu V3
 
-Correctif principal :
-- JavaScript et CSS intégrés directement dans `index.html` pour éviter les incohérences de cache GitHub Pages / PWA.
-- migration défensive des anciennes données locales ;
-- écran de réparation visible si une donnée locale provoque encore une erreur ;
-- service worker v2.1 en mode réseau d'abord pour faciliter les mises à jour.
+## Changements V3
+- L'installation ouvre directement `?v=3`.
+- Le service worker utilise le réseau en priorité pour éviter de rester bloqué sur une ancienne version.
+- La séance A du 21/08/2026 est préchargée une seule fois si l'historique est vide.
+- Chaque exercice affiche **DERNIÈRE FOIS** avec poids et répétitions.
+- Les champs de la nouvelle séance sont préremplis à partir de la dernière séance.
+- Planning compatible avec une future **Séance C**.
+- Séance C provisoire : jambes / mollets / avant-bras.
+- Les stats utilisent l'historique local existant.
 
-## Mise à jour
-Remplace tous les fichiers du dépôt par ceux de ce ZIP puis commit/push.
+## Mise à jour GitHub
+Remplacer :
+- `index.html`
+- `manifest.json`
+- `service-worker.js`
 
-Le fichier important est `index.html` : même si un ancien `app.js` reste en cache sur le téléphone,
-la v2.1 peut démarrer car son code est intégré dans la page.
+Les icônes peuvent aussi être remplacées mais ce n'est pas obligatoire.
 
-## Données
-Le correctif tente de conserver l'historique et les réglages de la v2.
+## Après la mise à jour
+Pour une installation propre, ouvrir :
+`https://fredgabin.github.io/Muscu/?v=3`
+puis installer l'application depuis cette page.
