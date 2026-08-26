@@ -1,5 +1,5 @@
-const CACHE='muscu-cache-v3';
-const STATIC=['./manifest.json?v=3','./icon-192.png','./icon-512.png'];
+const CACHE='muscu-cache-v4';
+const STATIC=['./manifest.json?v=4','./icon-192.png','./icon-512.png'];
 
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(STATIC)));
@@ -22,9 +22,9 @@ self.addEventListener('fetch',event=>{
     event.respondWith(
       fetch(event.request,{cache:'no-store'}).then(resp=>{
         const copy=resp.clone();
-        caches.open(CACHE).then(c=>c.put('./?v=3',copy));
+        caches.open(CACHE).then(c=>c.put('./?v=4',copy));
         return resp;
-      }).catch(()=>caches.match('./?v=3').then(r=>r||caches.match('./')))
+      }).catch(()=>caches.match('./?v=4').then(r=>r||caches.match('./')))
     );
     return;
   }
