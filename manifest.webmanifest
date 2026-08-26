@@ -1,12 +1,12 @@
 {
-  "name": "Coach 10K + Force",
-  "short_name": "Coach 10K",
-  "description": "Coach adaptatif musculation + running, objectif 10 km et côtes.",
-  "start_url": "./",
+  "name": "Force + Course V3.3.5",
+  "short_name": "Force+Course",
+  "description": "Coach manuel musculation et course A à F.",
+  "start_url": "./?v=335",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#0b0d10",
-  "theme_color": "#0f1115",
+  "background_color": "#0b0c0f",
+  "theme_color": "#0c0d10",
   "icons": [
     {
       "src": "./icon-192.png",

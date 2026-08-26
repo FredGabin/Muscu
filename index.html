@@ -6,8 +6,8 @@
 <meta name="theme-color" content="#0c0d10">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Force + Course">
-<title>Force + Course — V3.3.3</title>
-<link rel="manifest" href="./manifest.webmanifest?v=333">
+<title>Force + Course — V3.3.5</title>
+<link rel="manifest" href="./manifest.webmanifest?v=335">
 <link rel="icon" href="./icon-192.png">
 <style>
 :root{
@@ -35,7 +35,7 @@ h1{font-size:38px;line-height:1;margin:6px 0 0}h2{font-size:27px;margin:0 0 14px
 .field{width:100%;border:1px solid #353a43;background:#0d0f13;color:white;border-radius:14px;padding:12px}.fieldrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}.fieldrow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}@media(max-width:540px){.fieldrow3{grid-template-columns:1fr 1fr}}
 .exercise{border:1px solid #343941;background:#101217;border-radius:20px;padding:16px;margin-bottom:13px}.ref{border:1px solid #403529;background:#1a1714;color:#ffd3ad;border-radius:13px;padding:10px;margin:9px 0;font-size:13px}
 .setrow{display:grid;grid-template-columns:38px 1fr 1fr 90px;gap:7px;align-items:center;margin:8px 0}.setrow.done{background:#0e2b1c;border-radius:12px;padding:5px}
-.timer{display:none;position:fixed;z-index:50;left:50%;bottom:79px;transform:translateX(-50%);width:min(780px,calc(100% - 22px));background:#181b21;border:1px solid #464d58;border-radius:20px;padding:13px 15px;box-shadow:0 16px 45px #000a}.timer.show{display:flex;align-items:center;justify-content:space-between}.timerNum{font-size:28px;font-weight:950}
+.timer{display:none;position:fixed;z-index:50;left:50%;bottom:79px;transform:translateX(-50%);width:min(780px,calc(100% - 22px));background:#181b21;border:1px solid #464d58;border-radius:20px;padding:13px 15px;box-shadow:0 16px 45px #000a}.timer.show{display:flex;align-items:center;justify-content:space-between}.timer.inDialog{position:sticky;left:auto;bottom:8px;transform:none;width:100%;margin:14px 0 10px;z-index:5}.timerNum{font-size:28px;font-weight:950}
 .calendarHead{display:grid;grid-template-columns:42px 1fr 42px;align-items:center;margin-bottom:12px}.calendarGrid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}.dow{text-align:center;font-size:11px;color:#8f96a1;padding:5px 0}.calday{min-height:67px;border:1px solid #30343b;border-radius:12px;padding:6px;background:#101217}.calday.other{opacity:.25}.calday.today{border-color:var(--orange)}.num{font-size:12px;font-weight:850}.chips{display:flex;gap:3px;flex-wrap:wrap;margin-top:4px}.chip{font-size:9px;font-weight:900;border-radius:7px;padding:3px 5px}.chip.m{background:#43291a;color:#ffb57c}.chip.r{background:#17305a;color:#9bbcff}
 .statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.statbox{background:#101217;border:1px solid #30343b;border-radius:18px;padding:15px}.statn{font-size:27px;font-weight:950}.record{padding:12px 0;border-bottom:1px solid #2c3036}.record:last-child{border-bottom:0}
 dialog{width:min(620px,calc(100% - 22px));border:1px solid #3b414a;border-radius:23px;background:#121419;color:white;padding:18px}dialog::backdrop{background:#000a}
@@ -47,7 +47,7 @@ dialog{width:min(620px,calc(100% - 22px));border:1px solid #3b414a;border-radius
 <body>
 <div class="app">
 <header class="top">
- <div><div class="eyebrow">Coach manuel <span class="version">· V3.3.3</span></div><h1>Force + Course</h1></div>
+ <div><div class="eyebrow">Coach manuel <span class="version">· V3.3.5</span></div><h1>Force + Course</h1></div>
  <button class="btn ghost" id="installBtn" hidden>Installer</button>
 </header>
 
@@ -62,7 +62,7 @@ dialog{width:min(620px,calc(100% - 22px));border:1px solid #3b414a;border-radius
    <div class="sessgrid">
     <button class="sessionTile muscu" onclick="openSession('A')"><span class="letter">A</span><span class="strong">Muscu A — dos / biceps / épaules</span><span class="muted small">Musculation</span></button>
     <button class="sessionTile muscu" onclick="openSession('B')"><span class="letter">B</span><span class="strong">Muscu B — pectoraux / épaules / triceps</span><span class="muted small">Musculation</span></button>
-    <button class="sessionTile muscu" onclick="openSession('C')"><span class="letter">C</span><span class="strong">Muscu C — jambes / tronc</span><span class="muted small">Musculation</span></button>
+    <button class="sessionTile muscu" onclick="openSession('C')"><span class="letter">C</span><span class="strong">Muscu C — jambes</span><span class="muted small">Musculation</span></button>
     <button class="sessionTile runD" onclick="openRun('D')"><span class="letter">D</span><span class="strong">Fractionné</span><span class="muted small">Répétitions en durée</span></button>
     <button class="sessionTile runE" onclick="openRun('E')"><span class="letter">E</span><span class="strong">Endurance fondamentale</span><span class="muted small">Distance + durée + FC moyenne</span></button>
     <button class="sessionTile runF" onclick="openRun('F')"><span class="letter">F</span><span class="strong">Course libre / vallonnée</span><span class="muted small">Distance libre au ressenti</span></button>
@@ -106,7 +106,7 @@ dialog{width:min(620px,calc(100% - 22px));border:1px solid #3b414a;border-radius
 </main>
 </div>
 
-<div class="timer" id="restTimer"><div><div class="small muted">RÉCUPÉRATION</div><div class="timerNum" id="restTimerText">02:00</div></div><div class="row"><button class="btn" onclick="addRest(30)">+30 s</button><button class="btn orange" onclick="stopRest()">Stop</button></div></div>
+
 
 <nav class="bottomNav">
  <button id="navHome" class="active" onclick="showView('home')"><span class="ico">🏠</span>Aujourd’hui</button>
@@ -119,6 +119,10 @@ dialog{width:min(620px,calc(100% - 22px));border:1px solid #3b414a;border-radius
  <div class="row between"><div><div class="eyebrow" id="sessionCode">A</div><h2 id="sessionTitle"></h2></div><button class="btn ghost" onclick="sessionDialog.close()">✕</button></div>
  <label>Date<input class="field" type="date" id="sessionDate"></label>
  <div id="sessionExercises" style="margin-top:14px"></div>
+ <div class="timer inDialog" id="restTimer">
+   <div><div class="small muted">RÉCUPÉRATION</div><div class="timerNum" id="restTimerText">02:00</div></div>
+   <div class="row"><button class="btn" onclick="addRest(30)">+30 s</button><button class="btn orange" onclick="stopRest()">Stop</button></div>
+ </div>
  <button class="btn orange" style="width:100%" onclick="saveMuscuSession()">Enregistrer la séance</button>
 </dialog>
 
@@ -139,11 +143,12 @@ dialog{width:min(620px,calc(100% - 22px));border:1px solid #3b414a;border-radius
 </dialog>
 
 <script>
-const APP_VERSION='3.3.3';
+const APP_VERSION='3.3.5';
 const DATA_KEY='force-course-v333';
 const SETTINGS_KEY='force-course-settings-v333';
 const MIGRATION_KEY='force-course-v333-migrated';
 const A_REFERENCE_KEY='force-course-A-reference-v333';
+const TODAY_AC_KEY='force-course-2026-08-26-A-C-v335';
 
 const MUSCU={
  A:{title:'Muscu A — dos / biceps / épaules', exercises:[
@@ -164,13 +169,12 @@ const MUSCU={
   {name:'Élévation latérale poulie',group:'Épaules',sets:3,reps:12,weight:5,rest:'small'},
   {name:'Extension triceps corde',group:'Triceps',sets:3,reps:12,weight:'',rest:'small'}
  ]},
- C:{title:'Muscu C — jambes / tronc', exercises:[
-  {name:'Squat vers banc',group:'Jambes',sets:3,reps:8,weight:'',rest:'big'},
+ C:{title:'Muscu C — jambes', exercises:[
+  {name:'Squat vers banc',group:'Jambes',sets:3,reps:8,weight:58,rest:'big'},
   {name:'Leg extension',group:'Quadriceps',sets:3,reps:12,weight:'',rest:'small'},
-  {name:'Hip thrust',group:'Fessiers',sets:3,reps:10,weight:'',rest:'big'},
-  {name:'Leg curl',group:'Ischios',sets:3,reps:10,weight:'',rest:'small'},
-  {name:'Mollets debout',group:'Mollets',sets:3,reps:12,weight:'',rest:'small'},
-  {name:'Planche',group:'Tronc',sets:2,reps:45,weight:0,unit:'sec',rest:'small'}
+  {name:'Soulevé de terre roumain',group:'Ischios / fessiers',sets:3,reps:8,weight:72,rest:'big'},
+  {name:'Fentes avant',group:'Jambes',sets:3,reps:8,weight:20,rest:'big',note:'20 kg au total, 8 reps par jambe'},
+  {name:'Mollets debout',group:'Mollets',sets:3,reps:20,weight:38,rest:'small'},
  ]}
 };
 
@@ -346,9 +350,53 @@ function updateDiag(){diag.innerHTML=`Version : <b>${APP_VERSION}</b><br>Clé do
 function renderAll(){state.sessions.sort((a,b)=>b.date.localeCompare(a.date));renderToday();if(!calendarView.classList.contains('hidden'))renderCalendar();if(!statsView.classList.contains('hidden'))renderStats();updateDiag()}
 
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;installBtn.hidden=false});installBtn.addEventListener('click',async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;installBtn.hidden=true});
-if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js?v=333',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js?v=335',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 
-tryLegacyImport(false);ensureAReference();renderAll();
+
+function ensureTodayAandC(){
+  if(localStorage.getItem(TODAY_AC_KEY)) return;
+  const today='2026-08-26';
+
+  const hasA = state.sessions.some(s=>s.date===today&&s.code==='A'&&s.category==='muscu');
+  if(!hasA){
+    state.sessions.push({
+      id:crypto.randomUUID(),date:today,code:'A',category:'muscu',validated:true,
+      exercises:[
+        {name:'Tirage poulie haute',group:'Dos',sets:[{weight:60,reps:9},{weight:60,reps:9},{weight:60,reps:9}]},
+        {name:'Rowing poulie basse',group:'Dos',sets:[{weight:60,reps:10},{weight:70,reps:9},{weight:70,reps:10}]},
+        {name:'Pullover poulie haute',group:'Dos',sets:[{weight:20,reps:12},{weight:20,reps:12},{weight:20,reps:12}]},
+        {name:'Curl haltères assis',group:'Biceps',sets:[{weight:17,reps:7},{weight:17,reps:6},{weight:17,reps:7}]},
+        {name:'Face pull',group:'Épaules',sets:[{weight:15,reps:12},{weight:15,reps:12},{weight:15,reps:12}]},
+        {name:'Élévation latérale poulie',group:'Épaules',sets:[{weight:5,reps:12},{weight:5,reps:12},{weight:5,reps:12}]},
+        {name:'Planche',group:'Tronc',unit:'sec',sets:[{weight:0,reps:45}]},
+        {name:'Planche latérale',group:'Tronc',unit:'sec',sets:[{weight:0,reps:30},{weight:0,reps:30}]},
+        {name:'Dead bug',group:'Tronc',sets:[{weight:0,reps:10}]}
+      ]
+    });
+  }
+
+  const hasC = state.sessions.some(s=>s.date===today&&s.code==='C'&&s.category==='muscu');
+  if(!hasC){
+    state.sessions.push({
+      id:crypto.randomUUID(),date:today,code:'C',category:'muscu',validated:true,
+      exercises:[
+        {name:'Squat vers banc',group:'Jambes',sets:[
+          {weight:58,reps:8},{weight:58,reps:8},{weight:58,reps:8}]},
+        {name:'Soulevé de terre roumain',group:'Ischios / fessiers',sets:[
+          {weight:72,reps:8},{weight:72,reps:8},{weight:72,reps:8}]},
+        {name:'Fentes avant',group:'Jambes',note:'20 kg au total, 8 reps par jambe',sets:[
+          {weight:20,reps:8},{weight:20,reps:8},{weight:20,reps:8}]},
+        {name:'Mollets debout',group:'Mollets',sets:[
+          {weight:38,reps:20},{weight:38,reps:20},{weight:38,reps:20}]}
+      ]
+    });
+  }
+
+  localStorage.setItem(TODAY_AC_KEY,'1');
+  saveState();
+}
+
+tryLegacyImport(false);ensureAReference();ensureTodayAandC();renderAll();
 </script>
 </body>
 </html>
