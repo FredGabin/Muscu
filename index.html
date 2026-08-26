@@ -7,10 +7,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <title>Coach 10K + Force</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=3.2.1" />
-  <link rel="icon" href="./icon-192.png?v=3.2.1" />
-  <link rel="apple-touch-icon" href="./icon-192.png?v=3.2.1" />
+  <title>Coach Force + Course</title>
+  <link rel="manifest" href="./manifest.webmanifest?v=3.3.0" />
+  <link rel="icon" href="./icon-192.png?v=3.3.0" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=3.3.0" />
   <style>
 :root{
   --bg:#0b0d10;--panel:#14171c;--panel2:#1b1f25;--line:#2a3038;
@@ -78,46 +78,61 @@ dialog{width:min(720px,calc(100% - 18px));max-height:88vh;overflow:auto;border:1
 @media(max-width:380px){.nav-btn small{font-size:8px}.bottom-nav{padding-left:0;padding-right:0}.day{min-height:66px;padding:5px}.dot{font-size:8px}.set-grid{grid-template-columns:24px 48px 1fr 1fr 42px 36px}.refcell{font-size:9px;padding:3px}}
 @media(min-width:650px){.metric-grid{grid-template-columns:repeat(4,1fr)}.action-grid{grid-template-columns:repeat(3,1fr)}.day{min-height:92px}}
 
-  </style>
+  
+.choice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:12px}
+.choice-btn{border:1px solid #303741;background:#111419;color:var(--text);border-radius:16px;padding:14px 8px;text-align:center}
+.choice-btn .code{margin:0 auto 8px}.choice-btn strong{display:block;font-size:13px}.choice-btn small{display:block;color:var(--muted);font-size:10px;margin-top:4px;line-height:1.25}
+.month-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:12px 0}.summary-chip{background:#101318;border:1px solid #282f37;border-radius:12px;padding:9px;text-align:center}.summary-chip strong{display:block;font-size:18px}.summary-chip span{font-size:10px;color:var(--muted)}
+.interval-box{background:#101318;border:1px solid #2b323a;border-radius:16px;padding:14px;margin:12px 0}.interval-count{font-size:28px;font-weight:950}.interval-note{font-size:12px;color:var(--muted);margin-top:4px}.run-fields{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.session-line{display:grid;grid-template-columns:46px 1fr auto;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid #282e36}.session-line:last-child{border-bottom:0}.session-line .code{width:46px;height:46px}
+.code.easy{background:#153121;color:#7fe19e}.code.free{background:#2a2037;color:#c7a8ff}
+.hr-ok{color:#72e99a}.hr-high{color:#ff8d93}
+@media(max-width:460px){.choice-grid{grid-template-columns:repeat(2,1fr)}.month-summary{grid-template-columns:repeat(2,1fr)}.run-fields{grid-template-columns:1fr 1fr}}
+</style>
 </head>
 <body>
   <div id="app">
     <header class="topbar">
       <div>
-        <div class="eyebrow">COACH ADAPTATIF · V3.2.1</div>
-        <h1>10K + Force</h1>
+        <div class="eyebrow">COACH MANUEL · V3.3.0</div>
+        <h1>Force + Course</h1>
       </div>
       <button id="installBtn" class="ghost hidden">Installer</button>
     </header>
-
-    <main id="view">
-      <section class="card"><p class="muted">Chargement du coach…</p></section>
-    </main>
-
+    <main id="view"><section class="card"><p class="muted">Chargement…</p></section></main>
     <nav class="bottom-nav" aria-label="Navigation">
       <button data-tab="today" class="nav-btn active"><span>◉</span><small>Aujourd’hui</small></button>
-      <button data-tab="activity" class="nav-btn"><span>▦</span><small>Activité</small></button>
+      <button data-tab="activity" class="nav-btn"><span>▦</span><small>Calendrier</small></button>
       <button data-tab="sessions" class="nav-btn"><span>≡</span><small>Muscu</small></button>
       <button data-tab="running" class="nav-btn"><span>⌁</span><small>Course</small></button>
-      <button data-tab="stats" class="nav-btn"><span>↗</span><small>Niveau</small></button>
+      <button data-tab="stats" class="nav-btn"><span>↗</span><small>Synthèse</small></button>
       <button data-tab="settings" class="nav-btn"><span>⚙</span><small>Réglages</small></button>
     </nav>
   </div>
-
   <dialog id="sessionDialog"><div id="sessionDialogContent"></div></dialog>
   <dialog id="quickDialog"><div id="quickDialogContent"></div></dialog>
+<script>
+const APP_VERSION="3.3.0";
+const STORE="coach10k_force_v2"; // même clé : conserve l'historique et les références muscu
+const LIBRARY_VERSION=7;
 
-  <script>
-const APP_VERSION = "3.2.1";
-const STORE = "coach10k_force_v2"; // même clé pour conserver les données v2
-const LIBRARY_VERSION = 6;
+function clone(x){return JSON.parse(JSON.stringify(x))}
+function uid(){return (crypto.randomUUID?crypto.randomUUID():`${Date.now()}_${Math.random().toString(16).slice(2)}`)}
+function pad(n){return String(n).padStart(2,"0")}
+function dateKey(d=new Date()){return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`}
+function parseDateKey(k){const [y,m,d]=String(k).split("-").map(Number);return new Date(y,m-1,d,12,0,0)}
+function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x}
+function startOfWeek(d){const x=new Date(d);const day=(x.getDay()+6)%7;x.setDate(x.getDate()-day);x.setHours(12,0,0,0);return x}
+function monthTitle(d){return d.toLocaleDateString("fr-FR",{month:"long",year:"numeric"})}
+function fmtDate(isoOrKey){const d=String(isoOrKey).length===10?parseDateKey(isoOrKey):new Date(isoOrKey);return d.toLocaleDateString("fr-FR",{weekday:"short",day:"2-digit",month:"short"})}
+function fmtLongDate(k){return parseDateKey(k).toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}
+function historyDateKey(h){return h.dateKey||dateKey(new Date(h.date))}
+function num(v){const x=+v;return isFinite(x)?x:0}
+function avg(arr){return arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:null}
+function esc(s=""){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
 
-// Référence A conservée depuis la version précédente validée.
-// Elle sert uniquement de filet de sécurité si la v3.1.0 avait remplacé A par son modèle par défaut.
-const LEGACY_A_REFERENCE = {
-  code:"A", type:"strength", title:"Muscu A — séance de référence", duration:55, hardLegs:false,
-  goal:"Force / entretien — séance validée",
-  note:"Séance A de référence. Les charges et répétitions de la dernière A sont reprises automatiquement dès qu’elles existent dans l’historique.",
+const LEGACY_A_REFERENCE={
+  code:"A",type:"strength",title:"Muscu A — séance de référence",duration:55,
+  goal:"Force / entretien — séance validée",note:"Les dernières charges et répétitions enregistrées servent automatiquement de référence.",
   exercises:[
     {name:"Développé couché",sets:4,reps:"5-6",rest:120,increment:2.5},
     {name:"Tirage vertical",sets:4,reps:"6-8",rest:105,increment:2.5},
@@ -127,814 +142,172 @@ const LEGACY_A_REFERENCE = {
     {name:"Extension triceps",sets:2,reps:"10",rest:60,increment:1}
   ]
 };
+const DEFAULT_B={
+  code:"B",type:"strength",title:"Muscu B — pectoraux / épaules / triceps",duration:55,goal:"Force et entretien du haut du corps",
+  note:"Séance B validée. Pas d’échec : garde une exécution propre et une respiration continue sous charge.",
+  exercises:[
+    {name:"Développé couché",sets:4,reps:"8",rest:150,increment:2.5,note:"Référence : 58 kg · 10/10/7/7. Consolider avant de monter.",referenceSets:[{kg:58,reps:"10",done:true},{kg:58,reps:"10",done:true},{kg:58,reps:"7",done:true},{kg:58,reps:"7",done:true}]},
+    {name:"Développé incliné",sets:3,reps:"8-10",rest:90,increment:2.5,note:"Référence : 38 kg · 8/8/8.",referenceSets:[{kg:38,reps:"8",done:true},{kg:38,reps:"8",done:true},{kg:38,reps:"8",done:true}]},
+    {name:"Développé épaules assis barre devant",sets:3,reps:"8-10",rest:90,increment:2.5,note:"Barre devant la tête, dossier assez vertical. Référence : 28 kg · 10/10/10.",referenceSets:[{kg:28,reps:"10",done:true},{kg:28,reps:"10",done:true},{kg:28,reps:"10",done:true}]},
+    {name:"Écartés à la poulie",sets:3,reps:"10-12",rest:60,increment:1,note:"Debout, poulies mi-hauteur, mains vers le sternum. Machine : cran 12. Référence : 20 kg · 10/10/10.",referenceSets:[{kg:20,reps:"10",done:true},{kg:20,reps:"10",done:true},{kg:20,reps:"10",done:true}]},
+    {name:"Push-down triceps poulie",sets:3,reps:"10-12",rest:75,increment:1,note:"Coudes fixes. Référence : 20 kg · 10/10/10.",referenceSets:[{kg:20,reps:"10",done:true},{kg:20,reps:"10",done:true},{kg:20,reps:"10",done:true}]},
+    {name:"Extension triceps au-dessus de la tête",sets:3,reps:"12-15",rest:60,increment:1,note:"Référence : 15 kg · 15/15/15.",referenceSets:[{kg:15,reps:"15",done:true},{kg:15,reps:"15",done:true},{kg:15,reps:"15",done:true}]}
+  ]
+};
+const DEFAULT_C={
+  code:"C",type:"strength",title:"Muscu C — jambes / tronc",duration:58,goal:"Force utile à la course, chaîne postérieure et stabilité",
+  note:"Charge contrôlée. Les dernières valeurs enregistrées deviennent les références de la prochaine C.",
+  exercises:[
+    {name:"Squat au banc",sets:3,reps:"8",rest:120,increment:2.5},
+    {name:"Soulevé de terre roumain",sets:3,reps:"8",rest:105,increment:2.5},
+    {name:"Step-up bas",sets:3,reps:"8/jambe",rest:90,increment:1},
+    {name:"Leg curl à la poulie",sets:3,reps:"10-12",rest:75,increment:1},
+    {name:"Mollets debout",sets:3,reps:"12-15",rest:60,increment:2.5},
+    {name:"Pallof press",sets:3,reps:"10/côté",rest:45,increment:1}
+  ]
+};
+const DEFAULT_D={code:"D",type:"run",runKind:"interval",title:"Fractionné",duration:32,goal:"Répétitions en durée",note:"Paramètres libres. Valeur de départ : 5 × 4 min, récupération 3 min.",run:{reps:5,effortMin:4,recoveryMin:3}};
+const DEFAULT_E={code:"E",type:"run",runKind:"easy",title:"Endurance fondamentale",duration:45,goal:"Distance + durée + fréquence cardiaque moyenne",note:"Repère de fréquence cardiaque moyenne : ne pas dépasser 140 bpm.",run:{hrMax:140}};
+const DEFAULT_F={code:"F",type:"run",runKind:"free",title:"Course libre / vallonnée",duration:60,goal:"Distance libre au ressenti",note:"Vallonné ou libre, sans cible de fréquence cardiaque.",run:{}};
 
-const defaults = {
-  libraryVersion: LIBRARY_VERSION,
-  settings: {
-    target10kSec: 50*60,
-    maxSessionMin: 60,
-    enduranceScore: 5840,
-    climbScore: 40,
-    climbEndurance: 17,
-    climbPower: 32,
-    vo2max: 47,
-    readiness: 4,
-    legs: 2,
-    kneeToday: 0,
-    availableMin: 60,
-    allowDouble: true,
-    runPlanVersion: 1
-  },
-  sessions: [
-    clone(LEGACY_A_REFERENCE),
-    {
-      code:"B", type:"strength", title:"Muscu B — pectoraux / épaules / triceps", duration:55, hardLegs:false,
-      goal:"Force et entretien du haut du corps",
-      note:"Séance B validée le 23/08/2026. Pas d’échec : vise environ 2 RIR et garde une respiration continue sous charge.",
-      exercises:[
-        {name:"Développé couché",sets:4,reps:"8",rest:150,increment:2.5,note:"Référence validée : 58 kg · 10/10/7/7. Consolider 4 séries homogènes avant de monter."},
-        {name:"Développé incliné",sets:3,reps:"8-10",rest:90,increment:2.5,note:"Référence validée : 38 kg · 8/8/8."},
-        {name:"Développé épaules assis barre devant",sets:3,reps:"8-10",rest:90,increment:2.5,note:"Barre devant la tête, dossier assez vertical. Référence : 28 kg · 10/10/10."},
-        {name:"Écartés à la poulie",sets:3,reps:"10-12",rest:60,increment:1,note:"Debout, poulies mi-hauteur, mains vers le sternum. Machine : cran 12. Référence : 20 kg · 10/10/10."},
-        {name:"Push-down triceps poulie",sets:3,reps:"10-12",rest:75,increment:1,note:"Coudes fixes près du corps. Référence : 20 kg · 10/10/10."},
-        {name:"Extension triceps au-dessus de la tête",sets:3,reps:"12-15",rest:60,increment:1,note:"Référence : 15 kg · 15/15/15."}
-      ]
-    },
-    {
-      code:"C", type:"strength", title:"Muscu C — jambes / tronc", duration:58, hardLegs:true,
-      goal:"Force utile à la course, quadriceps, chaîne postérieure et stabilité",
-      note:"Squat au banc : 3×8, descente contrôlée ≈3 s, contact léger avec le banc. Ne poursuis pas si la douleur du genou augmente nettement.",
-      exercises:[
-        {name:"Squat au banc",sets:3,reps:"8",rest:120,increment:2.5},
-        {name:"Soulevé de terre roumain",sets:3,reps:"8",rest:105,increment:2.5},
-        {name:"Step-up bas",sets:3,reps:"8/jambe",rest:90,increment:1},
-        {name:"Leg curl à la poulie",sets:3,reps:"10-12",rest:75,increment:1},
-        {name:"Mollets debout",sets:3,reps:"12-15",rest:60,increment:2.5},
-        {name:"Pallof press",sets:3,reps:"10/côté",rest:45,increment:1}
-      ]
-    },
-    {code:"R1",type:"run",title:"Endurance fondamentale",duration:45,hardLegs:false,goal:"Base aérobie / récupération",note:"Allure très facile, terrain plat si les genoux sont sensibles. Conversation possible, RPE 3–4.",run:{warmup:0,main:"40–50 min facile",recovery:"",cooldown:""}},
-    {code:"R2",type:"run",title:"Fractionné court",duration:48,hardLegs:true,goal:"Vitesse / économie de course",note:"Uniquement si le suivi genou est favorable. Rapide mais contrôlé, jamais sprint maximal.",run:{warmup:14,main:"8 × 1 min rapide",recovery:"1 min lente entre répétitions",cooldown:"10–12 min facile"}},
-    {code:"R3",type:"run",title:"Seuil / tempo",duration:52,hardLegs:true,goal:"Tenir un effort soutenu",note:"Difficile mais contrôlé, RPE ≈7. À remplacer par R1 si réaction du genou retardée.",run:{warmup:12,main:"3 × 8 min soutenues",recovery:"2 min faciles",cooldown:"10 min facile"}},
-    {code:"R4",type:"run",title:"Spécifique 10 km",duration:52,hardLegs:true,goal:"Rendre 5:00/km durable",note:"Objectif 10 km < 50 min. Ne pas accélérer au-delà du plan pour gagner la séance.",run:{warmup:12,main:"4 × 1 km à 5:00–5:10/km",recovery:"2 min faciles",cooldown:"8–10 min facile"}},
-    {code:"R5",type:"run",title:"Côtes",duration:48,hardLegs:true,goal:"Puissance + endurance en montée",note:"À réintroduire lorsque les genoux tolèrent bien le plat. Effort énergique contrôlé, redescente tranquille.",run:{warmup:14,main:"6 × 60–75 s en côte",recovery:"redescente lente ≈2 min",cooldown:"10–12 min facile"}},
-    {code:"R6",type:"run",title:"Test / course 10 km",duration:60,hardLegs:true,goal:"Mesurer l’objectif sub-50",note:"À faire uniquement si les deux semaines précédentes ont été bien tolérées et sans réaction retardée importante.",run:{warmup:12,main:"10 km régulier — départ prudent vers 5:05/km puis ajustement",recovery:"",cooldown:"5–10 min très facile"}},
-    {code:"R7",type:"run",title:"Fartlek ludique",duration:46,hardLegs:true,goal:"Vitesse sans regarder constamment la montre",note:"À utiliser quand les genoux sont bien tolérés. Les accélérations restent contrôlées, jamais en sprint.",run:{warmup:12,main:"10 × 1 min vive / 1 min facile, au ressenti",recovery:"1 min très facile",cooldown:"10–12 min facile"}},
-    {code:"R8",type:"run",title:"Progressive / negative split",duration:50,hardLegs:false,goal:"Endurance + maîtrise d’allure",note:"Départ volontairement lent, puis accélération douce. Si les genoux réagissent, rester intégralement en endurance facile.",run:{warmup:0,main:"20 min faciles + 15 min régulières + 10 min légèrement plus actives",recovery:"",cooldown:"5 min très faciles"}}
-  ],
-  history: [],
-  planned: {},
-  planInitialized: false,
-  updatedAt: new Date().toISOString()
+const defaults={
+  libraryVersion:LIBRARY_VERSION,
+  settings:{maxSessionMin:60,hrEfMax:140},
+  sessions:[clone(LEGACY_A_REFERENCE),clone(DEFAULT_B),clone(DEFAULT_C),clone(DEFAULT_D),clone(DEFAULT_E),clone(DEFAULT_F)],
+  history:[],updatedAt:new Date().toISOString()
 };
 
-function clone(x){return JSON.parse(JSON.stringify(x))}
-function uid(){return (crypto.randomUUID?crypto.randomUUID():`${Date.now()}_${Math.random().toString(16).slice(2)}`)}
-function pad(n){return String(n).padStart(2,"0")}
-function dateKey(d=new Date()){return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`}
-function parseDateKey(k){const [y,m,d]=String(k).split("-").map(Number);return new Date(y,m-1,d,12,0,0)}
-function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x}
-function startOfWeek(d){const x=new Date(d);const day=(x.getDay()+6)%7;x.setDate(x.getDate()-day);x.setHours(12,0,0,0);return x}
-function nextMonday(d=new Date()){const x=new Date(d);x.setHours(12,0,0,0);const delta=(8-x.getDay())%7;return addDays(x,delta===0?0:delta)}
-function monthTitle(d){return d.toLocaleDateString("fr-FR",{month:"long",year:"numeric"})}
-function fmtDate(isoOrKey){const d=String(isoOrKey).length===10?parseDateKey(isoOrKey):new Date(isoOrKey);return d.toLocaleDateString("fr-FR",{weekday:"short",day:"2-digit",month:"short"})}
-function fmtLongDate(k){return parseDateKey(k).toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}
-function historyDateKey(h){return h.dateKey||dateKey(new Date(h.date))}
-
-function normalizePlanEntry(p){
-  if(typeof p==="string") return {id:uid(),code:p,status:"planned"};
-  if(!p||typeof p!=="object") return null;
-  return Object.assign({id:uid(),code:"R1",status:"planned"},p);
-}
-function normalizePlanned(planned){
-  const out={};
-  if(!planned||typeof planned!=="object") return out;
-  Object.keys(planned).forEach(k=>{
-    const arr=Array.isArray(planned[k])?planned[k]:[];
-    out[k]=arr.map(normalizePlanEntry).filter(Boolean);
-  });
-  return out;
-}
-function isV310DefaultA(s){
-  if(!s||s.code!=="A"||!Array.isArray(s.exercises))return false;
-  const names=s.exercises.map(e=>e.name);
-  const v310=["Tirage vertical","Rowing poulie ou barre","Rowing unilatéral poulie","Face pull","Curl biceps","Curl marteau"];
-  return names.length===v310.length&&v310.every((n,i)=>names[i]===n);
-}
+function isV310DefaultA(s){if(!s||s.code!=="A"||!Array.isArray(s.exercises))return false;const names=s.exercises.map(e=>e.name);const v=["Tirage vertical","Rowing poulie ou barre","Rowing unilatéral poulie","Face pull","Curl biceps","Curl marteau"];return names.length===v.length&&v.every((n,i)=>names[i]===n)}
 function aFromHistory(parsed,oldA){
-  const hist=(Array.isArray(parsed?.history)?parsed.history:[])
-    .filter(h=>h&&h.code==="A"&&h.strength&&Object.keys(h.strength).length)
-    .sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
-  if(!hist.length)return null;
-  const h=hist[0],names=Object.keys(h.strength||{});
-  if(!names.length)return null;
+  const hist=(Array.isArray(parsed?.history)?parsed.history:[]).filter(h=>h&&h.code==="A"&&h.strength&&Object.keys(h.strength).length).sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
+  if(!hist.length)return null;const h=hist[0],names=Object.keys(h.strength||{});if(!names.length)return null;
   const catalogs=[...(oldA?.exercises||[]),...LEGACY_A_REFERENCE.exercises];
-  const ex=names.map(name=>{
-    const known=catalogs.find(e=>e.name===name)||{};
-    const sets=Array.isArray(h.strength[name])?h.strength[name]:[];
-    const done=sets.filter(x=>x&&x.done);
-    const lastRep=(done[done.length-1]?.reps??sets[sets.length-1]?.reps??"");
-    return {name,sets:sets.length||known.sets||3,reps:String(lastRep||known.reps||"8"),rest:known.rest||90,increment:known.increment||2.5};
-  });
-  return Object.assign({},clone(LEGACY_A_REFERENCE),oldA||{},{code:"A",type:"strength",hardLegs:false,title:"Muscu A — séance de référence",goal:"Force / entretien — référence récupérée",exercises:ex});
+  const ex=names.map(name=>{const known=catalogs.find(e=>e.name===name)||{};const sets=Array.isArray(h.strength[name])?h.strength[name]:[];const done=sets.filter(x=>x&&x.done);const lastRep=(done[done.length-1]?.reps??sets[sets.length-1]?.reps??"");return {name,sets:sets.length||known.sets||3,reps:String(lastRep||known.reps||"8"),rest:known.rest||90,increment:known.increment||2.5,note:known.note||""}});
+  return Object.assign({},clone(LEGACY_A_REFERENCE),oldA||{},{code:"A",type:"strength",exercises:ex});
 }
-
 function normalizeState(parsed){
-  const base=clone(defaults);
-  if(!parsed||typeof parsed!=="object") return base;
-  base.settings=Object.assign({},base.settings,parsed.settings||{});
-  base.history=Array.isArray(parsed.history)?parsed.history:[];
-  base.planned=normalizePlanned(parsed.planned);
-  base.planInitialized=!!parsed.planInitialized || Object.keys(base.planned).length>0;
-  base.updatedAt=parsed.updatedAt||base.updatedAt;
-
-  const oldSessions=Array.isArray(parsed.sessions)?parsed.sessions:[];
-  if(oldSessions.length){
-    // Migration v2/v3 -> v3.1.1 : ne plus écraser A.
-    // Si un historique A existe, ses noms d’exercices deviennent la référence afin de retrouver les anciennes charges.
-    base.sessions=defaults.sessions.map(d=>{
-      const old=oldSessions.find(s=>s.code===d.code);
-      if(d.code==="A"){
-        const fromHistory=aFromHistory(parsed,old);
-        if(fromHistory)return fromHistory;
-        if(old&&isV310DefaultA(old))return clone(LEGACY_A_REFERENCE);
-        if(old&&Array.isArray(old.exercises)&&old.exercises.length)return Object.assign({},clone(LEGACY_A_REFERENCE),old,{code:"A",type:"strength",hardLegs:false,exercises:old.exercises});
-        return clone(LEGACY_A_REFERENCE);
-      }
-      // v3.2.1 : la séance B a été reconstruite et validée le 23/08/2026.
-      // Lors du premier passage à la bibliothèque 6, on applique ce nouveau modèle B.
-      if(d.code==="B" && num(parsed.libraryVersion)<6)return clone(d);
-      if(!old)return clone(d);
-      if(d.type==="strength"&&Array.isArray(old.exercises)&&old.exercises.length){
-        return Object.assign({},d,old,{code:d.code,type:"strength",hardLegs:d.hardLegs,exercises:old.exercises});
-      }
-      return Object.assign({},d,old,{code:d.code,type:d.type,hardLegs:d.hardLegs});
-    });
-  }
-  base.settings.runPlanVersion=num(parsed.settings?.runPlanVersion||0);
+  const base=clone(defaults);if(!parsed||typeof parsed!=="object")return base;
+  base.settings=Object.assign({},base.settings,parsed.settings||{});base.settings.hrEfMax=num(base.settings.hrEfMax)||140;
+  base.history=Array.isArray(parsed.history)?parsed.history:[];base.updatedAt=parsed.updatedAt||base.updatedAt;
+  const olds=Array.isArray(parsed.sessions)?parsed.sessions:[];
+  ["A","B","C"].forEach(code=>{const idx=base.sessions.findIndex(s=>s.code===code),d=base.sessions[idx],old=olds.find(s=>s.code===code);if(!old)return;
+    if(code==="A"){const from=aFromHistory(parsed,old);if(from)base.sessions[idx]=from;else if(old&&isV310DefaultA(old))base.sessions[idx]=clone(LEGACY_A_REFERENCE);else if(Array.isArray(old.exercises)&&old.exercises.length)base.sessions[idx]=Object.assign({},d,old,{code:"A",type:"strength",exercises:old.exercises});return;}
+    if(code==="B"&&num(parsed.libraryVersion)<6){base.sessions[idx]=clone(DEFAULT_B);return;}
+    if(Array.isArray(old.exercises)&&old.exercises.length)base.sessions[idx]=Object.assign({},d,old,{code,type:"strength",exercises:old.exercises});
+  });
+  // D/E/F sont la nouvelle bibliothèque course. Les anciens R1-R8 restent uniquement dans l'historique.
+  base.sessions=base.sessions.map(s=>{if(s.code==="E")s.run.hrMax=base.settings.hrEfMax;return s});
   base.libraryVersion=LIBRARY_VERSION;
   return base;
 }
-function load(){
-  try{const raw=localStorage.getItem(STORE);return raw?normalizeState(JSON.parse(raw)):clone(defaults)}catch(e){return clone(defaults)}
-}
+function load(){try{const raw=localStorage.getItem(STORE);return raw?normalizeState(JSON.parse(raw)):clone(defaults)}catch(e){return clone(defaults)}}
 let state=load();
 function save(){state.updatedAt=new Date().toISOString();state.libraryVersion=LIBRARY_VERSION;localStorage.setItem(STORE,JSON.stringify(state))}
-function recoverKnownAWeek(){
-  // La séance A du vendredi 21/08/2026 a été faite avant cette mise à jour.
-  // On ne fabrique aucune charge : si les séries existent encore, elles sont conservées ; sinon on restaure seulement la trace calendaire.
-  const target="2026-08-21";
-  const around=state.history.some(h=>h&&h.code==="A"&&["2026-08-20","2026-08-21","2026-08-22"].includes(historyDateKey(h)));
-  if(!around&&!state.settings.recoveredA20260821){
-    const d=parseDateKey(target);d.setHours(18,0,0,0);
-    state.history.push({id:uid(),code:"A",type:"strength",date:d.toISOString(),dateKey:target,duration:55,rpe:0,notes:"Séance A effectuée avant la mise à jour v3.1.1. La trace calendaire est récupérée ; aucune charge n’a été inventée.",strength:{},recovered:true});
-    state.settings.recoveredA20260821=true;save();
-  }
-}
-recoverKnownAWeek();
-function recoverKnownB20260823(){
-  // Valeurs validées pendant la séance B du 23/08/2026.
-  // Si une B existe déjà ce jour-là, on la corrige/complète sans créer de doublon.
-  const target="2026-08-23";
-  const existing=state.history.find(h=>h&&h.code==="B"&&historyDateKey(h)===target);
-  const source=existing?.strength||{};
-  const knownSets=(kg,reps,oldSets=[])=>reps.map((r,i)=>({kg,reps:String(r),rir:oldSets?.[i]?.rir??null,done:true}));
-  const strength={
-    "Développé couché":knownSets(58,[10,10,7,7],source["Développé couché"]),
-    "Développé incliné":knownSets(38,[8,8,8],source["Développé incliné"]),
-    "Développé épaules assis barre devant":knownSets(28,[10,10,10],source["Développé épaules assis barre devant"]||source["Élévations latérales poulie"]),
-    "Écartés à la poulie":knownSets(20,[10,10,10],source["Écartés à la poulie"]),
-    "Push-down triceps poulie":knownSets(20,[10,10,10],source["Push-down triceps poulie"]||source["Extension triceps poulie"]),
-    "Extension triceps au-dessus de la tête":knownSets(15,[15,15,15],source["Extension triceps au-dessus de la tête"])
-  };
-  let h=existing;
-  if(h){
-    h.strength=strength;
-    h.notes=[h.notes,"B validée : développé épaules barre devant ; écartés poulie machine cran 12 ; références corrigées selon la séance réelle."].filter(Boolean).join(" · ");
-    h.recovered=true;
-  }else{
-    const d=parseDateKey(target);d.setHours(21,55,0,0);
-    h={id:uid(),code:"B",type:"strength",date:d.toISOString(),dateKey:target,duration:0,rpe:0,
-      notes:"Séance B récupérée depuis les charges et répétitions validées le 23/08/2026. Écartés poulie : machine cran 12.",
-      strength,recovered:true};
-    state.history.push(h);
-  }
-  const p=plansOn(target).find(x=>x&&x.code==="B"&&x.status==="planned");
-  if(p){p.status="done";p.historyId=h.id}
-  save();
-}
-recoverKnownB20260823();
-function esc(s=""){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
-function secToPace(sec){if(!isFinite(sec)||sec<=0)return "—";const m=Math.floor(sec/60),s=Math.round(sec%60);return `${m}:${String(s).padStart(2,"0")}/km`}
-function paceToSec(txt){if(!txt)return null;const m=String(txt).match(/(\d+)\s*[:']\s*(\d+)/);return m?(+m[1]*60 + +m[2]):null}
 function sessionBy(code){return state.sessions.find(s=>s.code===code)}
-function isRunCode(code){const ss=sessionBy(code);return ss?.type==="run"||String(code).startsWith("R")}
-function displayCode(code){
-  if(code==="REST")return "—";
-  const txt=String(code||"");
-  const m=txt.match(/^R(\d+)$/i);if(m)return `D${m[1]}`;
-  const d=txt.match(/^D(\d+)$/i);if(d)return `D${d[1]}`;
-  return sessionBy(code)?.type==="run"?"D":code;
-}
-function displayType(code){const s=sessionBy(code);return s?.type==="run"?"COURSE":"MUSCU"}
-function runVariantLabel(code){const s=sessionBy(code);return s?.type==="run"?s.title:"Course"}
-function daysAgo(iso){return (Date.now()-new Date(iso).getTime())/86400000}
-function recent(code,days=14){return state.history.filter(h=>h.code===code&&daysAgo(h.date)<=days)}
-function lastOf(code){return state.history.filter(h=>h.code===code).sort((a,b)=>new Date(b.date)-new Date(a.date))[0]}
-function completedLast(days=7){return state.history.filter(h=>daysAgo(h.date)<=days).length}
-function hardLast(days=7){return state.history.filter(h=>daysAgo(h.date)<=days&&sessionBy(h.code)?.hardLegs).length}
-function lastHardDays(){const hard=state.history.filter(h=>sessionBy(h.code)?.hardLegs).sort((a,b)=>new Date(b.date)-new Date(a.date))[0];return hard?daysAgo(hard.date):99}
-function num(v){const x=+v;return isFinite(x)?x:0}
-function avg(arr){return arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:null}
-
-function makePlan(code,opts={}){return Object.assign({id:uid(),code,status:"planned"},opts)}
-function starterWeeks(){
-  // 8 semaines : reprise articulaire d'abord, puis variété progressive.
-  return [
-    [
-      makePlan("A",{note:"Reprise force haut du corps."}),
-      makePlan("R1",{plannedDuration:38,runMain:"35–40 min très faciles, terrain plat",note:"D facile : priorité à la tolérance des genoux."}),
-      makePlan("B"),
-      makePlan("R1",{plannedDuration:35,runMain:"30–35 min faciles + 6 × 20 s de cadence souple",note:"Petit jeu de cadence, sans sprint."}),
-      makePlan("C",{note:"Squat au banc 3×8, charge modérée, RIR 2–3."}),
-      makePlan("REST",{title:"Repos / marche",note:"Récupération. Marche douce possible."}),
-      makePlan("R1",{plannedDuration:45,runMain:"45 min faciles, terrain plat"})
-    ],
-    [
-      makePlan("A"),
-      makePlan("R8",{plannedDuration:42,runMain:"25 min faciles + 10 min un peu plus actives + 5 min faciles",note:"Progressive douce uniquement si douleur ≤2/10."}),
-      makePlan("B"),
-      makePlan("R1",{plannedDuration:40,runMain:"40 min faciles avec 4 changements de parcours ou de rythme très doux"}),
-      makePlan("C",{note:"Même charge ou petite progression seulement si bien tolérée."}),
-      makePlan("REST",{title:"Repos / marche"}),
-      makePlan("R1",{plannedDuration:50,runMain:"50 min faciles"})
-    ],
-    [
-      makePlan("A"),
-      makePlan("R7",{plannedDuration:44,runMain:"8 × 1 min vive / 1 min facile au ressenti",note:"D ludique : seulement si genou vert ; sinon 40 min faciles."}),
-      makePlan("B"),
-      makePlan("R1",{plannedDuration:40,runMain:"40 min faciles, sans objectif d’allure"}),
-      makePlan("C"),
-      makePlan("REST",{title:"Repos / marche"}),
-      makePlan("R8",{plannedDuration:50,runMain:"30 min faciles + 15 min régulières + 5 min faciles"})
-    ],
-    [
-      makePlan("A"),
-      makePlan("R3",{plannedDuration:48,runMain:"2 × 8 min tempo, récup 3 min faciles",note:"Soutenu mais contrôlé. Si réaction retardée : D facile."}),
-      makePlan("B"),
-      makePlan("R1",{plannedDuration:42,runMain:"40–45 min faciles"}),
-      makePlan("C"),
-      makePlan("REST",{title:"Repos / marche"}),
-      makePlan("R8",{plannedDuration:55,runMain:"35 min faciles + 15 min progressives + 5 min faciles"})
-    ],
-    [
-      makePlan("A"),
-      makePlan("R5",{plannedDuration:46,runMain:"6 × 45–60 s en côte douce, redescente lente",note:"Seulement si deux semaines bien tolérées ; sinon fartlek plat ou D facile."}),
-      makePlan("B"),
-      makePlan("R1",{plannedDuration:42,runMain:"40–45 min faciles"}),
-      makePlan("C"),
-      makePlan("REST",{title:"Repos / marche"}),
-      makePlan("R1",{plannedDuration:55,runMain:"55 min faciles, parcours agréable"})
-    ],
-    [
-      makePlan("A"),
-      makePlan("R2",{plannedDuration:48,runMain:"10 × 1 min rapide / 1 min lente",note:"Rapide, jamais sprint maximal."}),
-      makePlan("B"),
-      makePlan("R1",{plannedDuration:45,runMain:"45 min faciles"}),
-      makePlan("C"),
-      makePlan("REST",{title:"Repos / marche"}),
-      makePlan("R8",{plannedDuration:58,runMain:"35 min faciles + 15 min régulières + 8 min faciles"})
-    ],
-    [
-      makePlan("A"),
-      makePlan("R4",{plannedDuration:52,runMain:"4 × 1 km à 5:05 → 5:00/km, récup 2 min",note:"Spécifique 10 km, dernier km contrôlé."}),
-      makePlan("B"),
-      makePlan("R7",{plannedDuration:40,runMain:"6 × 90 s au ressenti / 90 s faciles",note:"Séance courte et ludique, sans chasse au chrono."}),
-      makePlan("C"),
-      makePlan("REST",{title:"Repos / marche"}),
-      makePlan("R1",{plannedDuration:55,runMain:"55 min faciles"})
-    ],
-    [
-      makePlan("A",{note:"Semaine allégée : ne cherche pas à battre les charges."}),
-      makePlan("R3",{plannedDuration:44,runMain:"2 × 7 min tempo, récup 3 min",note:"Volume réduit avant le test."}),
-      makePlan("B",{note:"Volume modéré."}),
-      makePlan("R1",{plannedDuration:35,runMain:"35 min très faciles"}),
-      makePlan("REST",{title:"Repos jambes",note:"Pas de C cette semaine pour arriver frais."}),
-      makePlan("REST",{title:"Repos / marche"}),
-      makePlan("R6",{plannedDuration:60,runMain:"Test 10 km : départ vers 5:05/km puis stabiliser autour de 5:00/km si tout va bien",note:"Seulement si genou vert. Sinon D facile 45 min et test reporté."})
-    ]
-  ];
-}
-function ensureStarterPlan(){
-  if(state.planInitialized||Object.keys(state.planned).length){state.planInitialized=true;return}
-  const start=nextMonday(new Date());
-  starterWeeks().forEach((week,wi)=>week.forEach((entry,di)=>{
-    const k=dateKey(addDays(start,wi*7+di));
-    state.planned[k]=state.planned[k]||[];
-    state.planned[k].push(entry);
-  }));
-  state.planInitialized=true;save();
-}
-ensureStarterPlan();
-function ensureRunningPlanV1(){
-  if(num(state.settings.runPlanVersion)>=1)return;
-  const start=nextMonday(new Date()), weeks=starterWeeks();
-  // On conserve A/B/C, repos et séances déjà effectuées ; seuls les D futurs planifiés sont renouvelés.
-  Object.keys(state.planned).forEach(k=>{
-    if(k>=dateKey(start))state.planned[k]=(state.planned[k]||[]).filter(p=>p.status==="done"||!isRunCode(p.code));
-  });
-  weeks.forEach((week,wi)=>week.forEach((entry,di)=>{
-    if(!isRunCode(entry.code))return;
-    const k=dateKey(addDays(start,wi*7+di));state.planned[k]=state.planned[k]||[];state.planned[k].push(entry);
-  }));
-  state.settings.runPlanVersion=1;save();
-}
-ensureRunningPlanV1();
-
-function kneeStatus(){
-  const today=num(state.settings.kneeToday);
-  const runs=state.history.filter(h=>h.run&&daysAgo(h.date)<=14).sort((a,b)=>new Date(b.date)-new Date(a.date));
-  const values=[];
-  runs.slice(0,4).forEach(h=>{
-    const k=h.run.knee||{};
-    [k.start,k.after2k,k.oneHour,k.nextMorning,k.after48h].forEach(v=>{if(v!==""&&v!=null&&isFinite(+v))values.push(+v)});
-  });
-  const recentFollow=runs.slice(0,3).map(h=>h.run.knee||{});
-  const red = today>=4 || recentFollow.some(k=>num(k.oneHour)>=5||num(k.nextMorning)>=4||num(k.after48h)>=3);
-  const warn = today>=2.5 || recentFollow.some(k=>num(k.oneHour)>=3||num(k.nextMorning)>=2||num(k.after48h)>=2);
-  const complete=recentFollow.filter(k=>k.oneHour!=null&&k.nextMorning!=null);
-  const green = today<=1 && complete.length>=2 && complete.every(k=>num(k.oneHour)<=2&&num(k.nextMorning)<=1&&(k.after48h==null||num(k.after48h)<=1));
-  if(red)return {level:"danger",label:"Genou rouge",text:"Réaction élevée : évite aujourd’hui les séances de course rapides et les grosses charges jambes."};
-  if(warn)return {level:"warn",label:"Genou orange",text:"Tolérance encore limite : privilégie facile/plat et garde les séances dures en attente."};
-  if(green)return {level:"good",label:"Genou vert",text:"Les dernières sorties semblent bien tolérées : progression prudente possible."};
-  return {level:"mid",label:"Genou à suivre",text:values.length?"Données partielles : complète le suivi 1 h / lendemain pour fiabiliser le planning.":"Pas encore assez de données post-course pour valider les séances rapides."};
-}
-
-function weaknessModel(){
-  const s=state.settings;
-  const r4=lastOf("R4"), r6=lastOf("R6");
-  const pace=(r6&&r6.run?.paceSec)||(r4&&r4.run?.paceSec)||null;
-  const tenKNeed=pace?Math.max(0,Math.min(100,(pace-300)*2+35)):55;
-  const enduranceNeed=Math.max(20,Math.min(95,70-Math.min(30,recent("R1",10).length*12)));
-  return [
-    {key:"climbEndurance",label:"Endurance en montée",need:Math.max(0,100-num(s.climbEndurance)),detail:`Garmin ${s.climbEndurance}`},
-    {key:"climbPower",label:"Puissance en montée",need:Math.max(0,100-num(s.climbPower)),detail:`Garmin ${s.climbPower}`},
-    {key:"10k",label:"Spécifique 10 km",need:tenKNeed,detail:pace?`Dernière allure spécifique ${secToPace(pace)}`:"Pas encore assez de données spécifiques"},
-    {key:"aerobic",label:"Endurance fondamentale",need:enduranceNeed,detail:`${recent("R1",10).length+recent("R8",10).length} D faciles/progressives sur 10 jours`}
-  ].sort((a,b)=>b.need-a.need);
-}
-function scoreSession(code){
-  const s=state.settings, weak=weaknessModel(), top=weak[0]?.key;
-  const knee=kneeStatus();
-  let score=50,reasons=[];
-  const hDays=lastHardDays(),legs=num(s.legs),readiness=num(s.readiness),sess=sessionBy(code);
-  if(code==="R5"){score+=(100-num(s.climbEndurance))*.25+(100-num(s.climbPower))*.2;reasons.push("cible la montée")}
-  if(code==="C"){score+=(100-num(s.climbPower))*.18;reasons.push("renforce les jambes et la stabilité")}
-  if(code==="R4"||code==="R6"){score+=top==="10k"?32:16;reasons.push("spécifique à l’objectif 5:00/km")}
-  if(code==="R3"){score+=top==="10k"?26:12;reasons.push("développe la tenue d’allure")}
-  if(code==="R2"||code==="R7"){score+=12;reasons.push(code==="R7"?"apporte de la vitesse avec un format ludique":"travaille vitesse et économie") }
-  if(code==="R1"||code==="R8"){score+=20+(hDays<1.5?24:0)+(legs>=4?20:0);reasons.push(code==="R8"?"développe l’endurance avec une allure progressive":"favorise récupération et base aérobie") }
-  if(code==="A"||code==="B"){score+=14+(hDays<1.2?16:0);reasons.push("entretient la force sans grosse contrainte jambes")}
-  if(sess?.hardLegs&&hDays<1.25){score-=50;reasons.push("forte charge jambes récente")}
-  if(sess?.hardLegs&&legs>=4){score-=40;reasons.push("jambes fatiguées")}
-  if(sess?.hardLegs&&readiness<=2){score-=35;reasons.push("récupération basse")}
-  if(hardLast(7)>=3&&sess?.hardLegs){score-=25;reasons.push("déjà beaucoup de séances exigeantes")}
-  const last=lastOf(code);if(last&&daysAgo(last.date)<2.5){score-=22;reasons.push("séance identique récente")}
-  if(sess?.duration>num(s.availableMin)){score-=80;reasons.push("dépasse le temps disponible")}
-  if(knee.level==="danger"){
-    if(sess?.type==="run") score-=code==="R1"?30:100;
-    if(code==="C")score-=85;
-  }else if(knee.level==="warn"){
-    if(sess?.hardLegs&&sess?.type==="run")score-=70;
-    if(code==="C")score-=35;
-  }
-  return {code,score,reasons};
-}
-function recommendation(){return state.sessions.map(x=>scoreSession(x.code)).sort((a,b)=>b.score-a.score)}
-function compat(a,b){
-  const A=sessionBy(a),B=sessionBy(b);if(!A||!B)return {lvl:"mid",txt:"À évaluer"};
-  if(a===b)return {lvl:"no",txt:"Même séance"};
-  if(A.hardLegs&&B.hardLegs)return {lvl:"no",txt:"Deux fortes charges jambes"};
-  if((A.code==="C"&&B.type==="run")||(B.code==="C"&&A.type==="run")){
-    if(A.code==="R1"||B.code==="R1")return {lvl:"mid",txt:"Possible seulement très facile et bien récupéré"};
-    return {lvl:"no",txt:"À éviter le même jour"};
-  }
-  if((A.type==="strength"&&!A.hardLegs&&B.code==="R1")||(B.type==="strength"&&!B.hardLegs&&A.code==="R1"))return {lvl:"ok",txt:"Bon doublé"};
-  if(A.hardLegs||B.hardLegs)return {lvl:"mid",txt:"Possible avec plusieurs heures d’écart"};
-  return {lvl:"ok",txt:"Compatible"};
-}
-
-function plansOn(k){return state.planned[k]||[]}
-function historyOn(k){return state.history.filter(h=>historyDateKey(h)===k)}
-function planById(k,id){return plansOn(k).find(p=>p.id===id)}
-function firstActivePlan(k){return plansOn(k).find(p=>p.status==="planned")}
-function todayDecision(){
-  const k=todayKey();const p=firstActivePlan(k);const knee=kneeStatus();
-  if(p){
-    if(p.code==="REST")return {rest:true,plan:p,reason:p.note||"Journée de récupération prévue au calendrier."};
-    const s=sessionBy(p.code);
-    if(s&&(s.hardLegs||s.type==="run")&&knee.level==="danger"){
-      const safe=recommendation().find(r=>["A","B"].includes(r.code))||recommendation()[0];
-      return {code:safe.code,plan:p,overridden:true,reason:`${displayCode(p.code)} était prévu, mais ${knee.label.toLowerCase()} : proposition plus prudente aujourd’hui.`};
-    }
-    if(s?.hardLegs&&s.type==="run"&&knee.level==="warn"){
-      return {code:"R1",plan:p,overridden:true,reason:`${displayCode(p.code)} était prévu, mais le suivi genou est orange : une D facile est proposée à la place.`};
-    }
-    return {code:p.code,plan:p,reason:`Séance prévue au planning aujourd’hui${p.note?` : ${p.note}`:"."}`};
-  }
-  const best=recommendation()[0];return {code:best.code,reason:best.reasons[0]||"meilleur compromis selon les données enregistrées"};
-}
 function todayKey(){return dateKey(new Date())}
+function historyOn(k){return state.history.filter(h=>historyDateKey(h)===k)}
+function displayCode(code){return String(code||"—")}
+function isNewRunCode(code){return ["D","E","F"].includes(code)}
+function runTitle(code,h=null){const s=sessionBy(code);if(s)return s.title;const legacy={R1:"Endurance fondamentale (ancien)",R2:"Fractionné court (ancien)",R3:"Seuil / tempo (ancien)",R4:"Spécifique 10 km (ancien)",R5:"Côtes (ancien)",R6:"Test 10 km (ancien)",R7:"Fartlek (ancien)",R8:"Progressive (ancien)"};return h?.title||legacy[code]||"Course"}
+function historyTimestampForKey(k){const d=parseDateKey(k),now=new Date();if(k===todayKey())d.setHours(now.getHours(),now.getMinutes(),now.getSeconds());else d.setHours(12,0,0);return d.toISOString()}
+function codeClass(code,type){if(type!=="run")return "";if(code==="E")return "run easy";if(code==="F")return "run free";return "run"}
+function hasRunOn(k){return historyOn(k).some(h=>h.type==="run")}
 
-let activeTab="today";
-let activityMode="month";
-let calendarCursor=new Date(new Date().getFullYear(),new Date().getMonth(),1,12);
-let selectedDate=todayKey();
-let runCursor=new Date(new Date().getFullYear(),new Date().getMonth(),1,12);
-const view=document.getElementById("view");
-const quickDialog=document.getElementById("quickDialog");
-const sessionDialog=document.getElementById("sessionDialog");
+let activeTab="today",calendarCursor=new Date(new Date().getFullYear(),new Date().getMonth(),1,12),selectedDate=todayKey();
+const view=document.getElementById("view"),quickDialog=document.getElementById("quickDialog"),sessionDialog=document.getElementById("sessionDialog");
 document.querySelectorAll(".nav-btn").forEach(b=>b.onclick=()=>{activeTab=b.dataset.tab;render()});
+function render(){document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.tab===activeTab));({today:renderToday,activity:renderActivity,sessions:renderSessions,running:renderRunning,stats:renderStats,settings:renderSettings}[activeTab]||renderToday)()}
 
-function render(){
-  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.tab===activeTab));
-  ({today:renderToday,activity:renderActivity,sessions:renderSessions,running:renderRunning,history:renderHistory,stats:renderStats,settings:renderSettings}[activeTab]||renderToday)();
-}
-function kneeBadge(){const k=kneeStatus();const cls=k.level==="mid"?"":k.level;return `<span class="badge ${cls}">${esc(k.label)}</span>`}
-function renderToday(){
-  const dec=todayDecision(),knee=kneeStatus(),today=new Date().toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"});
-  const planned=plansOn(todayKey());const upcoming=upcomingPlans(7);
-  let hero="";
-  if(dec.rest){
-    hero=`<section class="card hero"><div class="row between"><span class="badge">REPOS</span><span class="small">Activité</span></div><div class="big" style="margin-top:10px">Récupération</div><p class="muted">${esc(dec.reason)}</p><div class="notice ${knee.level}">${esc(knee.text)}</div><div class="action-grid"><button class="secondary" onclick="chooseSession(false,'${todayKey()}')">Faire une séance</button><button class="secondary" onclick="activeTab='activity';render()">Voir activité</button></div></section>`;
-  }else{
-    const s=sessionBy(dec.code);
-    const planArg=dec.plan?`,'${todayKey()}','${dec.plan.id}'`:`,'${todayKey()}',null`;
-    hero=`<section class="card hero">
-      <div class="row between"><span class="badge ${s.type==="run"?"blue":"accent"}">${esc(displayCode(s.code))} · ${s.type==="run"?"COURSE":"MUSCU"}</span><span class="small">≈ ${dec.plan?.plannedDuration||s.duration} min</span></div>
-      <div class="big" style="margin-top:10px">${esc(s.title)}</div>
-      <p class="muted">${esc(dec.reason)}</p>
-      ${dec.overridden?`<div class="notice warn"><strong>Planning adapté :</strong> ${esc(displayCode(dec.plan.code))} reste dans le planning mais n’est pas prioritaire aujourd’hui.</div>`:""}
-      <div class="notice ${knee.level}"><strong>${esc(knee.label)} :</strong> ${esc(knee.text)}</div>
-      <div class="action-grid"><button class="primary" onclick="openSession('${s.code}'${planArg})">Démarrer ${displayCode(s.code)}</button><button class="secondary" onclick="chooseSession(false,'${todayKey()}')">Changer</button><button class="secondary" onclick="chooseSession(true,'${todayKey()}')">+ 2e séance</button></div>
-    </section>`;
-  }
-  view.innerHTML=`
-    <div class="section-title"><div><div class="small">${esc(today)}</div><h2>Aujourd’hui</h2></div><div class="row wrap">${kneeBadge()}<span class="badge good">${completedLast(7)} / 7 j</span></div></div>
-    ${hero}
-    ${planned.length?`<section class="card"><div class="row between"><h3 style="margin:0">Prévu aujourd’hui</h3><button class="ghost" onclick="selectedDate='${todayKey()}';activeTab='activity';render()">Gérer</button></div>${planned.map(p=>planRow(p,todayKey())).join("")}</section>`:""}
-    <div class="section-title"><h2>7 prochains jours</h2><button class="ghost" onclick="activeTab='activity';render()">Activité</button></div>
-    <section class="card">${upcoming.length?upcoming.map(x=>`<div class="kpi"><div><strong>${esc(fmtDate(x.date))} · ${esc(displayCode(x.plan.code))}</strong><div class="small">${esc(planTitle(x.plan))}${x.plan.note?` · ${esc(x.plan.note)}`:""}</div></div><span class="badge ${isRunCode(x.plan.code)?"blue":x.plan.code==="REST"?"":"accent"}">${x.plan.status==="done"?"✓":"prévu"}</span></div>`).join(""):`<p class="muted">Rien de planifié.</p>`}</section>
-    <div class="section-title"><h2>Suivi rapide</h2><span class="small">modifie les recommandations</span></div>
-    <div class="metric-grid"><div class="metric"><div class="v">${state.settings.kneeToday||0}/10</div><div class="l">Douleur genou aujourd’hui</div></div><div class="metric"><div class="v">${state.settings.readiness}/5</div><div class="l">Récupération</div></div><div class="metric"><div class="v">${state.settings.legs}/5</div><div class="l">Fatigue jambes</div></div><div class="metric"><div class="v">5:00</div><div class="l">Allure cible 10 km</div></div></div>
-    <button class="secondary full" style="margin-top:10px" onclick="activeTab='settings';render()">Mettre à jour l’état du jour</button>`;
-}
-function planTitle(p){if(p.code==="REST")return p.title||"Repos";return p.title||sessionBy(p.code)?.title||p.code}
-function upcomingPlans(days){
-  const out=[],start=parseDateKey(todayKey());
-  for(let i=0;i<days;i++){
-    const k=dateKey(addDays(start,i));plansOn(k).forEach(p=>{if(p.status!=="skipped")out.push({date:k,plan:p})});
-  }
-  return out;
-}
-function sessionCard(s,open=false){return `<div class="card session-card ${open?"clickable":""}" ${open?`onclick="openSession('${s.code}','${todayKey()}',null)"`:""}><div class="code ${s.type==="run"?"run":""}">${esc(displayCode(s.code))}</div><div><strong>${esc(s.title)}</strong><p>${esc(s.goal)} · ≈ ${s.duration} min</p></div><div class="chev">›</div></div>`}
-function strengthHistorySummary(h){
-  if(!h||!h.strength||!Object.keys(h.strength).length)return `<div class="small">Séance enregistrée, mais les charges/reps de cette ancienne version ne sont plus disponibles. Elles seront recréées automatiquement à la prochaine A.</div>`;
-  return Object.entries(h.strength).map(([name,sets])=>{
-    const vals=(Array.isArray(sets)?sets:[]).filter(x=>x&&x.done).map(x=>`${x.kg||0} kg × ${x.reps||0}`).join(" · ");
-    return `<div class="kpi"><div><strong>${esc(name)}</strong><div class="small">${esc(vals||"séries enregistrées")}</div></div></div>`;
-  }).join("");
-}
-function aReferenceCard(){
-  const a=sessionBy("A"),last=state.history.filter(h=>h.code==="A").sort((x,y)=>new Date(y.date)-new Date(x.date))[0];
-  return `<section class="card"><div class="row between"><div><div class="small">RÉFÉRENCE A</div><h3 style="margin:4px 0 0">${esc(a?.title||"Séance A")}</h3></div>${last?`<span class="badge good">${esc(fmtDate(historyDateKey(last)))}</span>`:`<span class="badge">aucune</span>`}</div>${last?strengthHistorySummary(last):`<p class="small">Aucune A enregistrée pour l’instant.</p>`}<button class="ghost full" style="margin-top:10px" onclick="openSession('A','${todayKey()}',null)">Ouvrir A avec les dernières références</button></section>`;
-}
-function strengthTodayRows(k=todayKey()){
-  const plans=plansOn(k).filter(p=>!isRunCode(p.code)&&p.code!=="REST"&&p.status!=="skipped");
-  const linked=new Set(plans.map(p=>p.historyId).filter(Boolean));
-  const rows=plans.map(p=>{
-    const done=p.status==="done";return `<div class="today-entry"><div class="code">${esc(p.code)}</div><div><strong>${esc(sessionBy(p.code)?.title||p.code)}</strong><div class="small">${done?"Effectuée":"Prévue"}</div></div>${done?`<span class="badge good">✓</span>`:`<button class="mini good" onclick="openSession('${p.code}','${k}','${p.id}')">Démarrer</button>`}</div>`;
-  });
-  historyOn(k).filter(h=>h.type==="strength"&&!linked.has(h.id)).forEach(h=>rows.push(`<div class="today-entry"><div class="code">${esc(h.code)}</div><div><strong>${esc(sessionBy(h.code)?.title||h.code)}</strong><div class="small">Effectuée · ${h.duration||"—"} min</div></div><span class="badge good">✓</span></div>`));
-  return rows.join("")||`<div class="notice">Aucune séance de musculation aujourd’hui.</div>`;
-}
-function renderSessions(){
-  const k=todayKey();
-  view.innerHTML=`<div class="section-title"><div><div class="small">${esc(fmtLongDate(k))}</div><h2>Musculation</h2></div><span class="badge accent">A · B · C</span></div>
-  <section class="card"><div class="row between"><div><h3 style="margin:0">Aujourd’hui</h3><div class="small">Autant de séances muscu que tu veux dans la journée.</div></div></div><div class="today-list" style="margin-top:12px">${strengthTodayRows(k)}</div><button class="primary full" style="margin-top:12px" onclick="chooseStrengthSession('${k}')">+ Ajouter une séance</button></section>
-  <section class="card"><div class="notice">Dans chaque exercice, la colonne <strong>Réf</strong> reprend le poids et les reps de la séance précédente du même type. Pour un gainage, la durée est saisie en minutes.</div></section>`;
-}
-function chooseStrengthSession(k=todayKey()){
-  const strength=state.sessions.filter(s=>s.type==="strength");
-  document.getElementById("quickDialogContent").innerHTML=`<div class="dialog-inner"><div class="dialog-head"><div><div class="small">AJOUTER UNE SÉANCE MUSCU</div><h2 style="margin:0">${esc(fmtDate(k))}</h2></div><button class="close" onclick="quickDialog.close()">×</button></div>${strength.map(s=>`<div class="card session-card clickable" onclick="addStrengthAndOpen('${k}','${s.code}')"><div class="code">${s.code}</div><div><strong>${esc(s.title)}</strong><p>${esc(s.goal)}</p></div><div class="chev">›</div></div>`).join("")}</div>`;quickDialog.showModal();
-}
-function addStrengthAndOpen(k,code){
-  const p=makePlan(code,{note:"Ajoutée depuis l’onglet Muscu"});state.planned[k]=state.planned[k]||[];state.planned[k].push(p);save();quickDialog.close();openSession(code,k,p.id);
-}
+function choicesHTML(k=todayKey()){return `<div class="choice-grid">${state.sessions.map(s=>`<button class="choice-btn" onclick="openSession('${s.code}','${k}')"><div class="code ${codeClass(s.code,s.type)}">${esc(s.code)}</div><strong>${esc(s.title)}</strong><small>${s.type==="strength"?"Musculation":s.goal}</small></button>`).join("")}</div>`}
+function sessionLine(h){const title=h.type==="strength"?(sessionBy(h.code)?.title||h.code):runTitle(h.code,h);let detail="";
+  if(h.type==="strength")detail=`${h.duration||"—"} min`;
+  else if(h.code==="D")detail=`${h.run?.completedReps||0} × ${h.run?.effortMin||0} min · récup ${h.run?.recoveryMin||0} min`;
+  else if(h.code==="E")detail=`${h.run?.distance||0} km · ${h.duration||0} min · FC moy. ${h.run?.avgHr||"—"}`;
+  else if(h.code==="F")detail=`${h.run?.distance||0} km${h.duration?` · ${h.duration} min`:""}`;
+  else detail=`${h.run?.distance?`${h.run.distance} km · `:""}${h.duration||"—"} min`;
+  return `<div class="session-line"><div class="code ${codeClass(h.code,h.type)}">${esc(displayCode(h.code))}</div><div><strong>${esc(title)}</strong><div class="small">${esc(detail)}</div></div><span class="badge good">✓</span></div>`}
+function renderToday(){const k=todayKey(),hs=historyOn(k),d=new Date().toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"});view.innerHTML=`
+  <div class="section-title"><div><div class="small">${esc(d)}</div><h2>Aujourd’hui</h2></div><span class="badge">saisie libre</span></div>
+  <section class="card hero"><h3>Choisir une séance</h3><p class="small">Aucun planning automatique : tu choisis A, B, C, D, E ou F quand tu veux.</p>${choicesHTML(k)}</section>
+  <div class="section-title"><h2>Saisi aujourd’hui</h2><span class="small">${hs.length} séance(s)</span></div><section class="card">${hs.length?hs.map(sessionLine).join(""):`<p class="muted">Rien de saisi aujourd’hui.</p>`}</section>
+  <button class="secondary full" onclick="activeTab='activity';selectedDate='${k}';render()">Ouvrir le calendrier</button>`}
 
-function setActivityMode(mode){activityMode=mode;render()}
-function activitySegments(){return `<div class="segment"><button class="${activityMode==="week"?"active":""}" onclick="setActivityMode('week')">Semaine</button><button class="${activityMode==="month"?"active":""}" onclick="setActivityMode('month')">Mois</button><button class="${activityMode==="year"?"active":""}" onclick="setActivityMode('year')">Année</button></div>`}
-function renderActivity(){
-  if(activityMode==="week")return renderActivityWeek();
-  if(activityMode==="year")return renderActivityYear();
-  return renderActivityMonth();
-}
-function activityCodesOn(k){
-  const items=[];
-  plansOn(k).filter(p=>p.status!=="skipped"&&p.code!=="REST").forEach(p=>items.push({code:displayCode(p.code),type:isRunCode(p.code)?"run":"strength",done:p.status==="done"}));
-  historyOn(k).forEach(h=>{const dc=displayCode(h.code);if(!items.some(x=>x.done&&x.code===dc))items.push({code:dc,type:h.type,done:true})});
-  return items;
-}
-function activityLegend(){return `<div class="row wrap"><span class="badge accent">A/B/C = muscu</span><span class="badge blue">D1/D2/… = course</span><span class="badge good">contour = fait</span></div>`}
-function activityHistorySummary(){
-  const hs=[...state.history].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,10);
-  return `<div class="section-title"><h2>Dernières activités</h2><span class="small">détail conservé dans les stats</span></div><section class="card">${hs.length?hs.map(h=>`<div class="kpi"><div><strong>${esc(fmtDate(historyDateKey(h)))} · ${esc(displayCode(h.code))}</strong><div class="small">${h.type==="run"?esc(runVariantLabel(h.code)):esc(sessionBy(h.code)?.title||"")}${h.duration?` · ${h.duration} min`:""}</div></div><span class="badge good">✓</span></div>`).join(""):`<p class="muted">Aucune activité enregistrée.</p>`}</section>`;
-}
-function renderActivityMonth(){
-  const first=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth(),1,12),gridStart=startOfWeek(first),days=Array.from({length:42},(_,i)=>addDays(gridStart,i));
-  view.innerHTML=`<div class="section-title"><div><h2>Activité</h2><div class="small">Planning lisible : A · B · C · Dx</div></div><span class="badge">mois</span></div>${activitySegments()}<section class="card"><div class="calendar-head"><button class="ghost" onclick="moveMonth(-1)">‹</button><div class="calendar-title">${esc(monthTitle(first))}</div><div class="row"><button class="ghost" onclick="goTodayCalendar()">Aujourd’hui</button><button class="ghost" onclick="moveMonth(1)">›</button></div></div>${activityLegend()}<div class="calendar-weekdays" style="margin-top:10px"><div>Lun</div><div>Mar</div><div>Mer</div><div>Jeu</div><div>Ven</div><div>Sam</div><div>Dim</div></div><div class="calendar-grid">${days.map(d=>calendarDay(d,first.getMonth())).join("")}</div></section>${renderDayDetail(selectedDate)}${activityHistorySummary()}`;
-}
-function renderActivityWeek(){
-  const base=startOfWeek(parseDateKey(selectedDate)),days=Array.from({length:7},(_,i)=>addDays(base,i));
-  view.innerHTML=`<div class="section-title"><div><h2>Activité</h2><div class="small">Semaine du ${esc(fmtDate(dateKey(base)))}</div></div><span class="badge">semaine</span></div>${activitySegments()}<section class="card"><div class="calendar-head"><button class="ghost" onclick="moveActivityWeek(-1)">‹</button><div class="calendar-title">${esc(fmtDate(dateKey(base)))} → ${esc(fmtDate(dateKey(days[6])))}</div><button class="ghost" onclick="moveActivityWeek(1)">›</button></div>${activityLegend()}<div class="week-grid" style="margin-top:12px">${days.map(d=>weekActivityDay(d)).join("")}</div></section>${renderDayDetail(selectedDate)}${activityHistorySummary()}`;
-}
-function weekActivityDay(d){const k=dateKey(d),codes=activityCodesOn(k);return `<div class="week-day ${k===todayKey()?"today":""} ${k===selectedDate?"selected":""}" onclick="selectCalendarDay('${k}')"><div class="small">${d.toLocaleDateString('fr-FR',{weekday:'short'})}</div><strong>${d.getDate()}</strong><div class="daydots">${codes.map(x=>`<span class="dot ${x.type==="run"?"run":"strength"} ${x.done?"done":""}">${esc(x.code)}</span>`).join("")||`<span class="tiny">—</span>`}</div></div>`}
-function moveActivityWeek(n){selectedDate=dateKey(addDays(startOfWeek(parseDateKey(selectedDate)),n*7));calendarCursor=new Date(parseDateKey(selectedDate).getFullYear(),parseDateKey(selectedDate).getMonth(),1,12);render()}
-function renderActivityYear(){
-  const y=calendarCursor.getFullYear();
-  const cards=Array.from({length:12},(_,m)=>yearMonthCard(y,m)).join("");
-  view.innerHTML=`<div class="section-title"><div><h2>Activité</h2><div class="small">Vue annuelle A/B/C/Dx</div></div><span class="badge">${y}</span></div>${activitySegments()}<section class="card"><div class="calendar-head"><button class="ghost" onclick="moveActivityYear(-1)">‹</button><div class="calendar-title">${y}</div><button class="ghost" onclick="moveActivityYear(1)">›</button></div>${activityLegend()}<div class="year-grid" style="margin-top:12px">${cards}</div></section>${activityHistorySummary()}`;
-}
-function yearMonthCard(y,m){
-  const start=new Date(y,m,1,12),end=new Date(y,m+1,0,12),counts={A:0,B:0,C:0,D:0},done={A:0,B:0,C:0,D:0};
-  for(let d=new Date(start);d<=end;d=addDays(d,1)){activityCodesOn(dateKey(d)).forEach(x=>{const key=x.type==="run"?"D":x.code;if(counts[key]===undefined)return;counts[key]++;if(x.done)done[key]++})}
-  return `<button class="year-card" onclick="openActivityMonth(${y},${m})"><strong>${start.toLocaleDateString('fr-FR',{month:'short'})}</strong><div class="year-counts"><span>A ${done.A}/${counts.A}</span><span>B ${done.B}/${counts.B}</span><span>C ${done.C}/${counts.C}</span><span class="runtext">D ${done.D}/${counts.D}</span></div></button>`;
-}
-function moveActivityYear(n){calendarCursor=new Date(calendarCursor.getFullYear()+n,calendarCursor.getMonth(),1,12);render()}
-function openActivityMonth(y,m){calendarCursor=new Date(y,m,1,12);selectedDate=dateKey(new Date(y,m,1,12));activityMode="month";render()}
+function renderSessions(){const k=todayKey(),strength=state.sessions.filter(s=>s.type==="strength");view.innerHTML=`<div class="section-title"><div><h2>Musculation</h2><div class="small">A · B · C — fonctionnement manuel</div></div><span class="badge accent">références auto</span></div>
+  <section class="card"><div class="notice">Tu déclenches toi-même A, B ou C. La colonne <strong>Réf</strong> reprend la dernière séance du même type. Plusieurs séances muscu le même jour restent possibles.</div></section>
+  ${strength.map(s=>`<div class="card session-card clickable" onclick="openSession('${s.code}','${k}')"><div class="code">${s.code}</div><div><strong>${esc(s.title)}</strong><p>${esc(s.goal)} · ≈ ${s.duration} min</p></div><div class="chev">›</div></div>`).join("")}`}
 
-function calendarDay(d,currentMonth){
-  const k=dateKey(d),codes=activityCodesOn(k);
-  const cls=["day",d.getMonth()!==currentMonth?"other":"",k===todayKey()?"today":"",k===selectedDate?"selected":""].filter(Boolean).join(" ");
-  return `<div class="${cls}" onclick="selectCalendarDay('${k}')"><div class="daynum">${d.getDate()}</div><div class="daydots">${codes.slice(0,3).map(x=>`<span class="dot ${x.type==="run"?"run":x.type==="strength"?"strength":"rest"} ${x.done?"done":""}">${esc(x.code)}</span>`).join("")}</div>${codes.length>3?`<div class="daymore">+${codes.length-3}</div>`:""}</div>`;
-}
-function renderDayDetail(k){
-  const plans=plansOn(k),hs=historyOn(k),isFuture=k>todayKey();
-  return `<div class="section-title"><div><div class="small">${esc(fmtLongDate(k))}</div><h2>Détail du jour</h2></div><button class="primary" onclick="chooseSession(false,'${k}',true)">+ Planifier</button></div>
-  <section class="card"><h3>Prévu</h3>${plans.length?plans.map(p=>planRow(p,k,isFuture)).join(""):`<p class="muted">Aucune séance prévue.</p>`}</section>
-  <section class="card"><h3>Effectué</h3>${hs.length?hs.map(h=>historyCompact(h)).join(""):`<p class="muted">Aucune séance enregistrée ce jour.</p>`}</section>`;
-}
-function planRow(p,k,isFuture=k>todayKey()){
-  const s=p.code==="REST"?null:sessionBy(p.code);const type=s?.type||"rest";const done=p.status==="done";
-  return `<div class="day-plan"><div class="code ${type==="run"?"run":type==="rest"?"rest":""}">${esc(displayCode(p.code))}</div><div><strong>${esc(planTitle(p))}</strong><div class="small">${done?"Effectué":p.status==="skipped"?"Sauté":"Prévu"}${p.plannedDuration?` · ${p.plannedDuration} min`:""}${p.runMain?` · ${esc(p.runMain)}`:""}</div>${p.note?`<div class="tiny">${esc(p.note)}</div>`:""}</div><div class="plan-actions">${p.code!=="REST"&&!done?`<button class="mini good" ${isFuture?"disabled":""} onclick="event.stopPropagation();openSession('${p.code}','${k}','${p.id}')">${isFuture?"À venir":"Démarrer"}</button>`:""}${!done?`<button class="mini" onclick="event.stopPropagation();movePlanDialog('${k}','${p.id}')">Déplacer</button>`:""}<button class="mini danger" onclick="event.stopPropagation();removePlan('${k}','${p.id}')">×</button></div></div>`;
-}
-function historyCompact(h){return `<div class="history-item"><div class="row between"><div><strong>${esc(displayCode(h.code))} · ${esc(sessionBy(h.code)?.title||h.title||"")}</strong><div class="history-meta">RPE ${h.rpe||"—"}${h.duration?` · ${h.duration} min`:""}</div></div><span class="badge good">✓</span></div>${h.run?`<div class="small">${h.run.distance?`${h.run.distance} km · `:""}${h.run.paceSec?secToPace(h.run.paceSec):""}${h.run.cadence?` · ${h.run.cadence} ppm`:""}</div>`:""}</div>`}
+function lastRunEntries(n=8){return state.history.filter(h=>h.type==="run").sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,n)}
+function renderRunning(){const k=todayKey(),runs=state.sessions.filter(s=>s.type==="run"),todayRun=historyOn(k).find(h=>h.type==="run"),last=lastRunEntries();view.innerHTML=`<div class="section-title"><div><h2>Course</h2><div class="small">D · E · F — aucune séance planifiée automatiquement</div></div><span class="badge blue">1 course / jour</span></div>
+  <section class="card">${todayRun?sessionLine(todayRun):`<p class="muted">Aucune course saisie aujourd’hui.</p>`}${!todayRun?`<div style="margin-top:10px">${runs.map(s=>`<button class="secondary full" style="margin-top:8px;text-align:left" onclick="openSession('${s.code}','${k}')"><strong>${s.code} · ${esc(s.title)}</strong><br><span class="small">${esc(s.note)}</span></button>`).join("")}</div>`:""}</section>
+  <section class="card"><div class="run-detail"><span class="badge blue">D</span><h3 style="margin-top:8px">Fractionné</h3><div class="run-block"><strong>Par défaut :</strong> 5 × 4 min<br><strong>Récupération :</strong> 3 min, déclenchée quand tu valides une répétition.</div></div>
+  <div class="run-detail"><span class="badge good">E</span><h3 style="margin-top:8px">Endurance fondamentale</h3><div class="run-block">Saisie : kilomètres · durée · fréquence cardiaque moyenne.<br><strong>Repère FC moy. :</strong> ≤ ${state.settings.hrEfMax} bpm.</div></div>
+  <div class="run-detail"><span class="badge">F</span><h3 style="margin-top:8px">Course libre / vallonnée</h3><div class="run-block">Distance libre, au ressenti, sans cible de fréquence cardiaque.</div></div></section>
+  <div class="section-title"><h2>Dernières courses</h2></div><section class="card">${last.length?last.map(sessionLine).join(""):`<p class="muted">Aucune course enregistrée.</p>`}</section>`}
+
+function monthHist(cursor=calendarCursor){const y=cursor.getFullYear(),m=cursor.getMonth();return state.history.filter(h=>{const d=parseDateKey(historyDateKey(h));return d.getFullYear()===y&&d.getMonth()===m})}
+function monthSummaryHTML(cursor=calendarCursor){const hs=monthHist(cursor),counts={A:0,B:0,C:0,D:0,E:0,F:0};hs.forEach(h=>{if(counts[h.code]!=null)counts[h.code]++});const muscu=hs.filter(h=>h.type==="strength").length,run=hs.filter(h=>h.type==="run").length;return `<div class="month-summary"><div class="summary-chip"><strong>${muscu}</strong><span>muscu</span></div><div class="summary-chip"><strong>${run}</strong><span>course</span></div><div class="summary-chip"><strong>${hs.length}</strong><span>total</span></div>${Object.entries(counts).map(([c,n])=>`<div class="summary-chip"><strong>${n}</strong><span>${c}</span></div>`).join("")}</div>`}
+function calendarDay(d,currentMonth){const k=dateKey(d),hs=historyOn(k),cls=["day",d.getMonth()!==currentMonth?"other":"",k===todayKey()?"today":"",k===selectedDate?"selected":""].filter(Boolean).join(" ");return `<div class="${cls}" onclick="selectCalendarDay('${k}')"><div class="daynum">${d.getDate()}</div><div class="daydots">${hs.slice(0,4).map(h=>`<span class="dot ${h.type==="run"?"run":"strength"} done">${esc(displayCode(h.code))}</span>`).join("")}</div>${hs.length>4?`<div class="daymore">+${hs.length-4}</div>`:""}</div>`}
+function renderDayDetail(k){const hs=historyOn(k),future=k>todayKey();return `<div class="section-title"><div><div class="small">${esc(fmtLongDate(k))}</div><h2>Détail</h2></div>${!future?`<button class="primary" onclick="chooseSessionForDate('${k}')">+ Saisir</button>`:""}</div><section class="card">${hs.length?hs.map(h=>`${sessionLine(h)}<button class="ghost" style="margin:0 0 10px 56px" onclick="deleteHistory('${h.id}')">Supprimer</button>`).join(""):`<p class="muted">${future?"Aucune planification : la séance apparaîtra ici seulement après ta saisie.":"Aucune séance saisie ce jour."}</p>`}</section>`}
+function renderActivity(){const first=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth(),1,12),gridStart=startOfWeek(first),days=Array.from({length:42},(_,i)=>addDays(gridStart,i));view.innerHTML=`<div class="section-title"><div><h2>Calendrier</h2><div class="small">Uniquement les séances réellement saisies</div></div><span class="badge">A · B · C · D · E · F</span></div><section class="card"><div class="calendar-head"><button class="ghost" onclick="moveMonth(-1)">‹</button><div class="calendar-title">${esc(monthTitle(first))}</div><div class="row"><button class="ghost" onclick="goTodayCalendar()">Aujourd’hui</button><button class="ghost" onclick="moveMonth(1)">›</button></div></div>${monthSummaryHTML(first)}<div class="calendar-weekdays"><div>Lun</div><div>Mar</div><div>Mer</div><div>Jeu</div><div>Ven</div><div>Sam</div><div>Dim</div></div><div class="calendar-grid">${days.map(d=>calendarDay(d,first.getMonth())).join("")}</div></section>${renderDayDetail(selectedDate)}`}
 function moveMonth(n){calendarCursor=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth()+n,1,12);render()}
 function goTodayCalendar(){calendarCursor=new Date(new Date().getFullYear(),new Date().getMonth(),1,12);selectedDate=todayKey();render()}
 function selectCalendarDay(k){selectedDate=k;calendarCursor=new Date(parseDateKey(k).getFullYear(),parseDateKey(k).getMonth(),1,12);render()}
-function hasRunOn(k,excludePlanId=null){return plansOn(k).some(p=>p.id!==excludePlanId&&isRunCode(p.code)&&p.status!=="skipped")||historyOn(k).some(h=>h.type==="run")}
-function addPlanForDate(k,code){
-  state.planned[k]=state.planned[k]||[];
-  if(isRunCode(code)&&hasRunOn(k)){alert("Une course est déjà prévue ou effectuée ce jour. Maximum : 1 séance course par jour.");return;}
-  if(code==="REST")state.planned[k].push(makePlan("REST",{title:"Repos / marche"}));else state.planned[k].push(makePlan(code));
-  save();quickDialog.close();selectedDate=k;activeTab="activity";render();
-}
-function removePlan(k,id){if(confirm("Retirer cette entrée du calendrier ?")){state.planned[k]=(state.planned[k]||[]).filter(p=>p.id!==id);if(!state.planned[k].length)delete state.planned[k];save();render()}}
-function movePlanDialog(k,id){
-  const p=planById(k,id);if(!p)return;
-  document.getElementById("quickDialogContent").innerHTML=`<div class="dialog-inner"><div class="dialog-head"><h2 style="margin:0">Déplacer ${esc(p.code)}</h2><button class="close" onclick="quickDialog.close()">×</button></div><label>Nouvelle date</label><input id="moveDate" type="date" value="${k}"><button class="primary full" style="margin-top:12px" onclick="confirmMovePlan('${k}','${id}')">Déplacer</button></div>`;quickDialog.showModal();
-}
-function confirmMovePlan(oldK,id){
-  const newK=document.getElementById("moveDate").value;if(!newK)return;const p=planById(oldK,id);if(!p)return;
-  if(isRunCode(p.code)&&newK!==oldK&&hasRunOn(newK)){alert("Une course existe déjà à cette date. Maximum : 1 séance course par jour.");return;}
-  state.planned[oldK]=(state.planned[oldK]||[]).filter(x=>x.id!==id);if(!state.planned[oldK].length)delete state.planned[oldK];
-  state.planned[newK]=state.planned[newK]||[];state.planned[newK].push(p);save();quickDialog.close();selectedDate=newK;calendarCursor=new Date(parseDateKey(newK).getFullYear(),parseDateKey(newK).getMonth(),1,12);render();
-}
+function chooseSessionForDate(k){if(k>todayKey())return;const c=document.getElementById("quickDialogContent");c.innerHTML=`<div class="dialog-inner"><div class="dialog-head"><div><div class="small">SAISIR UNE SÉANCE</div><h2 style="margin:0">${esc(fmtDate(k))}</h2></div><button class="close" onclick="quickDialog.close()">×</button></div>${state.sessions.map(s=>`<div class="card session-card clickable" onclick="quickDialog.close();openSession('${s.code}','${k}')"><div class="code ${codeClass(s.code,s.type)}">${s.code}</div><div><strong>${esc(s.title)}</strong><p>${esc(s.goal)}</p></div><div class="chev">›</div></div>`).join("")}</div>`;quickDialog.showModal()}
 
-function plannedRunsInMonth(cursor=runCursor){
-  const y=cursor.getFullYear(),m=cursor.getMonth(),out=[];
-  Object.keys(state.planned).sort().forEach(k=>{const d=parseDateKey(k);if(d.getFullYear()===y&&d.getMonth()===m)plansOn(k).forEach(p=>{if(isRunCode(p.code)&&p.status!=="skipped")out.push({date:k,plan:p})})});
-  return out;
-}
-function nextPlannedRun(){
-  const start=parseDateKey(todayKey());
-  for(let i=0;i<28;i++){const k=dateKey(addDays(start,i));const p=plansOn(k).find(x=>isRunCode(x.code)&&x.status==="planned");if(p)return {date:k,plan:p}}
-  return null;
-}
-function lastRunCodes(n=3){return state.history.filter(h=>h.type==="run").sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,n).map(h=>h.code)}
-function runningCoachAdvice(){
-  const knee=kneeStatus(),next=nextPlannedRun(),lastCodes=lastRunCodes(3),lastHard=lastHardDays(),weak=weaknessModel()[0]?.key;
-  let code="R1",why="Construire la tolérance et l’endurance sans ajouter de fatigue inutile.",fun="Choisis un parcours agréable et cours uniquement au ressenti.";
-  if(knee.level==="danger"){
-    code="R1";why="La réaction des genoux est trop élevée pour une séance rapide. Priorité au plat, facile, et à une durée réduite.";fun="Fais un aller-retour : demi-tour à mi-temps, sans regarder l’allure.";
-  }else if(knee.level==="warn"){
-    code="R1";why="Les genoux sont encore en zone orange. On garde une D facile mais on peut la rendre moins monotone sans accélérations franches.";fun="Toutes les 8 minutes, 20 s de pas légèrement plus courts, puis retour facile.";
-  }else if(knee.level==="mid"){
-    code="R1";why="Le suivi à 1 h / J+1 / 48 h n’est pas encore assez complet pour valider une D rapide. On construit d’abord une base sûre.";fun="Choisis un trajet en boucle : à chaque tour, change seulement le point d’attention (posture, respiration, cadence), pas la vitesse.";
-  }else{
-    const candidates=weak==="climbPower"||weak==="climbEndurance"?["R5","R7","R8","R3"]:weak==="10k"?["R4","R3","R7","R2"]:["R8","R7","R3","R2"];
-    code=candidates.find(c=>!lastCodes.includes(c))||candidates[0];
-    if(lastHard<2.5){code="R1";why="Une charge jambes exigeante est récente : aujourd’hui, une D facile donnera plus de bénéfice qu’une deuxième séance dure.";fun="Course exploration : change une rue ou un chemin habituel, sans changer l’intensité.";}
-    else if(code==="R5"){why="Tes indicateurs de montée restent prioritaires : une petite dose de côte travaille puissance et technique sans faire une longue séance.";fun="Choisis une côte courte et régulière ; compte les répétitions, pas la vitesse.";}
-    else if(code==="R4"){why="Le prochain levier pour le 10 km est de rendre l’allure proche de 5:00/km plus familière, sans courir toute la séance vite.";fun="Chaque répétition est un mini-défi de régularité : cherche l’écart d’allure le plus faible.";}
-    else if(code==="R3"){why="Le tempo améliore la capacité à tenir une allure soutenue, utile pour ton objectif 10 km.";fun="Cours les blocs au ressenti 7/10 et regarde l’allure seulement après.";}
-    else if(code==="R7"){why="Le fartlek apporte de la vitesse avec moins de rigidité qu’un fractionné au chrono et évite la monotonie.";fun="Sur chaque minute vive, choisis un repère devant toi plutôt qu’une vitesse précise.";}
-    else if(code==="R8"){why="Une progressive développe l’endurance et la maîtrise d’allure avec une charge mécanique plus douce qu’un fractionné.";fun="Objectif : chaque tiers légèrement plus rapide que le précédent, sans sprint final.";}
-    else {why="Un peu de vitesse courte est utile, à condition que les genoux restent calmes après les sorties.";fun="Alterne une minute vive / une minute facile et arrête les répétitions si la foulée se dégrade.";}
-  }
-  const sess=sessionBy(code);return {code,session:sess,why,fun,next,knee};
-}
-function runCalendarDay(d,currentMonth){
-  const k=dateKey(d),plans=plansOn(k).filter(p=>isRunCode(p.code)&&p.status!=="skipped"),hist=historyOn(k).filter(h=>h.type==="run");
-  const code=hist[0]?.code||plans[0]?.code;const done=hist.length>0||plans.some(p=>p.status==="done");
-  const cls=["day",d.getMonth()!==currentMonth?"other":"",k===todayKey()?"today":""].filter(Boolean).join(" ");
-  return `<div class="${cls}" onclick="selectedDate='${k}';calendarCursor=new Date(${d.getFullYear()},${d.getMonth()},1,12);activeTab='activity';activityMode='month';render()"><div class="daynum">${d.getDate()}</div>${code?`<div class="daydots"><span class="dot run ${done?"done":""}">${esc(displayCode(code))}</span></div>`:""}</div>`;
-}
-function runFollowupList(){
-  const hs=state.history.filter(h=>h.type==="run").sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,6);
-  if(!hs.length)return `<p class="muted">Après ta première D, le suivi genou apparaîtra ici.</p>`;
-  return hs.map(h=>{const k=h.run?.knee||{};const pending=k.oneHour==null||k.nextMorning==null||k.after48h==null;return `<div class="kpi"><div><strong>${esc(fmtDate(historyDateKey(h)))} · ${esc(runVariantLabel(h.code))}</strong><div class="small">départ ${k.start??"—"} · 1 h ${k.oneHour??"—"} · J+1 ${k.nextMorning??"—"} · 48 h ${k.after48h??"—"}</div></div><button class="mini ${pending?"":"good"}" onclick="editKnee('${h.id}')">${pending?"Compléter":"Modifier"}</button></div>`}).join("");
-}
-function todayRunRow(k=todayKey()){
-  const p=plansOn(k).find(x=>isRunCode(x.code)&&x.status!=="skipped");
-  const h=historyOn(k).find(x=>x.type==="run");
-  if(h)return `<div class="today-entry"><div class="code run">${esc(displayCode(h.code))}</div><div><strong>${esc(runVariantLabel(h.code))}</strong><div class="small">Effectuée · ${h.duration||"—"} min</div></div><span class="badge good">✓</span></div>`;
-  if(p)return `<div class="today-entry"><div class="code run">${esc(displayCode(p.code))}</div><div><strong>${esc(runVariantLabel(p.code))}</strong><div class="small">Prévue${p.runMain?` · ${esc(p.runMain)}`:""}</div></div>${p.status==="done"?`<span class="badge good">✓</span>`:`<button class="mini good" onclick="openSession('${p.code}','${k}','${p.id}')">Démarrer</button>`}</div>`;
-  return `<div class="notice">Aucune course aujourd’hui. Maximum : 1 D par jour.</div>`;
-}
-function chooseRunSession(k=todayKey()){
-  if(hasRunOn(k)){alert("Une course est déjà prévue ou effectuée aujourd’hui. Maximum : 1 séance course par jour.");return;}
-  const runs=state.sessions.filter(s=>s.type==="run");
-  document.getElementById("quickDialogContent").innerHTML=`<div class="dialog-inner"><div class="dialog-head"><div><div class="small">CHOISIR UNE SÉANCE COURSE</div><h2 style="margin:0">${esc(fmtDate(k))}</h2></div><button class="close" onclick="quickDialog.close()">×</button></div>${runs.map(s=>`<div class="card session-card clickable" onclick="addRunAndOpen('${k}','${s.code}')"><div class="code run">${esc(displayCode(s.code))}</div><div><strong>${esc(s.title)}</strong><p>${esc(s.goal)} · ≈ ${s.duration} min</p></div><div class="chev">›</div></div>`).join("")}</div>`;quickDialog.showModal();
-}
-function addRunAndOpen(k,code){
-  if(hasRunOn(k)){alert("Une course est déjà prévue ou effectuée ce jour. Maximum : 1 séance course par jour.");return;}
-  const p=makePlan(code,{note:"Ajoutée depuis l’onglet Course"});state.planned[k]=state.planned[k]||[];state.planned[k].push(p);save();quickDialog.close();openSession(code,k,p.id);
-}
-function runLibraryDetails(){
-  return state.sessions.filter(s=>s.type==="run").map(s=>{const r=s.run||{};return `<div class="run-detail"><div class="row between"><div><span class="badge blue">${esc(displayCode(s.code))}</span><h3 style="margin:7px 0 0">${esc(s.title)}</h3></div><span class="small">≈ ${s.duration} min</span></div><div class="small" style="margin-top:5px">${esc(s.goal)}</div><div class="run-block">${r.warmup?`<strong>Échauffement :</strong> ${r.warmup} min<br>`:""}<strong>Bloc :</strong> ${esc(r.main||"")}${r.recovery?`<br><strong>Récupération :</strong> ${esc(r.recovery)}`:""}${r.cooldown?`<br><strong>Retour au calme :</strong> ${esc(r.cooldown)}`:""}</div><div class="tiny" style="margin-top:6px">${esc(s.note||"")}</div></div>`}).join("");
-}
-function renderRunning(){
-  const k=todayKey(),first=new Date(runCursor.getFullYear(),runCursor.getMonth(),1,12),gridStart=startOfWeek(first),days=Array.from({length:42},(_,i)=>addDays(gridStart,i)),monthRuns=plannedRunsInMonth(first),ad=runningCoachAdvice(),s=ad.session,next=ad.next;
-  view.innerHTML=`<div class="section-title"><div><div class="small">${esc(fmtLongDate(k))}</div><h2>Course · Dx</h2></div><span class="badge blue">objectif 10 km</span></div>
-  <section class="card"><h3>Aujourd’hui</h3><div class="today-list" style="margin-top:10px">${todayRunRow(k)}</div><button class="primary full" style="margin-top:12px" onclick="chooseRunSession('${k}')" ${hasRunOn(k)?"disabled":""}>+ Ajouter une course</button></section>
-  <section class="card hero"><div class="row between"><span class="badge blue">CONSEIL COACH · ${esc(displayCode(ad.code))}</span>${kneeBadge()}</div><div class="big" style="margin-top:10px">${esc(s.title)}</div><p class="muted">${esc(ad.why)}</p><div class="card soft"><strong>Version ludique</strong><p class="small">${esc(ad.fun)}</p></div><div class="notice ${ad.knee.level}">${esc(ad.knee.text)}</div>${next?`<div class="small" style="margin-top:10px">Prochaine prévue : ${esc(fmtDate(next.date))} · ${esc(displayCode(next.plan.code))} · ${esc(runVariantLabel(next.plan.code))}</div>`:""}<button class="secondary full" style="margin-top:10px" onclick="planCoachRun()">Adapter la prochaine course du programme</button></section>
-  <div class="section-title"><h2>Programme mensuel</h2><span class="badge">${monthRuns.length} D</span></div><section class="card"><div class="calendar-head"><button class="ghost" onclick="moveRunMonth(-1)">‹</button><div class="calendar-title">${esc(monthTitle(first))}</div><button class="ghost" onclick="moveRunMonth(1)">›</button></div><div class="calendar-weekdays"><div>Lun</div><div>Mar</div><div>Mer</div><div>Jeu</div><div>Ven</div><div>Sam</div><div>Dim</div></div><div class="calendar-grid">${days.map(d=>runCalendarDay(d,first.getMonth())).join("")}</div>${monthRuns.length?`<div style="margin-top:12px">${monthRuns.map(x=>runPlanRow(x.date,x.plan)).join("")}</div>`:`<p class="muted">Aucune course planifiée ce mois-ci.</p>`}</section>
-  <div class="section-title"><h2>Détail des séances Dx</h2><span class="small">plusieurs options pour varier</span></div><section class="card">${runLibraryDetails()}</section>
-  <div class="section-title"><h2>Suivi genoux après D</h2><span class="small">1 h · J+1 · 48 h</span></div><section class="card">${runFollowupList()}</section>`;
-}
-function runPlanRow(k,p){const s=sessionBy(p.code);return `<div class="run-plan-row"><div><div class="small">${esc(fmtDate(k))}</div><strong>${esc(displayCode(p.code))} · ${esc(s?.title||planTitle(p))}</strong><div class="small">${esc(p.runMain||s?.run?.main||"")}</div>${p.note?`<div class="tiny">${esc(p.note)}</div>`:""}</div><div class="plan-actions">${p.status==="done"?`<span class="badge good">✓</span>`:`<button class="mini" onclick="movePlanDialog('${k}','${p.id}')">Déplacer</button>`}</div></div>`}
-function moveRunMonth(n){runCursor=new Date(runCursor.getFullYear(),runCursor.getMonth()+n,1,12);render()}
-function planCoachRun(){
-  const ad=runningCoachAdvice(),next=ad.next;
-  if(next){next.plan.code=ad.code;next.plan.plannedDuration=ad.session.duration;next.plan.runMain=ad.session.run?.main||"";next.plan.note=`Adapté par le coach : ${ad.why}`;save();runCursor=new Date(parseDateKey(next.date).getFullYear(),parseDateKey(next.date).getMonth(),1,12);render();return}
-  const start=parseDateKey(todayKey());let target=null;for(let i=0;i<7;i++){const k=dateKey(addDays(start,i));if(!hasRunOn(k)){target=k;break}}target=target||dateKey(addDays(start,7));state.planned[target]=state.planned[target]||[];state.planned[target].push(makePlan(ad.code,{plannedDuration:ad.session.duration,runMain:ad.session.run?.main||"",note:`Conseil coach : ${ad.why}`}));save();runCursor=new Date(parseDateKey(target).getFullYear(),parseDateKey(target).getMonth(),1,12);render();
-}
-function renderHistory(){
-  const hs=[...state.history].sort((a,b)=>new Date(b.date)-new Date(a.date));
-  view.innerHTML=`<div class="section-title"><h2>Historique</h2><span class="badge">${hs.length} séance(s)</span></div><section class="card">${hs.length?hs.map(h=>historyItem(h)).join(""):`<p class="muted">Aucune séance enregistrée pour l’instant.</p>`}</section>`;
-}
-function historyItem(h){
-  const knee=h.run?.knee||null;const kneeTxt=knee?`Départ ${knee.start??"—"} · 2 km/fin ${knee.after2k??"—"} · 1 h ${knee.oneHour??"—"} · J+1 ${knee.nextMorning??"—"} · 48 h ${knee.after48h??"—"}`:"";
-  return `<div class="history-item"><div class="row between"><div><strong>${esc(displayCode(h.code))} · ${esc(sessionBy(h.code)?.title||h.title||"")}</strong><div class="history-meta">${fmtDate(historyDateKey(h))} · RPE ${h.rpe||"—"}${h.duration?` · ${h.duration} min`:""}</div></div><button class="ghost" onclick="deleteHistory('${h.id}')">×</button></div>${h.run?`<div class="small" style="margin-top:6px">${h.run.distance?`${h.run.distance} km · `:""}${h.run.paceSec?secToPace(h.run.paceSec):""}${h.run.hr?` · FC ${h.run.hr}`:""}${h.run.cadence?` · cadence ${h.run.cadence}`:""}${h.run.elev?` · D+ ${h.run.elev} m`:""}</div><div class="small" style="margin-top:5px">Genoux : ${esc(kneeTxt)}</div><button class="ghost" style="margin-top:7px" onclick="editKnee('${h.id}')">Suivi genou 1 h / J+1 / 48 h</button>`:""}${h.notes?`<div class="small" style="margin-top:5px">${esc(h.notes)}</div>`:""}</div>`;
-}
-function editKnee(id){
-  const h=state.history.find(x=>x.id===id);if(!h||!h.run)return;h.run.knee=h.run.knee||{};const k=h.run.knee;
-  document.getElementById("quickDialogContent").innerHTML=`<div class="dialog-inner"><div class="dialog-head"><div><div class="small">${esc(displayCode(h.code))} · ${esc(fmtDate(historyDateKey(h)))}</div><h2 style="margin:0">Suivi des genoux</h2></div><button class="close" onclick="quickDialog.close()">×</button></div><p class="small">Note la douleur maximale des deux genoux sur 10. Cela pilote les séances rapides suivantes.</p><div class="form-grid"><div><label>Au départ</label><input id="kStart" type="number" min="0" max="10" step=".5" value="${k.start??""}"></div><div><label>Après 2 km / fin</label><input id="k2" type="number" min="0" max="10" step=".5" value="${k.after2k??""}"></div><div><label>1 h après</label><input id="k1h" type="number" min="0" max="10" step=".5" value="${k.oneHour??""}"></div><div><label>Le lendemain matin</label><input id="kNext" type="number" min="0" max="10" step=".5" value="${k.nextMorning??""}"></div><div><label>48 h après</label><input id="k48" type="number" min="0" max="10" step=".5" value="${k.after48h??""}"></div></div><button class="primary full" style="margin-top:12px" onclick="saveKnee('${id}')">Enregistrer le suivi</button></div>`;quickDialog.showModal();
-}
-function nullableNumber(id){const v=document.getElementById(id).value;return v===""?null:+v}
-function saveKnee(id){const h=state.history.find(x=>x.id===id);if(!h?.run)return;h.run.knee={start:nullableNumber("kStart"),after2k:nullableNumber("k2"),oneHour:nullableNumber("k1h"),nextMorning:nullableNumber("kNext"),after48h:nullableNumber("k48")};save();quickDialog.close();render()}
+function strengthRecords(){const map=new Map();state.history.filter(h=>h.type==="strength"&&h.strength).forEach(h=>{Object.entries(h.strength).forEach(([name,sets])=>{(Array.isArray(sets)?sets:[]).filter(x=>x&&x.done&&num(x.kg)>0).forEach(x=>{const cur=map.get(name);if(!cur||num(x.kg)>cur.kg)map.set(name,{name,kg:num(x.kg),date:historyDateKey(h),code:h.code})})})});const order=[];state.sessions.filter(s=>s.type==="strength").forEach(s=>s.exercises.forEach(e=>{if(!order.includes(e.name))order.push(e.name)}));[...map.keys()].forEach(n=>{if(!order.includes(n))order.push(n)});return order.map(name=>map.get(name)||{name,kg:null,date:null,code:null})}
+function allSummary(){const hs=state.history,muscu=hs.filter(h=>h.type==="strength"),runs=hs.filter(h=>h.type==="run"),d=runs.filter(h=>h.code==="D"),e=runs.filter(h=>h.code==="E"),f=runs.filter(h=>h.code==="F");return {total:hs.length,muscu:muscu.length,runs:runs.length,dCount:d.length,dReps:d.reduce((n,h)=>n+num(h.run?.completedReps),0),dWork:d.reduce((n,h)=>n+num(h.run?.completedReps)*num(h.run?.effortMin),0),eCount:e.length,eKm:e.reduce((n,h)=>n+num(h.run?.distance),0),eHr:avg(e.map(h=>num(h.run?.avgHr)).filter(Boolean)),eOk:e.filter(h=>num(h.run?.avgHr)>0&&num(h.run?.avgHr)<=num(state.settings.hrEfMax)).length,fCount:f.length,fKm:f.reduce((n,h)=>n+num(h.run?.distance),0)}}
+function renderStats(){const s=allSummary(),records=strengthRecords(),mhs=monthHist(new Date());const muscuM=mhs.filter(h=>h.type==="strength").length,runM=mhs.filter(h=>h.type==="run").length;view.innerHTML=`<div class="section-title"><div><h2>Synthèse globale</h2><div class="small">Musculation + course, à partir de tes saisies</div></div><span class="badge accent">v${APP_VERSION}</span></div>
+  <section class="card hero"><div class="metric-grid"><div class="metric"><div class="v">${s.muscu}</div><div class="l">Muscu · total</div></div><div class="metric"><div class="v">${s.runs}</div><div class="l">Course · total</div></div><div class="metric"><div class="v">${muscuM}</div><div class="l">Muscu · ce mois</div></div><div class="metric"><div class="v">${runM}</div><div class="l">Course · ce mois</div></div></div></section>
+  <div class="section-title"><h2>Course</h2></div><section class="card"><div class="kpi"><div><strong>D · Fractionné</strong><div class="small">${s.dReps} répétitions · ${s.dWork} min d'effort cumulées</div></div><span class="badge blue">${s.dCount} séance(s)</span></div><div class="kpi"><div><strong>E · Endurance fondamentale</strong><div class="small">${s.eKm.toFixed(1)} km${s.eHr?` · FC moy. ${Math.round(s.eHr)} bpm`:""}${s.eCount?` · ${s.eOk}/${s.eCount} ≤ ${state.settings.hrEfMax} bpm`:""}</div></div><span class="badge good">${s.eCount} séance(s)</span></div><div class="kpi"><div><strong>F · Course libre</strong><div class="small">${s.fKm.toFixed(1)} km enregistrés</div></div><span class="badge">${s.fCount} séance(s)</span></div></section>
+  <div class="section-title"><h2>Records musculation</h2><span class="small">poids maximal enregistré</span></div><section class="card">${records.map(r=>`<div class="record-row"><div><strong>${esc(r.name)}</strong><div class="small">${r.date?`${esc(r.code)} · ${esc(fmtDate(r.date))}`:"Aucun poids enregistré"}</div></div><div class="record-weight">${r.kg!=null?`${r.kg} kg`:"—"}</div></div>`).join("")}</section>`}
 
-function strengthRecords(){
-  const map=new Map();
-  state.history.filter(h=>h.type==="strength"&&h.strength).forEach(h=>{
-    Object.entries(h.strength).forEach(([name,sets])=>{
-      (Array.isArray(sets)?sets:[]).filter(x=>x&&x.done&&num(x.kg)>0).forEach(x=>{
-        const cur=map.get(name);if(!cur||num(x.kg)>cur.kg)map.set(name,{name,kg:num(x.kg),date:historyDateKey(h),code:h.code});
-      });
-    });
-  });
-  const order=[];state.sessions.filter(s=>s.type==="strength").forEach(s=>s.exercises.forEach(e=>{if(!order.includes(e.name))order.push(e.name)}));
-  const extra=[...map.keys()].filter(n=>!order.includes(n));
-  return [...order,...extra].map(name=>map.get(name)||{name,kg:null,date:null,code:null});
-}
-function currentLevelSnapshot(){
-  const recent28=state.history.filter(h=>daysAgo(h.date)<=28),muscu=recent28.filter(h=>h.type==="strength").length,runs=recent28.filter(h=>h.type==="run").length;
-  const weightedSets=recent28.filter(h=>h.type==="strength").reduce((n,h)=>n+Object.values(h.strength||{}).reduce((m,sets)=>m+(Array.isArray(sets)?sets.filter(x=>x?.done&&num(x.kg)>0).length:0),0),0);
-  let label="Reprise";if(muscu>=8&&weightedSets>=24)label="Rythme installé";else if(muscu>=4&&weightedSets>=10)label="En progression";
-  return {label,muscu,runs,weightedSets,knee:kneeStatus()};
-}
-function renderStats(){
-  const records=strengthRecords(),lvl=currentLevelSnapshot();
-  view.innerHTML=`<div class="section-title"><div><h2>Records & niveau</h2><div class="small">synthèse simple de tes données</div></div><span class="badge accent">v${APP_VERSION}</span></div>
-  <section class="card hero"><div class="row between"><div><div class="small">NIVEAU ACTUEL</div><div class="big">${esc(lvl.label)}</div></div>${kneeBadge()}</div><div class="level-line"><span>Muscu sur 28 jours</span><strong>${lvl.muscu} séance(s)</strong></div><div class="level-line"><span>Course sur 28 jours</span><strong>${lvl.runs} séance(s)</strong></div><div class="level-line"><span>Séries chargées enregistrées</span><strong>${lvl.weightedSets}</strong></div><div class="level-line"><span>Tolérance genoux</span><strong>${esc(lvl.knee.label)}</strong></div><p class="small" style="margin-bottom:0">Ce niveau décrit ta régularité actuelle dans l’app, pas un classement par rapport à d’autres sportifs.</p></section>
-  <div class="section-title"><h2>Records musculation</h2><span class="small">poids maximal enregistré · reps non classées</span></div><section class="card">${records.map(r=>`<div class="record-row"><div><strong>${esc(r.name)}</strong><div class="small">${r.date?`${esc(r.code)} · ${esc(fmtDate(r.date))}`:"Aucun poids enregistré"}</div></div><div class="record-weight">${r.kg!=null?`${r.kg} kg`:"—"}</div></div>`).join("")}</section>`;
-}
+function renderSettings(){view.innerHTML=`<div class="section-title"><h2>Réglages & données</h2></div><section class="card"><h3>Endurance fondamentale E</h3><label>FC moyenne maximale de référence (bpm)</label><input id="hrEfMax" type="number" min="80" max="200" value="${state.settings.hrEfMax}"><button class="primary full" style="margin-top:12px" onclick="saveHrSetting()">Enregistrer</button></section>
+  <section class="card"><h3>Séances muscu</h3><p class="small">Tu peux modifier A, B ou C. L'historique reste conservé.</p><div class="action-grid"><button class="secondary" onclick="editStrength('A')">Modifier A</button><button class="secondary" onclick="editStrength('B')">Modifier B</button><button class="secondary" onclick="editStrength('C')">Modifier C</button></div></section>
+  <section class="card"><h3>Fonctionnement</h3><div class="notice good">Aucun planning automatique. Le calendrier reste vide tant que tu n'as rien saisi. A/B/C = muscu, D = fractionné, E = endurance fondamentale, F = course libre. Maximum 1 course par jour ; la muscu peut être ajoutée plusieurs fois.</div></section>
+  <section class="card"><h3>Sauvegarde</h3><div class="action-grid"><button class="secondary" onclick="exportData()">Exporter JSON</button><label class="secondary" style="text-align:center;margin:0">Importer JSON<input id="importFile" type="file" accept="application/json" onchange="importData(this.files[0])" style="display:none"></label><button class="ghost" onclick="clearCaches()">Forcer mise à jour</button></div><div class="small" style="margin-top:10px">Version ${APP_VERSION} · données stockées sur cet appareil.</div></section>
+  <section class="card"><h3>Règles d'entraînement</h3><div class="notice">Pas de 1RM ni de répétitions forcées. Garde une respiration continue sous charge. Les consignes de ton équipe médicale priment sur l'app et tu arrêtes l'effort en cas de symptôme inhabituel.</div></section>`}
+function saveHrSetting(){state.settings.hrEfMax=Math.max(80,Math.min(200,num(document.getElementById("hrEfMax").value)||140));const e=sessionBy("E");if(e?.run)e.run.hrMax=state.settings.hrEfMax;save();render()}
 
-function renderSettings(){
-  const s=state.settings;
-  view.innerHTML=`<div class="section-title"><h2>Réglages & données</h2></div>
-    <section class="card"><h3>État du jour</h3><div class="form-grid"><div><label>Récupération 1–5</label><input id="setReadiness" type="number" min="1" max="5" value="${s.readiness}"></div><div><label>Fatigue jambes 1–5</label><input id="setLegs" type="number" min="1" max="5" value="${s.legs}"></div><div><label>Douleur genoux 0–10</label><input id="setKnee" type="number" min="0" max="10" step=".5" value="${s.kneeToday||0}"></div><div><label>Temps disponible</label><select id="setAvailable"><option ${s.availableMin==30?"selected":""}>30</option><option ${s.availableMin==45?"selected":""}>45</option><option ${s.availableMin==60?"selected":""}>60</option></select></div></div><button class="primary full" style="margin-top:12px" onclick="saveDaily()">Recalculer ma séance</button></section>
-    <section class="card"><h3>Garmin</h3><div class="form-grid"><div><label>Score endurance</label><input id="gEnd" type="number" value="${s.enduranceScore}"></div><div><label>VO₂ max</label><input id="gVo2" type="number" value="${s.vo2max}"></div><div><label>Score montée</label><input id="gClimb" type="number" value="${s.climbScore}"></div><div><label>Endurance montée</label><input id="gClimbEnd" type="number" value="${s.climbEndurance}"></div><div><label>Puissance montée</label><input id="gClimbPow" type="number" value="${s.climbPower}"></div></div><button class="secondary full" style="margin-top:12px" onclick="saveGarmin()">Enregistrer Garmin</button></section>
-    <section class="card"><h3>Séances muscu</h3><p class="small">Tu peux modifier A, B ou C sans perdre l’historique. Format : Nom | séries | reps | repos.</p><div class="action-grid"><button class="secondary" onclick="editStrength('A')">Modifier A</button><button class="secondary" onclick="editStrength('B')">Modifier B</button><button class="secondary" onclick="editStrength('C')">Modifier C</button></div></section>
-    <section class="card"><h3>Planning</h3><p class="small">Activité affiche A/B/C et les variantes D1/D2/… L’onglet Course contient le programme et le détail de chaque Dx.</p><button class="ghost full" onclick="rebuildPlan()">Reconstruire le cycle à partir de lundi</button></section>
-    <section class="card"><h3>Sauvegarde</h3><div class="action-grid"><button class="secondary" onclick="exportData()">Exporter JSON</button><label class="secondary" style="text-align:center;margin:0">Importer JSON<input id="importFile" type="file" accept="application/json" onchange="importData(this.files[0])" style="display:none"></label><button class="ghost" onclick="clearCaches()">Forcer mise à jour</button></div><div class="small" style="margin-top:10px">Version ${APP_VERSION} · données stockées sur cet appareil.</div></section>
-    <section class="card"><h3>Règles d’entraînement</h3><div class="notice">Pas de 1RM ni de répétitions forcées. Respiration continue sous charge. Les consignes de ton équipe médicale priment sur l’app. Arrête l’effort en cas de symptôme inhabituel, gonflement important, blocage ou dérobement du genou.</div></section>`;
-}
-function saveDaily(){state.settings.readiness=Math.max(1,Math.min(5,num(document.getElementById("setReadiness").value)||3));state.settings.legs=Math.max(1,Math.min(5,num(document.getElementById("setLegs").value)||2));state.settings.kneeToday=Math.max(0,Math.min(10,num(document.getElementById("setKnee").value)));state.settings.availableMin=num(document.getElementById("setAvailable").value)||60;save();activeTab="today";render()}
-function saveGarmin(){state.settings.enduranceScore=num(document.getElementById("gEnd").value);state.settings.vo2max=num(document.getElementById("gVo2").value);state.settings.climbScore=num(document.getElementById("gClimb").value);state.settings.climbEndurance=num(document.getElementById("gClimbEnd").value);state.settings.climbPower=num(document.getElementById("gClimbPow").value);save();activeTab="stats";render()}
-function rebuildPlan(){if(!confirm("Remplacer toutes les séances futures non effectuées par un nouveau cycle de 8 semaines à partir de lundi ?"))return;Object.keys(state.planned).forEach(k=>{if(k>=todayKey())state.planned[k]=state.planned[k].filter(p=>p.status==="done")});state.planInitialized=false;const start=nextMonday(new Date());starterWeeks().forEach((week,wi)=>week.forEach((entry,di)=>{const k=dateKey(addDays(start,wi*7+di));state.planned[k]=state.planned[k]||[];state.planned[k].push(entry)}));state.planInitialized=true;state.settings.runPlanVersion=1;save();activeTab="activity";selectedDate=dateKey(start);calendarCursor=new Date(start.getFullYear(),start.getMonth(),1,12);render()}
-
-function chooseSession(second=false,k=todayKey(),planningOnly=false){
-  const recs=recommendation();
-  const firstActual=historyOn(k).find(h=>h.code!=="REST")?.code||plansOn(k).find(p=>p.code!=="REST"&&p.status!=="skipped")?.code||recs[0]?.code||"A";
-  const c=document.getElementById("quickDialogContent");
-  c.innerHTML=`<div class="dialog-inner"><div class="dialog-head"><div><div class="small">${planningOnly?"PLANIFIER":second?"DEUXIÈME SÉANCE":"CHOISIR UNE SÉANCE"}</div><h2 style="margin:0">${esc(fmtDate(k))}</h2></div><button class="close" onclick="quickDialog.close()">×</button></div>
-  ${state.sessions.map(s=>{const co=second?compat(firstActual,s.code):null;const action=planningOnly?`addPlanForDate('${k}','${s.code}')`:second?`addSecondAndOpen('${k}','${s.code}')`:`planAndOpen('${s.code}','${k}')`;return `<div class="card session-card clickable" onclick="${action}"><div class="code ${s.type==="run"?"run":""}">${displayCode(s.code)}</div><div><strong>${esc(s.title)}</strong><p>${esc(s.goal)}</p>${co?`<span class="compat ${co.lvl}">${esc(co.txt)}</span>`:""}</div><div class="chev">›</div></div>`}).join("")}
-  ${planningOnly?`<div class="card session-card clickable" onclick="addPlanForDate('${k}','REST')"><div class="code rest">—</div><div><strong>Repos / marche</strong><p>Journée de récupération planifiée</p></div><div class="chev">›</div></div>`:""}</div>`;quickDialog.showModal();
-}
-function addSecondAndOpen(k,code){
-  if(isRunCode(code)&&hasRunOn(k)){alert("Une course est déjà prévue ou effectuée ce jour. Maximum : 1 séance course par jour.");return;}
-  const p=makePlan(code,{note:"Séance supplémentaire du jour"});state.planned[k]=state.planned[k]||[];state.planned[k].push(p);save();quickDialog.close();
-  if(k<=todayKey())openSession(code,k,p.id);else{selectedDate=k;activeTab="activity";render()}
-}
-function planAndOpen(code,k){quickDialog.close();openSession(code,k,null)}
-
-let workoutDraft=null,restTimer=null,restRemaining=0,workoutTimer=null,workoutStart=0;
-function openSession(code,k=todayKey(),planId=null){
-  const s=sessionBy(code);if(!s)return;
-  if(s.type==="run"&&!planId){const existing=plansOn(k).find(x=>isRunCode(x.code)&&x.status==="planned");if(existing&&existing.code===code)planId=existing.id;else if(hasRunOn(k)){alert("Une course est déjà prévue ou effectuée ce jour. Maximum : 1 séance course par jour.");return;}}
-  if(s.type==="run"&&historyOn(k).some(h=>h.type==="run")){alert("Une course est déjà enregistrée ce jour. Maximum : 1 séance course par jour.");return;}
-  const p=planId?planById(k,planId):null;workoutDraft={code,dateKey:k,planId,plan:p};restRemaining=0;workoutStart=Date.now();
-  const c=document.getElementById("sessionDialogContent");
-  if(s.type==="strength"){
-    c.innerHTML=`<div class="dialog-inner"><div class="dialog-head"><div><div class="small">${esc(s.code)} · MUSCULATION · ${esc(fmtDate(k))}</div><h2 style="margin:0">${esc(s.title)}</h2></div><button class="close" onclick="closeSession()">×</button></div><div class="row between"><span id="elapsedBox" class="elapsed">00:00</span><span class="badge">objectif ≤ ${state.settings.maxSessionMin} min</span></div><div id="timerBox"></div><div class="notice">${esc(p?.note||s.note)}</div>${s.exercises.map((e,ei)=>exerciseHTML(s,e,ei)).join("")}<div class="form-grid"><div><label>RPE séance 1–10</label><input id="workRpe" type="number" min="1" max="10" step=".5" value="7"></div><div><label>Douleur genou max 0–10</label><input id="strengthKnee" type="number" min="0" max="10" step=".5" value="${state.settings.kneeToday||0}"></div></div><label>Notes</label><textarea id="workNotes" placeholder="Technique, amplitude, sensations…"></textarea><button class="primary full" style="margin-top:14px" onclick="finishStrength()">Terminer et analyser</button></div>`;
-  }else{
-    const run=s.run||{};const main=p?.runMain||run.main;const dur=p?.plannedDuration||s.duration;
-    c.innerHTML=`<div class="dialog-inner"><div class="dialog-head"><div><div class="small">${esc(displayCode(s.code))} · COURSE · ${esc(fmtDate(k))}</div><h2 style="margin:0">${esc(s.title)}</h2></div><button class="close" onclick="closeSession()">×</button></div><div class="row between"><span id="elapsedBox" class="elapsed">00:00</span><span class="badge ${kneeStatus().level}">${esc(kneeStatus().label)}</span></div><div class="card soft"><h3>Plan</h3>${run.warmup?`<p><strong>Échauffement :</strong> ${run.warmup} min</p>`:""}<p><strong>Bloc :</strong> ${esc(main)}</p>${run.recovery?`<p><strong>Récupération :</strong> ${esc(run.recovery)}</p>`:""}${run.cooldown?`<p><strong>Retour au calme :</strong> ${esc(run.cooldown)}</p>`:""}<div class="small">${esc(p?.note||s.note)}</div></div><div class="form-grid"><div><label>Durée (min)</label><input id="runDuration" type="number" value="${dur}"></div><div><label>Distance (km)</label><input id="runDistance" type="number" step=".01" placeholder="ex. 8.2"></div><div><label>Allure moy. (mm:ss/km)</label><input id="runPace" placeholder="ex. 5:18"></div><div><label>FC moy.</label><input id="runHr" type="number"></div><div><label>Cadence (ppm)</label><input id="runCadence" type="number"></div><div><label>D+ (m)</label><input id="runElev" type="number"></div><div><label>RPE 1–10</label><input id="runRpe" type="number" min="1" max="10" step=".5" value="${s.code==="R1"?3.5:7}"></div><div><label>Douleur genou au départ 0–10</label><input id="kneeStart" type="number" min="0" max="10" step=".5" value="${state.settings.kneeToday||0}"></div><div><label>Douleur après 2 km / fin</label><input id="knee2k" type="number" min="0" max="10" step=".5"></div></div><label>Notes / sensations</label><textarea id="runNotes" placeholder="Souffle, jambes, terrain, douleur autour de la rotule…"></textarea><div class="notice" style="margin-top:10px">Après la séance, ouvre l’onglet Course puis « Suivi genoux après D » pour noter la douleur à 1 h, J+1 et 48 h. C’est ce qui permet au coach de valider ou non les séances rapides.</div><button class="primary full" style="margin-top:14px" onclick="finishRun()">Enregistrer et analyser</button></div>`;
-  }
-  sessionDialog.showModal();startWorkoutClock();
-}
-function startWorkoutClock(){clearInterval(workoutTimer);function paint(){const el=document.getElementById("elapsedBox");if(!el)return;const sec=Math.floor((Date.now()-workoutStart)/1000);el.textContent=`${pad(Math.floor(sec/60))}:${pad(sec%60)}`}paint();workoutTimer=setInterval(paint,1000)}
+let workoutDraft=null,restTimer=null,restRemaining=0,restOnDone=null,workoutTimer=null,workoutStart=0,dCompleted=0,dRecoveryActive=false;
+function openSession(code,k=todayKey()){const s=sessionBy(code);if(!s)return;if(k>todayKey()){alert("Pas de planification en avance : saisis la séance le jour même ou après l'avoir faite.");return}if(s.type==="run"&&hasRunOn(k)){alert("Une course est déjà enregistrée ce jour. Maximum : 1 séance course par jour.");return}workoutDraft={code,dateKey:k};workoutStart=Date.now();restRemaining=0;restOnDone=null;dCompleted=0;dRecoveryActive=false;if(s.type==="strength")openStrengthSession(s,k);else openRunSession(s,k);sessionDialog.showModal();startWorkoutClock()}
+function openStrengthSession(s,k){document.getElementById("sessionDialogContent").innerHTML=`<div class="dialog-inner"><div class="dialog-head"><div><div class="small">${s.code} · MUSCULATION · ${esc(fmtDate(k))}</div><h2 style="margin:0">${esc(s.title)}</h2></div><button class="close" onclick="closeSession()">×</button></div><div class="row between"><span id="elapsedBox" class="elapsed">00:00</span><span class="badge">objectif ≤ ${state.settings.maxSessionMin||60} min</span></div><div id="timerBox"></div><div class="notice">${esc(s.note||"")}</div>${s.exercises.map((e,ei)=>exerciseHTML(s,e,ei)).join("")}<div class="form-grid"><div><label>RPE séance 1–10</label><input id="workRpe" type="number" min="1" max="10" step=".5" value="7"></div><div><label>Durée (min)</label><input id="workDuration" type="number" placeholder="auto si aujourd'hui"></div></div><label>Notes</label><textarea id="workNotes" placeholder="Technique, sensations, réglages…"></textarea><button class="primary full" style="margin-top:14px" onclick="finishStrength()">Enregistrer la séance</button></div>`}
 function lastExerciseSets(code,name){const last=state.history.filter(h=>h.code===code&&h.strength?.[name]).sort((a,b)=>new Date(b.date)-new Date(a.date))[0];return last?last.strength[name]:null}
 function parseRepNumber(v){const m=String(v??"").match(/\d+/);return m?+m[0]:0}
 function targetRepHigh(txt){const nums=(String(txt).match(/\d+/g)||[]).map(Number);return nums.length?Math.max(...nums):0}
 function isTimedExercise(e){return e?.unit==="min"||/(gainage|planche|plank)/i.test(e?.name||"")}
 function refSetText(e,x){if(!x||!x.done)return "—";if(isTimedExercise(e))return `${x.kg?`${x.kg}kg/`:""}${x.reps||"—"} min`;return `${x.kg||0}kg×${x.reps||0}`}
-function previousEx(code,e){const sets=lastExerciseSets(code,e.name);if(!sets)return "Aucun historique";const vals=sets.filter(x=>x.done).map(x=>refSetText(e,x));return vals.length?`Dernière fois : ${vals.join(" · ")}`:"Aucun historique"}
-function suggestedLoad(code,e){
-  if(isTimedExercise(e))return null;const sets=lastExerciseSets(code,e.name);if(!sets)return null;const done=sets.filter(x=>x.done&&num(x.kg)>0);if(!done.length)return null;
-  const base=done[done.length-1].kg;const high=targetRepHigh(e.reps);
-  const ready=done.length>=Math.min(e.sets,2)&&done.every(x=>parseRepNumber(x.reps)>=high && ((x.rir!=null&&x.rir!==""&&num(x.rir)>=2)||(x.rpe&&num(x.rpe)<=8)));
-  const next=ready?num(base)+num(e.increment||2.5):num(base);return {kg:next,ready};
-}
-function exerciseHTML(s,e,ei){
-  const last=lastExerciseSets(s.code,e.name)||[],timed=isTimedExercise(e),sug=suggestedLoad(s.code,e);const rows=Array.from({length:e.sets},(_,si)=>{const prev=last[si]||last[last.length-1]||{},ref=last[si]?refSetText(e,last[si]):(last.length?refSetText(e,last[last.length-1]):"—");return `<div class="set-grid"><strong>${si+1}</strong><div class="refcell">${esc(ref)}</div><input id="kg_${ei}_${si}" type="number" step=".5" placeholder="kg" value="${prev.kg||""}"><input id="reps_${ei}_${si}" ${timed?'type="number" step=".1" inputmode="decimal"':'inputmode="numeric"'} placeholder="${timed?'min':esc(e.reps)}" value="${prev.reps||""}"><input id="rir_${ei}_${si}" type="number" min="0" max="5" step="1" placeholder="RIR"><button class="checkset" id="done_${ei}_${si}" onclick="toggleSet(${ei},${si},${e.rest})">✓</button></div>`}).join("");
-  return `<div class="exercise"><div class="ex-head"><div><div class="ex-title">${esc(e.name)}</div>${e.note?`<div class="previous">${esc(e.note)}</div>`:""}${sug?`<div class="suggestion">Proposition : ${sug.kg} kg · ${sug.ready?"petite progression":"même charge, consolider les reps"}</div>`:""}</div><span class="badge">${e.sets}×${esc(e.reps)}${timed?" min":""}</span></div><div class="small" style="margin-top:7px">Série · Réf · kg · ${timed?"min":"reps"} · RIR · ✓</div>${rows}</div>`;
-}
+function suggestedLoad(code,e){if(isTimedExercise(e))return null;const sets=lastExerciseSets(code,e.name)||e.referenceSets;if(!sets)return null;const done=sets.filter(x=>x.done&&num(x.kg)>0);if(!done.length)return null;const base=done[done.length-1].kg,high=targetRepHigh(e.reps);const ready=done.length>=Math.min(e.sets,2)&&done.every(x=>parseRepNumber(x.reps)>=high&&x.rir!=null&&num(x.rir)>=2);return {kg:ready?num(base)+num(e.increment||2.5):num(base),ready}}
+function exerciseHTML(s,e,ei){const history=lastExerciseSets(s.code,e.name),last=history||e.referenceSets||[],timed=isTimedExercise(e),sug=suggestedLoad(s.code,e);const rows=Array.from({length:e.sets},(_,si)=>{const prev=last[si]||last[last.length-1]||{},ref=last[si]?refSetText(e,last[si]):(last.length?refSetText(e,last[last.length-1]):"—");return `<div class="set-grid"><strong>${si+1}</strong><div class="refcell">${esc(ref)}</div><input id="kg_${ei}_${si}" type="number" step=".5" placeholder="kg" value="${prev.kg||""}"><input id="reps_${ei}_${si}" ${timed?'type="number" step=".1" inputmode="decimal"':'inputmode="numeric"'} placeholder="${timed?'min':esc(e.reps)}" value="${prev.reps||""}"><input id="rir_${ei}_${si}" type="number" min="0" max="5" step="1" placeholder="RIR"><button class="checkset" id="done_${ei}_${si}" onclick="toggleSet(${ei},${si},${e.rest})">✓</button></div>`}).join("");return `<div class="exercise"><div class="ex-head"><div><div class="ex-title">${esc(e.name)}</div>${e.note?`<div class="previous">${esc(e.note)}</div>`:""}${sug?`<div class="suggestion">Proposition : ${sug.kg} kg · ${sug.ready?"petite progression":"même charge, consolider"}</div>`:""}</div><span class="badge">${e.sets}×${esc(e.reps)}${timed?" min":""}</span></div><div class="small" style="margin-top:7px">Série · Réf · kg · ${timed?"min":"reps"} · RIR · ✓</div>${rows}</div>`}
 function toggleSet(ei,si,rest){const btn=document.getElementById(`done_${ei}_${si}`);btn.classList.toggle("done");if(btn.classList.contains("done"))startRest(rest)}
-function startRest(sec){clearInterval(restTimer);restRemaining=sec;paintTimer();restTimer=setInterval(()=>{restRemaining--;paintTimer();if(restRemaining<=0){clearInterval(restTimer);if(navigator.vibrate)navigator.vibrate([120,80,120])}},1000)}
-function paintTimer(){const box=document.getElementById("timerBox");if(!box)return;if(restRemaining<=0){box.innerHTML="";return}box.innerHTML=`<div class="timerbar"><div><div class="small">RÉCUPÉRATION</div><div class="timerbig">${Math.floor(restRemaining/60)}:${pad(restRemaining%60)}</div></div><button class="ghost" onclick="restRemaining=0;paintTimer()">Passer</button></div>`}
-function historyTimestampForKey(k){const d=parseDateKey(k);const now=new Date();if(k===todayKey()){d.setHours(now.getHours(),now.getMinutes(),now.getSeconds())}else d.setHours(12,0,0);return d.toISOString()}
-function markPlanDone(k,planId,code,historyId){const arr=plansOn(k);let p=planId?arr.find(x=>x.id===planId):arr.find(x=>x.code===code&&x.status==="planned");if(p){p.status="done";p.historyId=historyId}}
-function finishStrength(){
-  const s=sessionBy(workoutDraft.code),strength={};s.exercises.forEach((e,ei)=>{strength[e.name]=Array.from({length:e.sets},(_,si)=>({kg:num(document.getElementById(`kg_${ei}_${si}`).value),reps:document.getElementById(`reps_${ei}_${si}`).value||"",rir:document.getElementById(`rir_${ei}_${si}`).value===""?null:num(document.getElementById(`rir_${ei}_${si}`).value),done:document.getElementById(`done_${ei}_${si}`).classList.contains("done")}))});
-  const elapsed=Math.max(1,Math.round((Date.now()-workoutStart)/60000));const h={id:uid(),code:s.code,type:"strength",date:historyTimestampForKey(workoutDraft.dateKey),dateKey:workoutDraft.dateKey,duration:elapsed,rpe:num(document.getElementById("workRpe").value),notes:document.getElementById("workNotes").value,strength,kneePain:num(document.getElementById("strengthKnee").value)};
-  state.history.push(h);markPlanDone(workoutDraft.dateKey,workoutDraft.planId,s.code,h.id);save();closeSession();activeTab="today";render();showPostAnalysis(h);
-}
-function finishRun(){
-  if(historyOn(workoutDraft.dateKey).some(h=>h.type==="run")){alert("Une course est déjà enregistrée ce jour. Maximum : 1 séance course par jour.");return;}
-  const s=sessionBy(workoutDraft.code),dist=num(document.getElementById("runDistance").value),dur=num(document.getElementById("runDuration").value)||(workoutDraft.plan?.plannedDuration||s.duration);let pace=paceToSec(document.getElementById("runPace").value);if(!pace&&dist)pace=dur*60/dist;
-  const h={id:uid(),code:s.code,type:"run",date:historyTimestampForKey(workoutDraft.dateKey),dateKey:workoutDraft.dateKey,duration:dur,rpe:num(document.getElementById("runRpe").value),notes:document.getElementById("runNotes").value,prescription:workoutDraft.plan?.runMain||s.run?.main||"",run:{distance:dist,paceSec:pace,hr:num(document.getElementById("runHr").value),cadence:num(document.getElementById("runCadence").value),elev:num(document.getElementById("runElev").value),knee:{start:nullableNumber("kneeStart"),after2k:nullableNumber("knee2k"),oneHour:null,nextMorning:null,after48h:null}}};
-  state.history.push(h);markPlanDone(workoutDraft.dateKey,workoutDraft.planId,s.code,h.id);save();closeSession();activeTab="today";render();showPostAnalysis(h);
-}
-function showPostAnalysis(h){
-  const c=document.getElementById("quickDialogContent");let msg=`Séance ${displayCode(h.code)} enregistrée.`;
-  if(h.run){const ks=h.run.knee?.start,ka=h.run.knee?.after2k;if(ks!=null&&ka!=null){msg+=ka<=ks?" La douleur n’a pas augmenté pendant la sortie.":" La douleur a augmenté pendant la sortie : le suivi à 1 h et demain sera important avant toute séance rapide."}msg+=" Pense à compléter le suivi genou dans l’onglet Course à 1 h, J+1 et 48 h."}
-  else if(h.code==="C")msg+=" La prochaine C comparera automatiquement charge, reps et RIR du squat au banc.";
-  const next=upcomingPlans(7).find(x=>x.plan.status==="planned");
-  c.innerHTML=`<div class="dialog-inner"><div class="dialog-head"><h2 style="margin:0">Analyse enregistrée</h2><button class="close" onclick="quickDialog.close()">×</button></div><p>${esc(msg)}</p>${next?`<div class="notice"><strong>Prochaine entrée du planning :</strong> ${esc(fmtDate(next.date))} · ${esc(displayCode(next.plan.code))} · ${esc(planTitle(next.plan))}</div>`:""}<button class="primary full" style="margin-top:12px" onclick="quickDialog.close()">OK</button></div>`;quickDialog.showModal();
-}
-function closeSession(){clearInterval(restTimer);clearInterval(workoutTimer);restRemaining=0;if(sessionDialog.open)sessionDialog.close()}
-function deleteHistory(id){if(confirm("Supprimer cette séance ?")){state.history=state.history.filter(h=>h.id!==id);Object.keys(state.planned).forEach(k=>plansOn(k).forEach(p=>{if(p.historyId===id){p.status="planned";delete p.historyId}}));save();render()}}
+function startRest(sec,onDone=null){clearInterval(restTimer);restOnDone=onDone;restRemaining=Math.max(0,Math.round(num(sec)));paintTimer();restTimer=setInterval(()=>{restRemaining--;paintTimer();if(restRemaining<=0){clearInterval(restTimer);if(navigator.vibrate)navigator.vibrate([120,80,120]);const cb=restOnDone;restOnDone=null;if(cb)cb()}},1000)}
+function skipRest(){clearInterval(restTimer);restRemaining=0;paintTimer();const cb=restOnDone;restOnDone=null;if(cb)cb()}
+function paintTimer(){const box=document.getElementById("timerBox");if(!box)return;if(restRemaining<=0){box.innerHTML="";return}box.innerHTML=`<div class="timerbar"><div><div class="small">RÉCUPÉRATION</div><div class="timerbig">${Math.floor(restRemaining/60)}:${pad(restRemaining%60)}</div></div><button class="ghost" onclick="skipRest()">Passer</button></div>`}
+function finishStrength(){const s=sessionBy(workoutDraft.code),strength={};s.exercises.forEach((e,ei)=>{strength[e.name]=Array.from({length:e.sets},(_,si)=>({kg:num(document.getElementById(`kg_${ei}_${si}`).value),reps:document.getElementById(`reps_${ei}_${si}`).value||"",rir:document.getElementById(`rir_${ei}_${si}`).value===""?null:num(document.getElementById(`rir_${ei}_${si}`).value),done:document.getElementById(`done_${ei}_${si}`).classList.contains("done")}))});const elapsed=Math.max(1,Math.round((Date.now()-workoutStart)/60000)),manual=num(document.getElementById("workDuration").value);const h={id:uid(),code:s.code,type:"strength",date:historyTimestampForKey(workoutDraft.dateKey),dateKey:workoutDraft.dateKey,duration:manual||elapsed,rpe:num(document.getElementById("workRpe").value),notes:document.getElementById("workNotes").value,strength};state.history.push(h);save();closeSession();activeTab="activity";selectedDate=workoutDraft.dateKey;calendarCursor=new Date(parseDateKey(selectedDate).getFullYear(),parseDateKey(selectedDate).getMonth(),1,12);render()}
+
+function lastRunOf(code){return state.history.filter(h=>h.code===code&&h.type==="run").sort((a,b)=>new Date(b.date)-new Date(a.date))[0]}
+function openRunSession(s,k){const last=lastRunOf(s.code),r=s.run||{};let body="";if(s.code==="D"){const lr=last?.run||{};body=`<div class="notice">Choisis le nombre de répétitions et la durée d'effort. À chaque validation d'une répétition, le repos se déclenche automatiquement.</div><div class="run-fields"><div><label>Répétitions prévues</label><input id="dReps" type="number" min="1" max="30" value="${lr.plannedReps||r.reps||5}" oninput="updateDStatus()"></div><div><label>Effort par répétition (min)</label><input id="dEffort" type="number" min=".5" max="30" step=".5" value="${lr.effortMin||r.effortMin||4}" oninput="updateDStatus()"></div><div><label>Repos (min)</label><input id="dRecovery" type="number" min="0" max="15" step=".5" value="${lr.recoveryMin||r.recoveryMin||3}" oninput="updateDStatus()"></div><div><label>Répétitions réalisées</label><input id="dCompletedInput" type="number" min="0" max="30" value="0" oninput="syncDCompleted()"></div></div><div id="intervalBox" class="interval-box"></div><div id="timerBox"></div><label>Notes</label><textarea id="runNotes" placeholder="Allure, sensations, terrain…"></textarea><button class="primary full" style="margin-top:14px" onclick="finishRunD()">Enregistrer D</button>`}
+  if(s.code==="E"){body=`<div class="notice good">Endurance fondamentale : saisis simplement les kilomètres, le temps et la fréquence cardiaque moyenne. Repère : ≤ ${state.settings.hrEfMax} bpm.</div><div class="run-fields"><div><label>Distance (km)</label><input id="eDistance" type="number" min="0" step=".01" placeholder="ex. 8.2"></div><div><label>Durée (min)</label><input id="eDuration" type="number" min="1" placeholder="ex. 50"></div><div><label>FC moyenne (bpm)</label><input id="eHr" type="number" min="50" max="220" oninput="paintEfHr()"></div></div><div id="efHrStatus" class="small" style="margin-top:10px"></div><label>Notes</label><textarea id="runNotes" placeholder="Sensations, parcours…"></textarea><button class="primary full" style="margin-top:14px" onclick="finishRunE()">Enregistrer E</button>`}
+  if(s.code==="F"){body=`<div class="notice">Course libre / vallonnée : pas de cible de fréquence cardiaque. Tu saisis la distance, et le temps si tu veux le conserver.</div><div class="run-fields"><div><label>Distance (km)</label><input id="fDistance" type="number" min="0" step=".01" placeholder="ex. 10"></div><div><label>Durée (min, facultatif)</label><input id="fDuration" type="number" min="0" placeholder="ex. 62"></div></div><label>Notes</label><textarea id="runNotes" placeholder="Vallonné, sensations, parcours…"></textarea><button class="primary full" style="margin-top:14px" onclick="finishRunF()">Enregistrer F</button>`}
+  document.getElementById("sessionDialogContent").innerHTML=`<div class="dialog-inner"><div class="dialog-head"><div><div class="small">${s.code} · COURSE · ${esc(fmtDate(k))}</div><h2 style="margin:0">${esc(s.title)}</h2></div><button class="close" onclick="closeSession()">×</button></div><div class="row between"><span id="elapsedBox" class="elapsed">00:00</span><span class="badge ${s.code==="E"?"good":s.code==="D"?"blue":""}">${esc(s.code)}</span></div>${body}</div>`;setTimeout(()=>{if(s.code==="D")updateDStatus();if(s.code==="E")paintEfHr()},0)}
+function syncDCompleted(){dCompleted=Math.max(0,num(document.getElementById("dCompletedInput")?.value));updateDStatus()}
+function updateDStatus(){const box=document.getElementById("intervalBox");if(!box)return;const total=Math.max(1,num(document.getElementById("dReps")?.value)||5),eff=num(document.getElementById("dEffort")?.value)||4,rec=num(document.getElementById("dRecovery")?.value)||3;dCompleted=Math.min(dCompleted,total);const next=Math.min(total,dCompleted+1);box.innerHTML=`<div class="row between"><div><div class="small">FRACTIONNÉ</div><div class="interval-count">${dCompleted} / ${total}</div><div class="interval-note">${dCompleted>=total?"Toutes les répétitions sont validées.":`Prochaine : répétition ${next} · ${eff} min`}</div></div><span class="badge blue">repos ${rec} min</span></div>${dCompleted<total?(dRecoveryActive?`<button class="secondary full" style="margin-top:12px" disabled>Repos en cours…</button>`:`<button class="primary full" style="margin-top:12px" onclick="completeDRep()">✓ Répétition terminée${dCompleted+1<total?" → lancer le repos":""}</button>`):""}`;const inp=document.getElementById("dCompletedInput");if(inp&&num(inp.value)!==dCompleted)inp.value=dCompleted}
+function completeDRep(){const total=Math.max(1,num(document.getElementById("dReps").value)||5);if(dCompleted>=total||dRecoveryActive)return;dCompleted++;document.getElementById("dCompletedInput").value=dCompleted;const rec=num(document.getElementById("dRecovery").value)||3;if(dCompleted<total&&rec>0){dRecoveryActive=true;startRest(Math.round(rec*60),()=>{dRecoveryActive=false;updateDStatus()})}else{clearInterval(restTimer);restRemaining=0;restOnDone=null;paintTimer()}updateDStatus()}
+function paintEfHr(){const el=document.getElementById("efHrStatus"),inp=document.getElementById("eHr");if(!el||!inp)return;const hr=num(inp.value),max=num(state.settings.hrEfMax)||140;if(!hr){el.textContent=`Repère : FC moyenne ≤ ${max} bpm.`;el.className="small";return}const ok=hr<=max;el.textContent=ok?`FC moyenne dans le repère : ${hr} ≤ ${max} bpm.`:`FC moyenne au-dessus du repère : ${hr} > ${max} bpm.`;el.className=ok?"small hr-ok":"small hr-high"}
+function finishRunD(){const total=Math.max(1,num(document.getElementById("dReps").value)||5),eff=num(document.getElementById("dEffort").value)||4,rec=num(document.getElementById("dRecovery").value)||3,completed=Math.min(total,Math.max(0,num(document.getElementById("dCompletedInput").value)));const estimated=Math.round(completed*eff+Math.max(0,completed-1)*rec);pushRun({id:uid(),code:"D",type:"run",date:historyTimestampForKey(workoutDraft.dateKey),dateKey:workoutDraft.dateKey,duration:estimated,notes:document.getElementById("runNotes").value,run:{plannedReps:total,completedReps:completed,effortMin:eff,recoveryMin:rec}})}
+function finishRunE(){const dist=num(document.getElementById("eDistance").value),dur=num(document.getElementById("eDuration").value),hr=num(document.getElementById("eHr").value);pushRun({id:uid(),code:"E",type:"run",date:historyTimestampForKey(workoutDraft.dateKey),dateKey:workoutDraft.dateKey,duration:dur,notes:document.getElementById("runNotes").value,run:{distance:dist,avgHr:hr,hrMaxRef:num(state.settings.hrEfMax)||140}})}
+function finishRunF(){const dist=num(document.getElementById("fDistance").value),dur=num(document.getElementById("fDuration").value);pushRun({id:uid(),code:"F",type:"run",date:historyTimestampForKey(workoutDraft.dateKey),dateKey:workoutDraft.dateKey,duration:dur,notes:document.getElementById("runNotes").value,run:{distance:dist}})}
+function pushRun(h){if(historyOn(workoutDraft.dateKey).some(x=>x.type==="run")){alert("Une course est déjà enregistrée ce jour.");return}state.history.push(h);save();closeSession();activeTab="activity";selectedDate=workoutDraft.dateKey;calendarCursor=new Date(parseDateKey(selectedDate).getFullYear(),parseDateKey(selectedDate).getMonth(),1,12);render()}
+function startWorkoutClock(){clearInterval(workoutTimer);function paint(){const el=document.getElementById("elapsedBox");if(!el)return;const sec=Math.floor((Date.now()-workoutStart)/1000);el.textContent=`${pad(Math.floor(sec/60))}:${pad(sec%60)}`}paint();workoutTimer=setInterval(paint,1000)}
+function closeSession(){clearInterval(restTimer);clearInterval(workoutTimer);restRemaining=0;restOnDone=null;dRecoveryActive=false;if(sessionDialog.open)sessionDialog.close()}
+function deleteHistory(id){if(confirm("Supprimer cette séance ?")){state.history=state.history.filter(h=>h.id!==id);save();render()}}
 
 function editStrength(code){const S=sessionBy(code);if(!S||S.type!=="strength")return;document.getElementById("quickDialogContent").innerHTML=`<div class="dialog-inner"><div class="dialog-head"><h2 style="margin:0">Modifier ${esc(code)}</h2><button class="close" onclick="quickDialog.close()">×</button></div><p class="small">Un exercice par ligne : Nom | séries | reps | repos en secondes</p><textarea id="strengthEditor" style="min-height:280px">${esc(S.exercises.map(e=>`${e.name} | ${e.sets} | ${e.reps} | ${e.rest}`).join("\n"))}</textarea><button class="primary full" style="margin-top:12px" onclick="saveStrength('${code}')">Enregistrer ${esc(code)}</button></div>`;quickDialog.showModal()}
-function saveStrength(code){const S=sessionBy(code);if(!S)return;const lines=document.getElementById("strengthEditor").value.split("\n").map(x=>x.trim()).filter(Boolean);const ex=lines.map(l=>{const [name,sets,reps,rest]=l.split("|").map(x=>x.trim());return {name,sets:num(sets)||3,reps:reps||"8",rest:num(rest)||90,increment:2.5}}).filter(x=>x.name);if(ex.length){S.exercises=ex;save()}quickDialog.close();render()}
-function exportData(){const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`coach-10k-force-backup-${todayKey()}.json`;a.click();URL.revokeObjectURL(a.href)}
-function importData(file){if(!file)return;const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);state=normalizeState(x);state.planInitialized=!!x.planInitialized||Object.keys(state.planned).length>0;save();alert("Import réussi.");render()}catch(e){alert("Fichier non reconnu.")}};r.readAsText(file)}
+function saveStrength(code){const S=sessionBy(code);if(!S)return;const old=S.exercises||[],lines=document.getElementById("strengthEditor").value.split("\n").map(x=>x.trim()).filter(Boolean);const ex=lines.map(l=>{const [name,sets,reps,rest]=l.split("|").map(x=>x.trim()),prev=old.find(e=>e.name===name)||{};return {name,sets:num(sets)||3,reps:reps||"8",rest:num(rest)||90,increment:prev.increment||2.5,note:prev.note||"",referenceSets:prev.referenceSets}}).filter(x=>x.name);if(ex.length){S.exercises=ex;save()}quickDialog.close();render()}
+function exportData(){const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`coach-force-course-backup-${todayKey()}.json`;a.click();URL.revokeObjectURL(a.href)}
+function importData(file){if(!file)return;const r=new FileReader();r.onload=()=>{try{state=normalizeState(JSON.parse(r.result));save();alert("Import réussi.");render()}catch(e){alert("Fichier non reconnu.")}};r.readAsText(file)}
 async function clearCaches(){if("caches" in window){for(const k of await caches.keys())await caches.delete(k)}if(navigator.serviceWorker?.controller)navigator.serviceWorker.controller.postMessage({type:"SKIP_WAITING"});alert("Cache vidé. Recharge la page.");location.reload(true)}
-
-let deferredPrompt=null;
-window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;document.getElementById("installBtn").classList.remove("hidden")});
-document.getElementById("installBtn").onclick=async()=>{if(deferredPrompt){deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;document.getElementById("installBtn").classList.add("hidden")}};
-if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=3.2.1").catch(()=>{}))}
-
-function boot(){
-  try{render()}catch(err){console.error(err);const v=document.getElementById("view");if(v){v.innerHTML=`<section class="card hero"><h2>Réparation nécessaire</h2><p>L’application a rencontré une donnée locale incompatible.</p><button class="primary full" id="repairBtn">Réparer sans supprimer l’historique</button><button class="ghost full" style="margin-top:8px" id="resetBtn">Réinitialiser l’application</button><p class="small" style="margin-top:10px">Erreur : ${esc(err?.message||String(err))}</p></section>`;document.getElementById("repairBtn").onclick=()=>{state=normalizeState(state);save();location.reload()};document.getElementById("resetBtn").onclick=()=>{if(confirm("Réinitialiser les données locales ?")){localStorage.removeItem(STORE);location.reload()}}}}
-}
-window.addEventListener("error",e=>console.error("APP ERROR",e.error||e.message));
-boot();
-
-  </script>
-</body>
-</html>
+let deferredPrompt=null;window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;document.getElementById("installBtn").classList.remove("hidden")});document.getElementById("installBtn").onclick=async()=>{if(deferredPrompt){deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;document.getElementById("installBtn").classList.add("hidden")}};if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=3.3.0").catch(()=>{}))}
+function boot(){try{render()}catch(err){console.error(err);view.innerHTML=`<section class="card hero"><h2>Réparation nécessaire</h2><p>L'application a rencontré une donnée locale incompatible.</p><button class="primary full" id="repairBtn">Réparer sans supprimer l'historique</button><p class="small">Erreur : ${esc(err?.message||String(err))}</p></section>`;document.getElementById("repairBtn").onclick=()=>{state=normalizeState(state);save();location.reload()}}}
+window.addEventListener("error",e=>console.error("APP ERROR",e.error||e.message));boot();
+</script>
+</body></html>
