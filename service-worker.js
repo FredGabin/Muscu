@@ -1,8 +1,15 @@
-const CACHE='muscu-cache-v4';
-const STATIC=['./manifest.json?v=4','./icon-192.png','./icon-512.png'];
+const CACHE='muscu-v5-20260826';
+const OFFLINE='./?v=5';
 
 self.addEventListener('install',event=>{
-  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(STATIC)));
+  event.waitUntil(
+    caches.open(CACHE).then(c=>c.addAll([
+      './?v=5',
+      './manifest.json?v=5',
+      './icon-192.png?v=5',
+      './icon-512.png?v=5'
+    ]))
+  );
   self.skipWaiting();
 });
 
@@ -16,25 +23,26 @@ self.addEventListener('activate',event=>{
 self.addEventListener('fetch',event=>{
   if(event.request.method!=='GET') return;
 
-  // Toujours tenter le réseau d'abord pour les pages HTML/navigation :
-  // évite qu'une ancienne version reste bloquée après une mise à jour GitHub Pages.
   if(event.request.mode==='navigate'){
     event.respondWith(
-      fetch(event.request,{cache:'no-store'}).then(resp=>{
-        const copy=resp.clone();
-        caches.open(CACHE).then(c=>c.put('./?v=4',copy));
-        return resp;
-      }).catch(()=>caches.match('./?v=4').then(r=>r||caches.match('./')))
+      fetch(event.request,{cache:'no-store'})
+        .then(resp=>{
+          const copy=resp.clone();
+          caches.open(CACHE).then(c=>c.put(OFFLINE,copy));
+          return resp;
+        })
+        .catch(()=>caches.match(OFFLINE))
     );
     return;
   }
 
-  // Pour les fichiers statiques : réseau puis cache.
   event.respondWith(
-    fetch(event.request,{cache:'no-store'}).then(resp=>{
-      const copy=resp.clone();
-      caches.open(CACHE).then(c=>c.put(event.request,copy));
-      return resp;
-    }).catch(()=>caches.match(event.request))
+    fetch(event.request,{cache:'no-store'})
+      .then(resp=>{
+        const copy=resp.clone();
+        caches.open(CACHE).then(c=>c.put(event.request,copy));
+        return resp;
+      })
+      .catch(()=>caches.match(event.request))
   );
 });

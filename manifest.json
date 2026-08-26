@@ -1,21 +1,21 @@
 {
-  "name": "Muscu - Planning et suivi",
+  "name": "Muscu - Planning et suivi V5",
   "short_name": "Muscu",
   "description": "Planning, exercices, historique et statistiques de musculation.",
-  "start_url": "./?v=4",
+  "start_url": "./?v=5",
   "scope": "./",
   "display": "standalone",
   "background_color": "#0b1220",
-  "theme_color": "#111827",
+  "theme_color": "#0b1220",
   "icons": [
     {
-      "src": "./icon-192.png",
+      "src": "./icon-192.png?v=5",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "./icon-512.png",
+      "src": "./icon-512.png?v=5",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
