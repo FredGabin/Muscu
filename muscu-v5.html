@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Muscu">
+<title>Muscu V5 Direct</title>
+<link rel="icon" href="./icon-192.png?v=5">
+<style>
+:root{--bg:#0b1220;--card:#111827;--card2:#172033;--line:#26354c;--text:#f8fafc;--muted:#94a3b8;--green:#22c55e;--blue:#38bdf8;--orange:#f59e0b;--red:#ef4444}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;padding-bottom:80px}
+button,input,select{font:inherit}.app{max-width:820px;margin:auto;padding:14px}.top{display:flex;justify-content:space-between;align-items:center;padding:10px 0 14px;position:sticky;top:0;background:#0b1220f2;z-index:10}
+.brand{display:flex;gap:10px;align-items:center}.logo{width:44px;height:44px;border-radius:14px;background:var(--green);color:#052e16;display:grid;place-items:center;font-size:22px;font-weight:900}
+h1,h2,h3{margin-top:0}.muted{color:var(--muted)}.small{font-size:13px}.tiny{font-size:11px}
+.card,.exercise{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:18px;padding:15px;margin-bottom:13px}
+.hero{background:radial-gradient(circle at 100% 0,#22c55e25,transparent 34%),linear-gradient(180deg,var(--card2),var(--card))}
+.row{display:flex;gap:9px;align-items:center}.between{justify-content:space-between}.wrap{flex-wrap:wrap}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}@media(max-width:600px){.grid3{grid-template-columns:1fr}.setrow{grid-template-columns:38px 1fr 1fr 82px!important}}
+.btn{border:0;border-radius:13px;padding:11px 13px;background:#243149;color:white;font-weight:750;min-height:44px}.primary{background:var(--green);color:#052e16}.blue{background:var(--blue);color:#082f49}.orange{background:var(--orange);color:#422006}.danger{background:#431b1d;color:#fecaca}.ghost{background:transparent;border:1px solid var(--line)}
+.tag{display:inline-block;padding:5px 9px;border-radius:999px;background:#1f2a44;color:#cbd5e1;font-size:12px;margin:4px 4px 0 0}
+.kpi{background:#0f172a;border:1px solid var(--line);border-radius:15px;padding:14px}.kpi .n{font-size:28px;font-weight:900}.kpi .l{font-size:12px;color:var(--muted)}
+.setrow{display:grid;grid-template-columns:42px 1fr 1fr 88px;gap:7px;align-items:center;margin-top:8px}.setrow input,.field{width:100%;background:#0b1220;border:1px solid #334155;color:white;border-radius:10px;padding:9px}
+.done{background:#12301f!important;border-color:#166534!important}.last{background:#101b2e;border:1px solid #2b3d59;border-radius:12px;padding:9px;margin:10px 0;font-size:13px}
+.day{display:grid;grid-template-columns:80px 1fr;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}.today{color:var(--green);font-weight:900}
+.history{padding:12px 0;border-bottom:1px solid var(--line)}.history:last-child{border-bottom:0}.hidden{display:none!important}
+.timer{display:none;position:fixed;left:50%;bottom:80px;transform:translateX(-50%);width:min(780px,calc(100% - 24px));background:#0f172a;border:1px solid #334155;border-radius:16px;padding:12px;z-index:30;box-shadow:0 14px 45px #0009}.timer.show{display:flex;align-items:center;justify-content:space-between}.timerTime{font-size:27px;font-weight:900}
+nav{position:fixed;bottom:0;left:0;right:0;height:72px;background:#09101bf2;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);z-index:20}nav button{border:0;background:none;color:var(--muted);font-size:11px;font-weight:700}nav button.active{color:var(--green)}.ico{display:block;font-size:19px}
+.notice{background:#2a2413;border:1px solid #5f4a15;color:#fde68a;border-radius:14px;padding:12px;font-size:13px}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="top">
+  <div class="brand"><div class="logo">M</div><div><h1 style="margin:0">Muscu</h1><div class="small muted">Planning • exos • stats • V5 DIRECT</div></div></div>
+  <button class="btn ghost" id="installBtn" hidden>Installer</button>
+</div>
+
+<main id="homeView">
+<section class="card hero">
+  <div class="tiny muted">PROCHAINE SÉANCE</div>
+  <h2 id="nextTitle">Planning à définir</h2>
+  <p id="nextText" class="muted"></p>
+  <div class="row wrap">
+    <button class="btn primary" onclick="startSession('A')">Séance A</button>
+    <button class="btn blue" onclick="startSession('B')">Séance B</button>
+    <button class="btn orange" onclick="startSession('C')">Séance C</button>
+  </div>
+</section>
+<div class="grid3">
+  <div class="kpi"><div class="n" id="kSessions">0</div><div class="l">séances</div></div>
+  <div class="kpi"><div class="n" id="kSets">0</div><div class="l">séries</div></div>
+  <div class="kpi"><div class="n" id="kVolume">0</div><div class="l">kg volume</div></div>
+</div>
+<section class="card" style="margin-top:13px"><div class="tiny muted">DERNIÈRE SÉANCE</div><b id="lastWorkout">Aucune</b></section>
+<div class="notice">V5 conserve l'historique local déjà présent et ajoute la séance A de référence seulement si elle est absente.</div>
+</main>
+
+<main id="planView" class="hidden">
+<h2>Planning</h2><section class="card"><div id="weekPlan"></div></section>
+<section class="card"><b>A</b> Dos • Biceps • Épaules<br><b>B</b> Pectoraux • Triceps<br><b>C</b> Jambes • Mollets • Avant-bras</section>
+</main>
+
+<main id="workoutView" class="hidden">
+<div class="row between wrap"><div><div class="tiny muted">SÉANCE EN COURS</div><h2 id="workoutTitle"></h2></div><button class="btn ghost" onclick="cancelWorkout()">Quitter</button></div>
+<div id="exerciseList"></div>
+<button class="btn primary" style="width:100%" onclick="finishWorkout()">Terminer et enregistrer</button>
+</main>
+
+<main id="exosView" class="hidden">
+<h2>Exercices</h2><section class="card"><div id="exosList"></div></section>
+</main>
+
+<main id="statsView" class="hidden">
+<h2>Stats</h2>
+<div class="grid3">
+  <div class="kpi"><div class="n" id="sSessions">0</div><div class="l">séances</div></div>
+  <div class="kpi"><div class="n" id="sSets">0</div><div class="l">séries</div></div>
+  <div class="kpi"><div class="n" id="sVolume">0</div><div class="l">kg volume total</div></div>
+</div>
+<section class="card" style="margin-top:13px"><h3>Meilleures charges</h3><div id="bestList"></div></section>
+<section class="card"><h3>Historique</h3><div id="historyList"></div></section>
+</main>
+
+<main id="settingsView" class="hidden">
+<h2>Réglages</h2>
+<section class="card">
+  <h3>Repos automatique</h3>
+  <label>Gros exercices <select class="field" id="bigRest"><option value="90">90 s</option><option value="120" selected>120 s</option><option value="150">150 s</option><option value="180">180 s</option></select></label><br><br>
+  <label>Petits exercices <select class="field" id="smallRest"><option value="60">60 s</option><option value="75" selected>75 s</option><option value="90">90 s</option></select></label>
+</section>
+<section class="card">
+  <h3>Sauvegarde</h3>
+  <div class="row wrap">
+    <button class="btn blue" onclick="exportData()">Exporter JSON</button>
+    <label class="btn ghost">Importer JSON<input id="importInput" type="file" accept="application/json" hidden></label>
+  </div>
+</section>
+</main>
+</div>
+
+<div class="timer" id="timerBar"><div><div class="tiny muted">REPOS</div><div class="timerTime" id="timerText">02:00</div></div><div class="row"><button class="btn ghost" onclick="addTimer(30)">+30 s</button><button class="btn primary" onclick="stopTimer()">Stop</button></div></div>
+
+<nav>
+<button id="navHome" class="active" onclick="showView('home')"><span class="ico">🏠</span>Accueil</button>
+<button id="navPlan" onclick="showView('plan')"><span class="ico">📅</span>Planning</button>
+<button id="navExos" onclick="showView('exos')"><span class="ico">🏋️</span>Exos</button>
+<button id="navStats" onclick="showView('stats')"><span class="ico">📊</span>Stats</button>
+<button id="navSettings" onclick="showView('settings')"><span class="ico">⚙️</span>Réglages</button>
+</nav>
+
+<script>
+const DATA_KEY='muscu-data-v1';
+const SETTINGS_KEY='muscu-settings-v1';
+const PLAN_KEY='muscu-plan-v1';
+const MIGRATION_A_KEY='muscu-v5-A-restored';
+const DAYS=['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
+
+const templates={
+A:{name:'Séance A — Dos / Biceps / Épaules',exercises:[
+{name:'Tirage poulie haute',group:'Dos',weight:60,sets:3,reps:9,target:'3 × 8–10',rest:'big'},
+{name:'Rowing poulie basse',group:'Dos',weight:70,sets:3,reps:9,target:'3 × 8–10',rest:'big'},
+{name:'Pullover poulie haute',group:'Dos',weight:20,sets:3,reps:12,target:'3 × 10–12',rest:'small'},
+{name:'Curl haltères assis',group:'Biceps',weight:17,sets:3,reps:7,target:'3 × 6–8',rest:'small'},
+{name:'Face pull',group:'Épaules',weight:15,sets:3,reps:12,target:'3 × 12–15',rest:'small'},
+{name:'Élévation latérale poulie',group:'Épaules',weight:5,sets:3,reps:12,target:'3 × 12–15',rest:'small'},
+{name:'Planche',group:'Gainage',weight:0,sets:1,reps:45,target:'45 s',unit:'sec',rest:'small'},
+{name:'Planche latérale',group:'Gainage',weight:0,sets:2,reps:30,target:'30 s / côté',unit:'sec',rest:'small'},
+{name:'Dead bug',group:'Gainage',weight:0,sets:1,reps:10,target:'10 / côté',rest:'small'}]},
+B:{name:'Séance B — Pectoraux / Triceps',exercises:[
+{name:'Développé couché barre',group:'Pectoraux',weight:'',sets:3,reps:8,target:'3 × 8–10',rest:'big'},
+{name:'Développé incliné',group:'Pectoraux',weight:'',sets:3,reps:8,target:'3 × 8–10',rest:'big'},
+{name:'Écarté poulie ou haltères',group:'Pectoraux',weight:'',sets:3,reps:12,target:'3 × 10–15',rest:'small'},
+{name:'Extension triceps corde',group:'Triceps',weight:'',sets:3,reps:12,target:'3 × 10–15',rest:'small'}]},
+C:{name:'Séance C — Jambes / Mollets / Avant-bras',exercises:[
+{name:'Squat vers banc',group:'Jambes',weight:'',sets:3,reps:8,target:'3 × 8–10',rest:'big'},
+{name:'Leg extension',group:'Jambes',weight:'',sets:3,reps:12,target:'3 × 10–15',rest:'small'},
+{name:'Hip thrust',group:'Jambes',weight:'',sets:3,reps:10,target:'3 × 10–12',rest:'big'},
+{name:'Leg curl',group:'Jambes',weight:'',sets:3,reps:10,target:'3 × 10–12',rest:'small'},
+{name:'Mollets debout',group:'Mollets',weight:'',sets:3,reps:12,target:'3 × 12–15',rest:'small'},
+{name:'Curl marteau léger',group:'Avant-bras',weight:'',sets:2,reps:10,target:'2 × 10–12',rest:'small'}]}
+};
+
+let state=loadData();
+let current=null;
+let timerId=null,timerEnd=0,deferredPrompt=null;
+
+function loadData(){try{return JSON.parse(localStorage.getItem(DATA_KEY))||{workouts:[]}}catch{return{workouts:[]}}}
+function saveData(){localStorage.setItem(DATA_KEY,JSON.stringify(state));refreshHome()}
+function getSettings(){try{return JSON.parse(localStorage.getItem(SETTINGS_KEY))||{bigRest:120,smallRest:75}}catch{return{bigRest:120,smallRest:75}}}
+function saveSettings(){localStorage.setItem(SETTINGS_KEY,JSON.stringify({bigRest:+bigRest.value,smallRest:+smallRest.value}))}
+function getPlan(){try{return JSON.parse(localStorage.getItem(PLAN_KEY))||['rest','A','run','rest','B','run','rest']}catch{return['rest','A','run','rest','B','run','rest']}}
+function savePlan(p){localStorage.setItem(PLAN_KEY,JSON.stringify(p));refreshHome()}
+
+function restoreAIfMissing(){
+  if(localStorage.getItem(MIGRATION_A_KEY)) return;
+
+  const hasReferenceA = state.workouts.some(w =>
+    w && w.key==='A' && Array.isArray(w.exercises) &&
+    w.exercises.some(e=>e.name==='Tirage poulie haute') &&
+    w.exercises.some(e=>e.name==='Curl haltères assis')
+  );
+
+  if(!hasReferenceA){
+    state.workouts.push({
+      key:'A',
+      name:'Séance A — Dos / Biceps / Épaules',
+      startedAt:'2026-08-21T18:00:00+02:00',
+      finishedAt:'2026-08-21T19:30:00+02:00',
+      restored:true,
+      exercises:[
+        {name:'Tirage poulie haute',group:'Dos',entries:[{weight:60,reps:9,feel:'moyen',done:true},{weight:60,reps:9,feel:'moyen',done:true},{weight:60,reps:9,feel:'moyen',done:true}]},
+        {name:'Rowing poulie basse',group:'Dos',entries:[{weight:60,reps:10,feel:'facile',done:true},{weight:70,reps:9,feel:'moyen',done:true},{weight:70,reps:10,feel:'moyen',done:true}]},
+        {name:'Pullover poulie haute',group:'Dos',entries:[{weight:20,reps:12,feel:'moyen',done:true},{weight:20,reps:12,feel:'moyen',done:true},{weight:20,reps:12,feel:'moyen',done:true}]},
+        {name:'Curl haltères assis',group:'Biceps',entries:[{weight:17,reps:7,feel:'moyen',done:true},{weight:17,reps:6,feel:'moyen',done:true},{weight:17,reps:7,feel:'moyen',done:true}]},
+        {name:'Face pull',group:'Épaules',entries:[{weight:15,reps:12,feel:'moyen',done:true},{weight:15,reps:12,feel:'moyen',done:true},{weight:15,reps:12,feel:'moyen',done:true}]},
+        {name:'Élévation latérale poulie',group:'Épaules',entries:[{weight:5,reps:12,feel:'moyen',done:true},{weight:5,reps:12,feel:'moyen',done:true},{weight:5,reps:12,feel:'moyen',done:true}]},
+        {name:'Planche',group:'Gainage',unit:'sec',entries:[{weight:0,reps:45,feel:'moyen',done:true}]},
+        {name:'Planche latérale',group:'Gainage',unit:'sec',entries:[{weight:0,reps:30,feel:'moyen',done:true},{weight:0,reps:30,feel:'moyen',done:true}]},
+        {name:'Dead bug',group:'Gainage',entries:[{weight:0,reps:10,feel:'moyen',done:true}]}
+      ]
+    });
+    state.workouts.sort((a,b)=>new Date(b.finishedAt||b.startedAt)-new Date(a.finishedAt||a.startedAt));
+    saveData();
+  }
+  localStorage.setItem(MIGRATION_A_KEY,'1');
+}
+
+function showView(name){
+  ['home','plan','workout','exos','stats','settings'].forEach(v=>document.getElementById(v+'View').classList.toggle('hidden',v!==name));
+  ['Home','Plan','Exos','Stats','Settings'].forEach(v=>{const e=document.getElementById('nav'+v);if(e)e.classList.toggle('active',v.toLowerCase()===name)});
+  if(name==='plan')renderPlan();
+  if(name==='exos')renderExos();
+  if(name==='stats')renderStats();
+  if(name==='settings'){const s=getSettings();bigRest.value=s.bigRest;smallRest.value=s.smallRest}
+  scrollTo(0,0);
+}
+
+function lastExercise(name){
+  for(const w of state.workouts){
+    const e=(w.exercises||[]).find(x=>x.name===name);
+    if(e && (e.entries||[]).some(s=>s.done)) return e;
+  }
+  return null;
+}
+function lastText(e){
+  if(!e)return 'Aucune référence';
+  return e.entries.filter(s=>s.done).map(s=>e.unit==='sec'?`${s.reps}s`:`${s.weight}kg × ${s.reps}`).join(' / ');
+}
+function entriesFromLast(t){
+  const last=lastExercise(t.name);
+  const done=last?last.entries.filter(s=>s.done):[];
+  return Array.from({length:t.sets},(_,i)=>({
+    weight:done[i]&&done[i].weight!==undefined?done[i].weight:t.weight,
+    reps:done[i]&&done[i].reps!==undefined?done[i].reps:t.reps,
+    feel:'moyen',done:false
+  }));
+}
+function startSession(k){
+  current={key:k,name:templates[k].name,startedAt:new Date().toISOString(),exercises:templates[k].exercises.map(t=>({...t,entries:entriesFromLast(t)}))};
+  workoutTitle.textContent=current.name;
+  renderWorkout();
+  showView('workout');
+}
+function renderWorkout(){
+  exerciseList.innerHTML='';
+  current.exercises.forEach((e,ei)=>{
+    const box=document.createElement('section');box.className='exercise';
+    box.innerHTML=`<div class="row between wrap"><div><h3>${e.name}</h3><div class="small muted">${e.group} • ${e.target}</div></div><span class="tag">${e.rest==='big'?'2 min':'1 min 15'}</span></div><div class="last"><b>Dernière fois :</b> ${lastText(lastExercise(e.name))}</div>`;
+    e.entries.forEach((s,si)=>{
+      const r=document.createElement('div');r.className='setrow';
+      r.innerHTML=`<b>S${si+1}</b><input type="number" step=".5" value="${s.weight}" placeholder="kg" ${e.unit==='sec'?'disabled':''} onchange="setValue(${ei},${si},'weight',this.value)"><input type="number" step="1" value="${s.reps}" onchange="setValue(${ei},${si},'reps',this.value)"><button class="btn" onclick="toggleSet(${ei},${si},this)">Valider</button>`;
+      box.appendChild(r);
+    });
+    exerciseList.appendChild(box);
+  });
+}
+function setValue(ei,si,k,v){current.exercises[ei].entries[si][k]=v===''?'':Number(v)}
+function toggleSet(ei,si,btn){
+  const s=current.exercises[ei].entries[si];s.done=!s.done;
+  btn.textContent=s.done?'✓ Fait':'Valider';btn.classList.toggle('primary',s.done);btn.parentElement.classList.toggle('done',s.done);
+  if(s.done){const cfg=getSettings();startTimer(current.exercises[ei].rest==='big'?cfg.bigRest:cfg.smallRest)}
+}
+function startTimer(sec){stopTimer(false);timerEnd=Date.now()+sec*1000;timerBar.classList.add('show');tick();timerId=setInterval(tick,250)}
+function tick(){const l=Math.max(0,Math.ceil((timerEnd-Date.now())/1000));timerText.textContent=String(Math.floor(l/60)).padStart(2,'0')+':'+String(l%60).padStart(2,'0');if(l<=0){stopTimer();if(navigator.vibrate)navigator.vibrate([150,70,150])}}
+function addTimer(s){timerEnd+=s*1000;tick()}
+function stopTimer(h=true){if(timerId){clearInterval(timerId);timerId=null}if(h!==false)timerBar.classList.remove('show')}
+function finishWorkout(){
+  if(!current.exercises.some(e=>e.entries.some(s=>s.done))&&!confirm('Enregistrer sans série validée ?'))return;
+  current.finishedAt=new Date().toISOString();state.workouts.unshift(JSON.parse(JSON.stringify(current)));saveData();current=null;stopTimer();showView('home');
+}
+function cancelWorkout(){if(confirm('Quitter sans enregistrer ?')){current=null;stopTimer();showView('home')}}
+
+function renderPlan(){
+  const p=getPlan(),today=(new Date().getDay()+6)%7;
+  weekPlan.innerHTML=DAYS.map((d,i)=>`<div class="day"><div class="${i===today?'today':''}">${d}${i===today?'<div class="tiny">Aujourd’hui</div>':''}</div><select class="field" onchange="changePlan(${i},this.value)"><option value="rest" ${p[i]==='rest'?'selected':''}>Repos</option><option value="run" ${p[i]==='run'?'selected':''}>Course</option><option value="A" ${p[i]==='A'?'selected':''}>Séance A</option><option value="B" ${p[i]==='B'?'selected':''}>Séance B</option><option value="C" ${p[i]==='C'?'selected':''}>Séance C</option></select></div>`).join('');
+}
+function changePlan(i,v){const p=getPlan();p[i]=v;savePlan(p);renderPlan()}
+
+function allExerciseNames(){
+  const m=new Map();
+  Object.values(templates).forEach(t=>t.exercises.forEach(e=>m.set(e.name,{name:e.name,group:e.group,target:e.target})));
+  state.workouts.forEach(w=>(w.exercises||[]).forEach(e=>{if(!m.has(e.name))m.set(e.name,{name:e.name,group:e.group||'',target:''})}));
+  return [...m.values()];
+}
+function renderExos(){
+  exosList.innerHTML=allExerciseNames().map(e=>{
+    const last=lastExercise(e.name);
+    const best=bestWeight(e.name);
+    return `<div class="history"><div class="row between wrap"><div><b>${e.name}</b><div class="small muted">${e.group||''} ${e.target?'• '+e.target:''}</div><div class="small">Dernière : ${lastText(last)}</div></div><div><div class="tiny muted">Max enregistré</div><b>${best?best+' kg':'—'}</b></div></div></div>`;
+  }).join('');
+}
+function bestWeight(name){
+  let best=0;state.workouts.forEach(w=>(w.exercises||[]).filter(e=>e.name===name).forEach(e=>(e.entries||[]).filter(s=>s.done).forEach(s=>best=Math.max(best,Number(s.weight)||0))));
+  return best;
+}
+function calcStats(){
+  let sets=0,vol=0;
+  state.workouts.forEach(w=>(w.exercises||[]).forEach(e=>(e.entries||[]).filter(s=>s.done).forEach(s=>{sets++;if(e.unit!=='sec')vol+=(Number(s.weight)||0)*(Number(s.reps)||0)})));
+  return{sets,vol:Math.round(vol)};
+}
+function refreshHome(){
+  const s=calcStats();kSessions.textContent=state.workouts.length;kSets.textContent=s.sets;kVolume.textContent=s.vol.toLocaleString('fr-FR');
+  const w=state.workouts[0];lastWorkout.textContent=w?w.name+' • '+new Date(w.finishedAt||w.startedAt).toLocaleDateString('fr-FR'):'Aucune';
+  const p=getPlan(),today=(new Date().getDay()+6)%7;let f=null;
+  for(let x=0;x<7;x++){let i=(today+x)%7;if(['A','B','C'].includes(p[i])){f={x,i,k:p[i]};break}}
+  if(f){nextTitle.textContent=(f.x===0?'Aujourd’hui : ':'')+'Séance '+f.k;nextText.textContent=f.x===0?'Prévue aujourd’hui':'Prévue '+DAYS[f.i].toLowerCase()}
+  else{nextTitle.textContent='Aucune séance planifiée';nextText.textContent='Va dans Planning.'}
+}
+function renderStats(){
+  const s=calcStats();sSessions.textContent=state.workouts.length;sSets.textContent=s.sets;sVolume.textContent=s.vol.toLocaleString('fr-FR');
+  const names=allExerciseNames().map(e=>e.name),best=names.map(n=>[n,bestWeight(n)]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);
+  bestList.innerHTML=best.length?best.map(([n,k])=>`<div class="history"><div class="row between"><b>${n}</b><b>${k} kg</b></div></div>`).join(''):'<div class="muted">Aucune donnée.</div>';
+  historyList.innerHTML=state.workouts.length?state.workouts.map(w=>`<div class="history"><div class="row between"><b>${w.name}</b><span class="small muted">${new Date(w.finishedAt||w.startedAt).toLocaleDateString('fr-FR')}</span></div>${(w.exercises||[]).map(e=>{const ss=(e.entries||[]).filter(s=>s.done);return ss.length?`<div class="small" style="margin-top:5px"><b>${e.name}</b> : ${ss.map(s=>e.unit==='sec'?s.reps+'s':s.weight+'kg×'+s.reps).join(' / ')}</div>`:''}).join('')}</div>`).join(''):'<div class="muted">Aucune séance.</div>';
+}
+function exportData(){
+  const payload={version:5,exportedAt:new Date().toISOString(),data:state,settings:getSettings(),plan:getPlan()};
+  const b=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');
+  a.href=u;a.download='muscu-sauvegarde-'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(u);
+}
+importInput.addEventListener('change',async e=>{
+  const f=e.target.files[0];if(!f)return;
+  try{const p=JSON.parse(await f.text()),d=p.data||p;if(!Array.isArray(d.workouts))throw 0;if(confirm('Remplacer les données locales par cette sauvegarde ?')){state=d;saveData();if(p.settings)localStorage.setItem(SETTINGS_KEY,JSON.stringify(p.settings));if(p.plan)localStorage.setItem(PLAN_KEY,JSON.stringify(p.plan));alert('Import terminé')}}
+  catch{alert('Fichier invalide')}e.target.value='';
+});
+bigRest.addEventListener('change',saveSettings);smallRest.addEventListener('change',saveSettings);
+
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;installBtn.hidden=false});
+installBtn.addEventListener('click',async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;installBtn.hidden=true});
+
+/* Test direct : aucun service worker enregistré par cette page. */
+
+restoreAIfMissing();
+refreshHome();
+</script>
+</body>
+</html>
