@@ -1,24 +1,34 @@
-# Muscu V3
+# Force + Course V3.3.6
 
-## Changements V3
-- L'installation ouvre directement `?v=3`.
-- Le service worker utilise le réseau en priorité pour éviter de rester bloqué sur une ancienne version.
-- La séance A du 21/08/2026 est préchargée une seule fois si l'historique est vide.
-- Chaque exercice affiche **DERNIÈRE FOIS** avec poids et répétitions.
-- Les champs de la nouvelle séance sont préremplis à partir de la dernière séance.
-- Planning compatible avec une future **Séance C**.
-- Séance C provisoire : jambes / mollets / avant-bras.
-- Les stats utilisent l'historique local existant.
+À installer directement, même si V3.3.4 n'a pas été installée.
 
-## Mise à jour GitHub
-Remplacer :
-- `index.html`
-- `manifest.json`
-- `service-worker.js`
+## Mise à jour séance C
+- Squat vers banc : 58 kg — 3 × 8
+- Leg extension : reste dans le programme ; résultat non préchargé car charge/reps non communiqués
+- Soulevé de terre roumain : 72 kg — 3 × 8
+- Fentes avant : 20 kg total — 3 × 8 par jambe
+- Mollets debout : 38 kg — 3 × 20
+- Hip thrust supprimé
+- Leg curl supprimé
+- Gainage retiré de C pour l'instant
 
-Les icônes peuvent aussi être remplacées mais ce n'est pas obligatoire.
+## Historique
+Les séances A et C du 26/08/2026 sont ajoutées comme validées uniquement si elles ne sont pas déjà présentes.
 
-## Après la mise à jour
-Pour une installation propre, ouvrir :
-`https://fredgabin.github.io/Muscu/?v=3`
-puis installer l'application depuis cette page.
+## Conservé
+A–F, course, calendrier, saisie libre/rétroactive, chrono automatique, références, stats/records et données locales.
+
+Ouvrir après publication :
+https://fredgabin.github.io/Muscu/?v=335
+
+
+## Mise à jour séance B — V3.3.6
+- Développé-jeté épaules : 30 kg — 3 × 6
+- Élévation frontale bras tendus : 3 × 12
+- Extension triceps barre prise neutre : 20 kg — 3 × 12
+- Kick-back triceps haltère D/G : 6 kg — 3 × 12 par côté
+- Les exercices B déjà présents sont conservés
+- Séances A et C, course, calendrier, historique et clés de données inchangés
+
+Ouvrir après publication :
+https://fredgabin.github.io/Muscu/?v=336

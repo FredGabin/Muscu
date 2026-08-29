@@ -1,8 +1,8 @@
 {
-  "name": "Force + Course V3.3.5",
+  "name": "Force + Course V3.3.6",
   "short_name": "Force+Course",
   "description": "Coach manuel musculation et course A à F.",
-  "start_url": "./?v=335",
+  "start_url": "./?v=336",
   "scope": "./",
   "display": "standalone",
   "background_color": "#0b0c0f",

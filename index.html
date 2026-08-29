@@ -6,8 +6,8 @@
 <meta name="theme-color" content="#0c0d10">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Force + Course">
-<title>Force + Course — V3.3.5</title>
-<link rel="manifest" href="./manifest.webmanifest?v=335">
+<title>Force + Course — V3.3.6</title>
+<link rel="manifest" href="./manifest.webmanifest?v=336">
 <link rel="icon" href="./icon-192.png">
 <style>
 :root{
@@ -47,7 +47,7 @@ dialog{width:min(620px,calc(100% - 22px));border:1px solid #3b414a;border-radius
 <body>
 <div class="app">
 <header class="top">
- <div><div class="eyebrow">Coach manuel <span class="version">· V3.3.5</span></div><h1>Force + Course</h1></div>
+ <div><div class="eyebrow">Coach manuel <span class="version">· V3.3.6</span></div><h1>Force + Course</h1></div>
  <button class="btn ghost" id="installBtn" hidden>Installer</button>
 </header>
 
@@ -143,7 +143,7 @@ dialog{width:min(620px,calc(100% - 22px));border:1px solid #3b414a;border-radius
 </dialog>
 
 <script>
-const APP_VERSION='3.3.5';
+const APP_VERSION='3.3.6';
 const DATA_KEY='force-course-v333';
 const SETTINGS_KEY='force-course-settings-v333';
 const MIGRATION_KEY='force-course-v333-migrated';
@@ -166,8 +166,12 @@ const MUSCU={
   {name:'Développé couché barre',group:'Pectoraux',sets:3,reps:8,weight:'',rest:'big'},
   {name:'Développé incliné',group:'Pectoraux',sets:3,reps:8,weight:'',rest:'big'},
   {name:'Écartés poulie',group:'Pectoraux',sets:3,reps:12,weight:'',rest:'small'},
+  {name:'Développé-jeté épaules',group:'Épaules',sets:3,reps:6,weight:30,rest:'big'},
   {name:'Élévation latérale poulie',group:'Épaules',sets:3,reps:12,weight:5,rest:'small'},
-  {name:'Extension triceps corde',group:'Triceps',sets:3,reps:12,weight:'',rest:'small'}
+  {name:'Élévation frontale bras tendus',group:'Épaules',sets:3,reps:12,weight:'',rest:'small'},
+  {name:'Extension triceps corde',group:'Triceps',sets:3,reps:12,weight:'',rest:'small'},
+  {name:'Extension triceps barre prise neutre',group:'Triceps',sets:3,reps:12,weight:20,rest:'small'},
+  {name:'Kick-back triceps haltère D/G',group:'Triceps',sets:3,reps:12,weight:6,rest:'small',note:'12 reps par côté'}
  ]},
  C:{title:'Muscu C — jambes', exercises:[
   {name:'Squat vers banc',group:'Jambes',sets:3,reps:8,weight:58,rest:'big'},
@@ -350,7 +354,7 @@ function updateDiag(){diag.innerHTML=`Version : <b>${APP_VERSION}</b><br>Clé do
 function renderAll(){state.sessions.sort((a,b)=>b.date.localeCompare(a.date));renderToday();if(!calendarView.classList.contains('hidden'))renderCalendar();if(!statsView.classList.contains('hidden'))renderStats();updateDiag()}
 
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;installBtn.hidden=false});installBtn.addEventListener('click',async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;installBtn.hidden=true});
-if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js?v=335',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js?v=336',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 
 
 function ensureTodayAandC(){
